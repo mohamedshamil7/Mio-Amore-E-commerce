@@ -1,0 +1,38 @@
+
+      <main id="MainContent" class="content-for-layout">
+            <div class="login-page mt-100">
+                <div class="container">
+                    <form action="http://localhost:8001/user/login-submit" method="post" class="login-form common-form mx-auto">
+                        <div class="section-header mb-3">
+                            <h2 class="section-heading text-center">Login</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span style="color: red;">{{error}}</span>
+                                <fieldset>
+                                    <label class="label">Email address</label>
+                                    <input name="email" id="s-email" oninput="validateEmail()" type="email" />
+                                    <span  style="color: red;"id="email-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12">
+                                <fieldset>
+                                    <label class="label">Password</label>
+                                    <input name="password" id="s-password1" oninput="validatePassword()" type="password" />
+                                
+                                    <span style="color: red;"  id="password-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12 mt-3">
+                                {{!-- <a href="#" class="text_14 d-block">Forgot your password?</a> --}}
+                                <button type="submit" class="btn-primary d-block mt-4 btn-signin">SIGN IN</button>
+                                <a href="register.html" class="btn-secondary mt-2 btn-signin">CREATE AN ACCOUNT</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </main>
+
+
+<script src="http://localhost:4000/javascripts/validation.js"></script>

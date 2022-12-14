@@ -1,0 +1,55 @@
+        <section>
+            <div class="container">
+                <div class="row">
+ <main id="MainContent" class="content-for-layout">
+            <div class="login-page mt-100">
+                <div class="container">
+                    <form action="http://localhost:8001/user/signup-submit" method="post" class="login-form common-form mx-auto">
+                        <div class="section-header mb-3">
+                            <h2 class="section-heading text-center">Register</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <span style="color: red;">{{error}}</span>
+                                <fieldset>
+                                    <label class="label">Username</label>
+                                    <input name="username" id="username" oninput="validateName()" type="text" />
+                                    <span  style="color: red;" id="name-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12">
+                                <fieldset>
+                                    <label class="label">Phone</label>
+                                    <input name="phone" id="s-phone" oninput="validatePhone()" type="phone" />
+                                       <span  style="color: red;" id="phone-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12">
+                                <fieldset>
+                                    <label class="label">Email address</label>
+                                    <input name="email" id="s-email" oninput="validateEmail()" type="email" />
+                                    <span  style="color: red;"id="email-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12">
+                                <fieldset>
+                                    <label class="label">Password</label>
+                                    <input name="password" id="s-password1" oninput="passwordConfirmation()" type="password" />
+                                    <label class="label">Confirm Password</label>
+                                    <input  id="s-password2" oninput="passwordConfirmation()" type="password" />
+                                    <span style="color: red;"  id="password-error"></span>
+                                </fieldset>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <button type="submit" class="btn-primary d-block mt-3 btn-signin">CREATE</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </main>
+                </div>
+            </div>
+        </section>
+
+<script src="http://localhost:4000/javascripts/validation.js"></script>
