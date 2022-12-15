@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const{renderLogin,userLoginroute,renderSignup,userSignupRoute,cokkieJWtAuth,renderHome,redirectHome,LogincokkieJWtAuth}=require('../controller/usercontroller')
+const{renderLogin,userLoginroute,renderSignup,userSignupRoute,cokkieJWtAuth,checkBlocked,renderHome,redirectHome,LogincokkieJWtAuth}=require('../controller/usercontroller')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

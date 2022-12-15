@@ -1,8 +1,10 @@
-var db=require("../dbconnections/dbConnection")
-var collection=require("../dbconnections/Collections")
+var db=require("../../../dbconnections/dbConnection")
+var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")
 const { resolve } = require("path")
 const jwt=require("jsonwebtoken");
+const { reject } = require("firebase-tools/lib/utils");
+const { ObjectId } = require("mongodb");
 require("dotenv").config();
 
 var MY_SECRET = process.env.MY_SECRET
@@ -12,7 +14,8 @@ module.exports={
 
 
     doSignup: (userData) => {
-
+        userData.createdAt= new Date().toDateString()
+        userData.isBlocked=false
 
         return new Promise(async(resolve, reject) => {
             console.log("user data before fiindone :",userData);
@@ -59,6 +62,18 @@ module.exports={
             }
         })
      },
+     userBlockCheck:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId)})
+            console.log(user);
+            if(user.isBlocked){
+                reject()
+            }
+            else{
+                resolve()
+            }
+        })
+     }
 
    
 }

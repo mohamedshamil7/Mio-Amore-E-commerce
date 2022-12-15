@@ -33,6 +33,7 @@ module.exports={
         try{
            const user = jwt.verify(token,MY_SECRET) 
            req.user=user
+           console.log(user);
            console.log("ive ethaninfo avo");
            return res.redirect('/user/home')
         } catch(err){
@@ -56,9 +57,17 @@ module.exports={
         return res.redirect('/user/login')
     }
   },
+checkBlocked:(req,res,next)=>{
+userHelpers.userBlockCheck(req.body._id).then(()=>{
+    next()
+}).catch((err)=>{
+    res.render("userView/login",{error:"user is blocked"})
+})
+},
+
   renderHome:(req,res)=>{
     
-    res.render('userView/home');
+    res.render('userView/home',{user:true});
  },
  redirectHome:(req,res)=>{
     res.redirect("/user/home")

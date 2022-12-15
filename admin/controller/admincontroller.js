@@ -1,6 +1,5 @@
 
-
-
+const adminHelper= require('../model/adminHelpers')
 
 
 module.exports={
@@ -18,6 +17,24 @@ module.exports={
  },
  renderadminDash:(req,res)=>{
    res.render("adminView/adminDash",{admin:true})
+ },
+
+ AllUsersPage:(req,res)=>{
+   adminHelper.getAllUsers().then((users)=>{
+      console.log(users);
+      res.render('adminView/allUsers',{admin:true,users})
+   })
+ },
+ userBlock:(req,res)=>{
+//   console.log("}}}}}}}}}}}}}}"+req.params.id);
+  console.log(req.body.id);
+  console.log(req.body.isBlocked);
+
+  adminHelper.userBlockManager(req.body.id,req.body.isBlocked).then(()=>{
+   console.log("block wroked ///////////////////////////////////////////");
+   res.redirect('/admin/allUsers')
+  })
+
  }
 
 }

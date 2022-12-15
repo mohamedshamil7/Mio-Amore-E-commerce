@@ -1,51 +1,50 @@
-<section class="align">
+<section class="page-align ">
      <!-- Table with stripped rows -->
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Start Date</th>
+                    <th scope="col">username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">action </th>
                   </tr>
                 </thead>
                 <tbody>
+                    {{#each users}}
                   <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                    <td>28</td>
-                    <td>2016-05-25</td>
+
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.phone}}</td>
+                    <td>{{this.createdAt}}</td>
+                    <td>
+                     {{#if this.isBlocked}}
+                    Blocked
+                    {{else}}
+                    Active
+                    {{/if}}
+                    </td>
+                    <td>
+                        <a href="">
+                            <form action="/admin/blockManager" method="post">
+                            <input type="text" name="isBlocked" value="{{this.isBlocked}}" hidden >
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-secondary">
+                               {{#if this.isBlocked}}
+                               Unblock
+                               {{else}}
+                               Block
+                               {{/if}}
+                            </button>
+                            </form>
+                        </a>
+                    </td>
+
+
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Developer</td>
-                    <td>35</td>
-                    <td>2014-12-05</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Finance</td>
-                    <td>45</td>
-                    <td>2011-08-12</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>HR</td>
-                    <td>34</td>
-                    <td>2012-06-11</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Dynamic Division Officer</td>
-                    <td>47</td>
-                    <td>2011-04-19</td>
-                  </tr>
+                  {{/each}}
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->

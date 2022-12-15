@@ -2,12 +2,13 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const hbs = require('express-handlebars');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 
 var app = express();
-var db=require('./models/dbconnections/dbConnection')
+var db=require('../dbconnections/dbConnection')
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views'}))
 
 db.connect((err)=>{
   if(err) console.log(' Connection error '+err);
