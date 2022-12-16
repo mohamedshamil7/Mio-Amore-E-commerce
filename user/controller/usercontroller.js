@@ -5,65 +5,138 @@ const jwt=require("jsonwebtoken");
 const { read } = require('fs');
 const { send } = require('process');
 const { reset } = require('nodemon');
+const { userBlockCheck } = require('../models/userHelpers/userHelpers');
 
-// var MY_SECRET = process.env.MY_SECRET
+
 const MY_SECRET = process.env.MY_SECRET
 
 
-// const createToken = (id)=>{
-//     return jwt.sign({id},"Mio Amore Secret",{
-//             expiresIn:30
-//             })
-//         }
-//         // const token=createToken(response.insertedId)
-//         // res.cookie('jwt',token,{httpOnly:true,maxAge:15})
-//         // res.status(201)
-//             module.exports={createToken}
         
 const createToken=(user)=>{
     
-   return jwt.sign({id:user.insertedId},MY_SECRET,{expiresIn:"30s"})
+   return jwt.sign({value:user},MY_SECRET,{expiresIn:"30s"})
 
 
 }
+const  tokenVerify=(request)=>{
+    const decode = jwt.verify(request.cookies.token,MY_SECRET)
+    return decode
+}
 module.exports={
-    LogincokkieJWtAuth:(req,res,next)=>{
-        console.log("entered jwtAuth for login");
-        const token =req.cookies.token
-        try{
-           const user = jwt.verify(token,MY_SECRET) 
-           req.user=user
-           console.log(user);
-           console.log("ive ethaninfo avo");
-           return res.redirect('/user/home')
-        } catch(err){
-            console.log("entererd error");
-            res.clearCookie("token")
+    homeJwtCheck:(req,res,next)=>{
+        const token= req.cookies.token
+        console.log(token);
+        if(!token){
             next()
-            
         }
-      },
+        else{
+            try{
+                const user =jwt.verify(token,MY_SECRET)
+                console.log("userrrrr<<<<<<<<<<<<<<<<<<<>>>>>>>"+user);
+                if(user){
+                    res.render("userView/home")
+                    // res.redirect("/user/home")
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+    },
+    // homeCookieCheck:(req,res,next)=>{
+    //     console.log("entered jwtAuth for login");
+    //     const token =req.cookies.token
+    //     if(!token){
+    //         console.log("no token next wrked");
+    //         next()
+    //     }else{
+    //     try{
+    //        const user = tokenVerify(token,MY_SECRET) 
+    //        console.log(user);
+    //      if(user){
+    //         console.log("try if user worked");
+    //         res.redirect("/home")
+    //      }
+    //      else{
+    //         console.log("eklse next workded");
+    //         next()
+    //      }
+    //     } catch(err){
+    //         console.log("catch err next worked");
+    //         console.log(err);
+    //         next()
+            
+    //     }
+    //     }
+    //   },
 
-
-  cokkieJWtAuth:(req,res,next)=>{
-    console.log("entered jwtAuth");
-    const token =req.cookies.token
+    autherization:(req,res,next)=>{
+        console.log("entered auth");
+        
+const token = req.cookies.token
+console.log(token);
+if( ! token){
+    res.render("userView/login")
+}
+else{
     try{
-       const user = jwt.verify(token,MY_SECRET) 
-       req.user=user
-       next()
-    } catch(err){
-        res.clearCookie("token")
-        return res.redirect('/user/login')
+        const user = tokenVerify(req)
+        // console.log(user);
+        if(user){
+            const decode = tokenVerify(req)
+            console.log(decode,"+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
+            console.log(decode.value.userid);
+
+            userHelpers.userBlockCheck(decode.value.userid).then((response)=>{
+                next()
+            }).catch(()=>{
+                 res.clearCookie("token")
+                res.render('userView/login',{error:'This account is blocked'})
+                })
+        }else{
+            res.render('userView/login')
+        }
+    }catch{
+        res.render('userView/login')
     }
-  },
-checkBlocked:(req,res,next)=>{
-userHelpers.userBlockCheck(req.body._id).then(()=>{
-    next()
-}).catch((err)=>{
-    res.render("userView/login",{error:"user is blocked"})
-})
-},
+    
+}
+    },
+
+//   autherize:(req,res,next)=>{
+//     console.log("entered jwtAuth");
+//     const token =req.cookies.token
+//     if(! token){
+//         console.log("autherize token no token");
+//         next()
+//     }
+//     else{
+//     try{
+//        const user = tokenVerify(req) 
+//        console.log("autherize token "+user);
+//        if(user){
+//         const decode=tokenVerify(req)
+//         console.log(decode +"//////////");
+//         userHelpers.userBlockCheck(decode.value.id).then(()=>{
+//             console.log("user block ceheck then worked");
+//             next()
+//         })
+//         .catch(()=>{
+//             res.render('userView/login',{error:'This account is blocked'})
+//             })
+            
+        
+//        }
+//        else{
+//         res.render("userView/login")
+//     }
+//     } catch(err){
+//         // res.clearCookie("token")
+//         return res.redirect('/user/login')
+//     }
+//     }
+//   },
+
 
   renderHome:(req,res)=>{
     
@@ -140,6 +213,9 @@ next()
 })
     
 },
+
+
+
     
 
 }

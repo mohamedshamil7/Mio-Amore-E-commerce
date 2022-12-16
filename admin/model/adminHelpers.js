@@ -14,20 +14,28 @@ module.exports={
         })
     },
     userBlockManager:(userId,status)=>{
+        console.log(status);
         var update
-        if(status=='true') update=false
-        else update=true
+        if(status=="true")
+         {
+            update=false
+            console.log(update)
+        }
+        else {
+            update=true
+            console.log(update)
+    }
 
         return new Promise(async(resolve,reject)=>{
            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
                 $set:{
-                    isBlocked:status
+                    isBlocked:update
                 }
-            }).then(()=>{
-                console.log();
+            }).then((response)=>{
+                console.log(response);
                 resolve()
             }).catch((err)=>{
-                console.log(err);
+                reject(err)
             })
         })
 

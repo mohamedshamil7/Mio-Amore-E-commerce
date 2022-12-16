@@ -4,16 +4,18 @@ const axios = require("axios")
 
 const port=8001
 
-const server= gateway(
+
+const server=
+ gateway(
     {
         routes:[{
             
             prefix:"/user",
-            // target:axios.get("http://localhost:4000/")
             target:"http://localhost:4000/"
         },
-        {prefix:"/admin",
-        target:"http://localhost:4001/"
+        {
+            prefix:"/admin",
+            target:"http://localhost:4001/"
         }
     
     
