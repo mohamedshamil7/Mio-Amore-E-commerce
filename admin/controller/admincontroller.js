@@ -1,4 +1,5 @@
 
+const { response } = require('../app')
 const adminHelper= require('../model/adminHelpers')
 
 
@@ -36,6 +37,57 @@ module.exports={
    res.redirect('/admin/allUsers')
   })
 
- }
+ },
+
+ stockPage:(req,res)=>{
+  res.render("adminView/stocks",{admin:true})
+ },
+ categories_Page:(req,res)=>{
+  adminHelper.getAllCategories().then((categories)=>{
+    console.log("found these categories",categories);
+    res.render("adminView/categories",{admin:true,categories})
+  }).catch((err)=>{
+    console.log(err);
+  })
+ },
+
+
+ addCategoryManager:(req,res)=>{
+  console.log(req.body);
+
+  adminHelper.addcategory(req.body.newCategory).then((response)=>{
+    console.log(response);
+res.redirect("/admin/categories")
+  }).catch((categories)=>{
+res.render("adminView/categories",{admin:true,error:"category already exists"})
+  }).catch((err)=>{
+    console.log("some other error ocuured whiile adding categories");
+  })
+ },
+
+ deleteCategory:(req,res)=>{
+  console.log(req.body); 
+  adminHelper.deleteCategories(req.body.id).then((response)=>{
+    res.redirect("/admin/categories")
+  }).catch((error)=>{
+    console.log(error);
+  })
+ },
+
+
+ addProductForm:(req,res)=>{
+  adminHelper.getAllCategories().then((categories=>{
+    res.render("adminView/addProduct",{admin:true,categories})
+
+  })).catch((error)=>{
+    console.log(error);
+    res.send(error)
+  })
+
+ },
+
+addNewProduct:(req,res)=>{
+  console.log(req.body);
+}
 
 }

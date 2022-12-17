@@ -8,7 +8,20 @@ var router = express.Router();
 
 
 
-const{renderadminLogin,adminLoginRoute,redirectAdminDash,renderadminDash,AllUsersPage,userBlock}=require("../controller/admincontroller")
+const {
+  renderadminLogin,
+  adminLoginRoute,
+  redirectAdminDash,
+  renderadminDash,
+  AllUsersPage,
+  userBlock,
+  stockPage,
+  categories_Page,
+  addCategoryManager,
+  deleteCategory,
+  addProductForm,
+  addNewProduct
+} = require("../controller/admincontroller");
 /* GET home page. */
 router.get('/login',renderadminLogin);
 
@@ -20,4 +33,15 @@ router.get("/allUsers",AllUsersPage)
 
 router.post("/blockManager",userBlock)
 
+router.get("/stocks",stockPage)
+
+router.get("/categories",categories_Page)
+
+router.post("/addCategory",addCategoryManager)
+
+router.post("/deleteCategory",deleteCategory)
+
+router.get("/add-product",addProductForm)
+
+router.post("/addProduct-submit",addNewProduct)
 module.exports = router;

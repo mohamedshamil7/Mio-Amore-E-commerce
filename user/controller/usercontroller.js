@@ -43,32 +43,6 @@ module.exports={
             }
         }
     },
-    // homeCookieCheck:(req,res,next)=>{
-    //     console.log("entered jwtAuth for login");
-    //     const token =req.cookies.token
-    //     if(!token){
-    //         console.log("no token next wrked");
-    //         next()
-    //     }else{
-    //     try{
-    //        const user = tokenVerify(token,MY_SECRET) 
-    //        console.log(user);
-    //      if(user){
-    //         console.log("try if user worked");
-    //         res.redirect("/home")
-    //      }
-    //      else{
-    //         console.log("eklse next workded");
-    //         next()
-    //      }
-    //     } catch(err){
-    //         console.log("catch err next worked");
-    //         console.log(err);
-    //         next()
-            
-    //     }
-    //     }
-    //   },
 
     autherization:(req,res,next)=>{
         console.log("entered auth");
@@ -103,39 +77,7 @@ else{
 }
     },
 
-//   autherize:(req,res,next)=>{
-//     console.log("entered jwtAuth");
-//     const token =req.cookies.token
-//     if(! token){
-//         console.log("autherize token no token");
-//         next()
-//     }
-//     else{
-//     try{
-//        const user = tokenVerify(req) 
-//        console.log("autherize token "+user);
-//        if(user){
-//         const decode=tokenVerify(req)
-//         console.log(decode +"//////////");
-//         userHelpers.userBlockCheck(decode.value.id).then(()=>{
-//             console.log("user block ceheck then worked");
-//             next()
-//         })
-//         .catch(()=>{
-//             res.render('userView/login',{error:'This account is blocked'})
-//             })
-            
-        
-//        }
-//        else{
-//         res.render("userView/login")
-//     }
-//     } catch(err){
-//         // res.clearCookie("token")
-//         return res.redirect('/user/login')
-//     }
-//     }
-//   },
+
 
 
   renderHome:(req,res)=>{
