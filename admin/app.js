@@ -4,11 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const hbs = require('express-handlebars');
+const fileUpload = require('express-fileupload')
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
 
 
 var app = express();
+app.use(fileUpload())
 var db=require('../dbconnections/dbConnection')
 
 // view engine setup

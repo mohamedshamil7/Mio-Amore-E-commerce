@@ -27,9 +27,9 @@ module.exports={
             else{
           userData.password = await bcrypt.hash(userData.password, 10);
           const result = await db.get().collection(collection.USER_COLLECTION).insertOne(userData);
+          console.log("this result>>>>>>>>>>>",result);
 
           if (result.insertedId) {
-            
           resolve(result)
         }
           else {
@@ -51,7 +51,7 @@ module.exports={
                         
                         var userData={
                             username:user.username,
-                            userid:user._id
+                            insertedId:user._id
                         }
                         resolve(userData)}
                     else reject()
@@ -66,6 +66,7 @@ module.exports={
         return new Promise(async(resolve,reject)=>{
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId)})
             console.log(user);
+            console.log(user.isBlocked,".................................................");
             if(user.isBlocked==true){
                 reject()
             }

@@ -13,49 +13,41 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Position</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Start Date</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Company</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Category</th>
+                    
+                    <th scope="col">Manufacturing Date</th>
+                    <th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
+                    {{#each stock}}
                   <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Designer</td>
-                    <td>28</td>
-                    <td>2016-05-25</td>
+                    <th scope="row"><img style="width: 50px;" src="./images/product-images/{{this._id}}.jpg" alt="no"></th>
+                    <td>{{this.ProductName}}</td>
+                    <td>{{this.Company}}</td>
+                    <td>{{this.Price}}</td>
+                    <td>{{this.category}}</td>
+                    <td>>{{this.Manufacturing-Date}}</td>
+                    {{!-- <td>{{this.Description}}</td> --}}
+                    <td>
+                        <a href=""><form action="/admin/edit-Product" method="post">
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-primary">Edit
+                            </button>
+                            </form></a> 
+                            </td>
+                            <td> <a href=""><form action="/admin/delete-Product" method="post">
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-danger" onclick="return confirm(`Are you sure want to delete {{this.ProductName}} 
+                    ?` )">delete
+                            </button>
+                            </form></a></td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Developer</td>
-                    <td>35</td>
-                    <td>2014-12-05</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Finance</td>
-                    <td>45</td>
-                    <td>2011-08-12</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>HR</td>
-                    <td>34</td>
-                    <td>2012-06-11</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Dynamic Division Officer</td>
-                    <td>47</td>
-                    <td>2011-04-19</td>
-                  </tr>
+                    {{/each}}
                 </tbody>
               </table>
               <!-- End Table with stripped rows -->

@@ -39,7 +39,7 @@ module.exports={
                 }
             }
             catch(err){
-                console.log(err);
+                next()
             }
         }
     },
@@ -59,9 +59,9 @@ else{
         if(user){
             const decode = tokenVerify(req)
             console.log(decode,"+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
-            console.log(decode.value.userid);
+            console.log(decode.value.insertedId);
 
-            userHelpers.userBlockCheck(decode.value.userid).then((response)=>{
+            userHelpers.userBlockCheck(decode.value.insertedId).then((response)=>{
                 next()
             }).catch(()=>{
                  res.clearCookie("token")
@@ -104,7 +104,8 @@ userSignupRoute:(req,res,next)=>{
         let  userData=req.body
      userHelpers.doSignup(userData).then((response)=>{
         let user=response
-        console.log("cmondt=ra"+user);
+        console.log(user,"?????///////////////////////////////////////////////////////////////////");
+        console.log("cmondt=ra"+user.isBlocked);
         const token=createToken(user)
         //  const token=jwt.sign({id:user.insertedId},MY_SECRET,{expiresIn:"15m"})
         res.cookie("token",token,{
@@ -132,7 +133,7 @@ next()
 },
   userLoginroute:(req,res,next)=>{
     let userData=req.body
-    console.log("?????????????????????????????????????????");
+    console.log("?????????");
     userHelpers.doLogin(userData).then((response)=>{
     console.log(response);
     let user=response

@@ -3,7 +3,7 @@ var db =require('../../dbconnections/dbConnection')
 var collection =require('../../dbconnections/Collections')
 const { resolve } = require("path")
 const { ObjectId } = require('mongodb')
-const { reject } = require('firebase-tools/lib/utils')
+const { reject, promiseAllSettled, explainStdin } = require('firebase-tools/lib/utils')
 const { response } = require('../app')
 
 
@@ -41,6 +41,17 @@ module.exports={
             })
         })
 
+    },
+    getAllStocks:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let stocks= await db.get().collection(collection.PRODUCT_COLLECTIONS).find().toArray()
+            if(stocks){
+                resolve(stocks)
+            }else{
+                reject()
+            }
+
+        })
     },
 
     addcategory:(data)=>{
@@ -84,7 +95,53 @@ module.exports={
         })
     },
 
-    addNewProduct:()=>{
-        
+    addNewProduct:(Data)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
+            if(data){
+                id=data.insertedId
+                console.log("idddd",id);
+                resolve(id)
+            }else{
+                reject(data)
+            }
+        })
+    },
+    deleteProduct:(id)=>{
+        return new Promise(async(resolve,reject)=>{
+       db.get().collection(collection.PRODUCT_COLLECTIONS).deleteOne({_id:ObjectId(id)}).then((response)=>{
+        resolve(response)
+       }).catch((error)=>{
+        reject(error)
+       })
+            
+        })
+    },
+    getEditProduct:(id)=>{
+        return new Promise(async(resolve,reject)=>{
+            let product= db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(id)})
+            if(product) resolve(product)
+            else reject()
+    
+        })
+    },
+
+    editProduct:(id)=>{
+        return new promiseAllSettled(async(resolve,reject)=>{
+            let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
+                $set:{
+                    ProductName:id.ProductName,
+                    Company:id.Company,
+                    Price:id.Price,
+                    Description:id.Description,
+                    category:id.category,
+                    ManufacturingDate:id.ManufacturingDate,
+
+
+                }
+            })
+            if(Product) resolve(Product)
+            else reject()
+        })
     }
 }
