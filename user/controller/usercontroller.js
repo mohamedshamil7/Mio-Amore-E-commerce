@@ -81,10 +81,12 @@ else{
 
 
   renderHome:(req,res)=>{
-    
-    res.render('userView/home',{user:true});
+    let decode= tokenVerify(req)
+    console.log(decode);
+    res.render('userView/home',{user:decode.value.username,userpar:true});
  },
  redirectHome:(req,res)=>{
+
     res.redirect("/user/home")
  },
 
@@ -156,6 +158,10 @@ next()
 })
     
 },
+userLogout:(req,res)=>{
+    res.clearCookie("token")
+    res.redirect("/user/login")
+}
 
 
 

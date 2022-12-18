@@ -121,6 +121,7 @@ editProduct:(req,res)=>{
   adminHelper.getEditProduct(req.body.id).then((product)=>{
     console.log(product);
     adminHelper.getAllCategories().then((categories)=>{
+      console.log(categories);
       res.render("adminView/editProduct",{admin:true,product,categories})
     })
     
@@ -130,10 +131,15 @@ editProduct:(req,res)=>{
   
 },
 EditProductData:(req,res)=>{
-adminHelper.editProduct(req.body.id).then((response)=>{
-  res.redirect("/adminView/stocks")
-}).catch((err)=>{
-  console.log(err);
+  console.log("enettererere");
+  let id= req.body.id
+adminHelper.editProduct(req.body).then((response)=>{
+  console.log(response);
+ if(req.files.Image){
+  var image=req.files.Image
+  image.mv('./public/images/product-images/'+id+'.jpg' )
+ }
+  res.redirect("/admin/stocks")
 })
 }
 

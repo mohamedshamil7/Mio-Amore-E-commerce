@@ -127,7 +127,9 @@ module.exports={
     },
 
     editProduct:(id)=>{
-        return new promiseAllSettled(async(resolve,reject)=>{
+        console.log(">>>>");
+        // console.log(id);
+        return new Promise(async(resolve,reject)=>{
             let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
                 $set:{
                     ProductName:id.ProductName,
@@ -140,8 +142,14 @@ module.exports={
 
                 }
             })
-            if(Product) resolve(Product)
-            else reject()
+            console.log("}}}}}}}}}}}}}}}}}}}}}}}}");
+            if(Product) {
+                console.log("??????????????????????????????",Product.insertedId);
+                resolve(Product)
+            }
+            else {
+                console.log("else wooo");
+                reject()}
         })
     }
 }

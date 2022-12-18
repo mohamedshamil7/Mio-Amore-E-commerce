@@ -1,3 +1,164 @@
+
+
+<div class="fullpage-loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- Loader End -->
+
+    <!-- Header Start -->
+    <header class="">
+       
+
+        <div class="top-nav top-header ">
+            <div class="container-fluid-lg">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="navbar-top">
+                            <button class="navbar-toggler d-xl-none d-inline navbar-menu-button" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#primaryMenu">
+                                <span class="navbar-toggler-icon">
+                                    <i class="fa-solid fa-bars"></i>
+                                </span>
+                            </button>
+                            <a href="/user/home" class="web-logo nav-logo">
+                                <img src="http://localhost:4000/images/logopng.png" class="img-fluid blur-up lazyload" alt="">
+                            </a>
+
+                            <div class="header-nav-middle">
+                                <div class="main-nav navbar navbar-expand-xl navbar-light navbar-sticky">
+                                    <div class="offcanvas offcanvas-collapse order-xl-2" id="primaryMenu">
+                                        <div class="offcanvas-header navbar-shadow">
+                                            <h5>Menu</h5>
+                                            <button class="btn-close lead" type="button" data-bs-dismiss="offcanvas"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <ul class="navbar-nav">
+    
+                                                
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rightside-box">
+                                <div class="search-full">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i data-feather="search" class="font-light"></i>
+                                        </span>
+                                        <input type="text" class="form-control search-type" placeholder="Search here..">
+                                        <span class="input-group-text close-search">
+                                            <i data-feather="x" class="font-light"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <ul class="right-side-menu">
+                                    <li class="right-side">
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <div class="search-box">
+                                                    <i data-feather="search"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                   
+                                    
+                                    <li class="right-side onhover-dropdown">
+                                                                                    
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <button class="btn btn-secondary"><i data-feather="user" ></i>
+                                                {{#if user}}
+                                                 {{user}}
+                                                 {{/if}}
+                                                 </button>
+                                                
+                                            </div>
+                                            <div class="delivery-detail">
+                                                <h6>Hello</h6>
+                                                <h5>My Account</h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="onhover-div onhover-div-login">
+
+                                            <ul class="user-box-name">
+                                                <li class="product-box-contain">
+                                                    <i></i>
+                                                    {{#if user}}
+                                                    <a href="http://localhost:8001/user/logout">Log out</a>
+                                                    {{else}}
+                                                    <a href="/user/login">Log in</a>
+                                                <li class="product-box-contain">
+                                                    <a href="/user/signup">Register</a>
+                                                </li>
+                                                    {{/if}}
+                                                </li>
+
+
+                                                {{!-- <li class="product-box-contain">
+                                                    <a href="forgot.html">Forgot Password</a>
+                                                </li> --}}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header End -->
+        <!-- mobile fix menu start -->
+    <div class="mobile-menu d-md-none d-block mobile-cart">
+        <ul>
+            <li class="active">
+                <a href="index.html">
+                    <i class="iconly-Home icli"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li class="mobile-category">
+                <a href="javascript:void(0)">
+                    <i class="iconly-Category icli js-link"></i>
+                    <span>Category</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="search.html" class="search-box">
+                    <i class="iconly-Search icli"></i>
+                    <span>Search</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="wishlist.html" class="notifi-wishlist">
+                    <i class="iconly-Heart icli"></i>
+                    <span>My Wish</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="cart.html">
+                    <i class="iconly-Bag-2 icli fly-cate"></i>
+                    <span>Cart</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- mobile fix menu end -->
+
 <section>
     <div class="container">
         <div class="row">
@@ -14,7 +175,7 @@
                 <div class="col-xxl-4 col-xl-5 col-lg-6 col-sm-8 mx-auto">
                     <div class="log-in-box">
                         <div class="log-in-title">
-                            <h3>Welcome To Fastkart</h3>
+                            <h3>Welcome To Mio Amore</h3>
                             <h4>Create New Account</h4>
                         </div>
 
