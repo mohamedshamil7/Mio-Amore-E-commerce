@@ -1,3 +1,6 @@
+User product page
+
+
  <!-- Product Left Sidebar Start -->
     <section class="product-section">
         <div class="container-fluid-lg">
@@ -8,20 +11,16 @@
                             <div class="product-left-box">
                                 <div class="row g-sm-4 g-2">
                                     <div class="col-12">
-                                        <div class="product-main no-arrow">
+                                        <div class="product-main no-arrow" >
                                             <div>
-                                                <div class="slider-image">
-                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}" id="img-1"
-                                                        data-zoom-image="http://localhost:8001/admin/ImageSupply/{{data._id}}" class="
-                                                        img-fluid image_zoom_cls-0 blur-up lazyload" alt="">
+                                                <div class="slider-image " id="homd" >
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}" id="img-1" >
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <div class="slider-image">
-                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}"
-                                                        data-zoom-image="../assets/images/product/category/2.jpg" class="
-                                                        img-fluid image_zoom_cls-1 blur-up lazyload" alt="">
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}" >
                                                 </div>
                                             </div>
 
@@ -381,3 +380,34 @@
         </div>
     </section>
     <!-- Product Left Sidebar End -->
+
+
+    <script src="https://unpkg.com/js-image-zoom/js-image-zoom.js"></script>
+   
+<script src="https://cdn.jsdelivr.net/npm/js-image-zoom/js-image-zoom.min.js"></script>
+
+{{!-- <script>
+    var options = {
+    width: 400,
+    scale: 1,
+    zoomPosition: 'right' // required
+    // more options here
+};
+
+</script> --}}
+
+
+<script>
+    
+    var options = {
+        width: 400, // required
+        zoomWidth: 400,
+        scale: 1,
+        offset: {
+            vertical: 35,
+            horizontal: -420
+        }
+    };
+    new ImageZoom(document.getElementById('homd'), options)
+
+</script>

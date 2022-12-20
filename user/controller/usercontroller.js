@@ -1,3 +1,6 @@
+
+
+
 const { response } = require('../app');
 require("dotenv").config();
 const userHelpers=require('../models/userHelpers/userHelpers')
@@ -84,6 +87,7 @@ else{
       let decode= tokenVerify(req)
       console.log(decode);
     userHelpers.getAllProducts().then((data)=>{
+        // let wishlist=getAllWishist
         console.log("the then data is :",data);
         res.render('userView/home',{data,user:decode.value.username,userpar:true});
     }).catch((err)=>{
@@ -189,7 +193,12 @@ imageRoute:(req,res)=>{
 },
 
 wishlistPage:(req,res)=>{
-    res.render('userView/wishlist',{userpar:true})
+    let decode= tokenVerify(req)
+
+    userHelpers.wishlistProducts(decode.value.insertedId).then((response)=>{
+        let data=response
+        res.render('userView/wishlist',{data,user:decode.value.username,userpar:true})
+    })
 },
 addToWishlist:(req,res)=>{
     console.log(req.params.id);

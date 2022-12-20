@@ -1,3 +1,7 @@
+
+
+
+
 var db=require("../../../dbconnections/dbConnection")
 var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")
@@ -179,7 +183,79 @@ module.exports={
             }
            
         })
-     }
+     },
+    //  getAllWishist:(userId)=>{
+    //     return new Promise (async(resolve,reject)=>{
+    //         let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
+    //         if(userwl){
+    //             await db.get().collection(collection.WISHLIST_COLLECTION).find()
+    //         }
+    //     })
+    //  }
+    wishlistProducts:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+             let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
+             console.log(userwl);
+             if(userwl){
+                let wishlist=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
+                    {
+                        $match:{
+                            user:ObjectId(userId)
+                        }
+                    },
+                    {
+                        $unwind:"$wishlist"
+                    },
+                    {
+                        $lookup:{
+                            from:collection.PRODUCT_COLLECTIONS,
+                            localField:"wishlist",
+                            foreignField:"_id",
+                            as:"wishlistItems"
+                        }
+                    },
+                    {
+                        $project:{
+                            wishlistItems:1,
+                            ProductName:1,
+                            Company:1,
+                            Price:1,
+                            ManufacturingDate:1,
+                            category:1,
+                            Description:1,
+                            Product:{$arrayElemAt:["$wishlistItems",0]}
+                        }
+                    }
+
+                ]).toArray()
+                if(wishlist){
+
+                    // console.log("hi",wishlist[0].Product);
+                    resolve(wishlist)
+                }
+                else{
+                    reject()
+                }
+                
+                // .then((response)=>{
+                    
+                //     console.log(response);
+                //     resolve(response)
+                // })
+                
+                
+                // .catch((error)=>{
+                //     reject(error)
+                // })
+              
+                
+
+               }
+else{
+   resolve()
+}
+        })
+    }
 
    
 }

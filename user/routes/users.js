@@ -1,3 +1,6 @@
+
+
+
 var express = require('express');
 var router = express.Router();
 
@@ -44,3 +47,4 @@ router.get("/wishlistPage",wishlistPage)
 router.get("/addToCart/:id",addToWishlist)
 
 module.exports = router;
+
