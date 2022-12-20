@@ -5,6 +5,7 @@
                 <div class="col-12">
                     <div class="slider-animate">
                         <div>
+
                             <div class="home-contain rounded-0 p-0">
                                 <img src="http://localhost:4000/assets/images/fashion/home-banner/1.jpg"
                                     class="img-fluid bg-img blur-up lazyload" alt="">
@@ -23,6 +24,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -702,13 +704,15 @@
             <div class="row g-sm-4 g-3">
                 <div class="col-xxl-12 ratio_110">
                     <div class="slider-6 img-slider">
+                                {{#each data.all}}
                         <div>
                             <div class="product-box-5 wow fadeInUp">
                                 <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="http://localhost:4000/assets/images/fashion/product/7.jpg"
-                                            class="img-fluid blur-up lazyload bg-img" alt="">
+                                    <a href="/user/product/{{this._id}}">   
+                                        <img src="http://localhost:8001/admin/ImageSupply/{{this._id}}"
+                                            class="img-fluid blur-up lazyload bg-img" alt="no image">
                                     </a>
+                                    
 
                                     <a href="javascript:void(0)" class="wishlist-top" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Wishlist">
@@ -738,159 +742,25 @@
 
                                 <div class="product-detail">
                                     <a href="product-left-thumbnail.html">
-                                        <h5 class="name">Black Gown</h5>
+                                        <h5 class="name">{{this.ProductName}}</h5>
                                     </a>
 
                                     <h5 class="sold text-content">
-                                        <span class="theme-color price">$26.69</span>
+                                        <span class="theme-color price">{{this.Price}}</span>
                                         <del>28.56</del>
                                     </h5>
                                 </div>
+                          
                             </div>
                         </div>
 
-                        <div>
-                            <div class="product-box-5 wow fadeInUp">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/fashion/product/8.jpg"
-                                            class="img-fluid blur-up lazyload bg-img" alt="">
-                                    </a>
+                        
 
-                                    <a href="javascript:void(0)" class="wishlist-top" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Wishlist">
-                                        <i data-feather="bookmark"></i>
-                                    </a>
+                        
 
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
+                        
 
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="product-detail">
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">Black Gown</h5>
-                                    </a>
-
-                                    <h5 class="sold text-content">
-                                        <span class="theme-color price">$26.69</span>
-                                        <del>28.56</del>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box-5 wow fadeInUp">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/fashion/product/9.jpg"
-                                            class="img-fluid blur-up lazyload bg-img" alt="">
-                                    </a>
-
-                                    <a href="javascript:void(0)" class="wishlist-top" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Wishlist">
-                                        <i data-feather="bookmark"></i>
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="product-detail">
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">Black Gown</h5>
-                                    </a>
-
-                                    <h5 class="sold text-content">
-                                        <span class="theme-color price">$26.69</span>
-                                        <del>28.56</del>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="product-box-5 wow fadeInUp">
-                                <div class="product-image">
-                                    <a href="product-left-thumbnail.html">
-                                        <img src="../assets/images/fashion/product/10.jpg"
-                                            class="img-fluid blur-up lazyload bg-img" alt="">
-                                    </a>
-
-                                    <a href="javascript:void(0)" class="wishlist-top" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Wishlist">
-                                        <i data-feather="bookmark"></i>
-                                    </a>
-
-                                    <ul class="product-option">
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                            <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#view">
-                                                <i data-feather="eye"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
-                                            <a href="compare.html">
-                                                <i data-feather="refresh-cw"></i>
-                                            </a>
-                                        </li>
-
-                                        <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                            <a href="wishlist.html" class="notifi-wishlist">
-                                                <i data-feather="heart"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="product-detail">
-                                    <a href="product-left-thumbnail.html">
-                                        <h5 class="name">Black Gown</h5>
-                                    </a>
-
-                                    <h5 class="sold text-content">
-                                        <span class="theme-color price">$26.69</span>
-                                        <del>28.56</del>
-                                    </h5>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
+                        {{!-- <div>
                             <div class="product-box-5 wow fadeInUp">
                                 <div class="product-image">
                                     <a href="product-left-thumbnail.html">
@@ -935,9 +805,9 @@
                                     </h5>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div>
+                        {{!-- <div>
                             <div class="product-box-5 wow fadeInUp">
                                 <div class="product-image">
                                     <a href="product-left-thumbnail.html">
@@ -982,7 +852,8 @@
                                     </h5>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
+                  {{/each}}
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-
+var path = require('path');
 const { response } = require('../app')
 const adminHelper= require('../model/adminHelpers')
 
@@ -141,6 +141,13 @@ adminHelper.editProduct(req.body).then((response)=>{
  }
   res.redirect("/admin/stocks")
 })
-}
+},
 
+ImageSupplier:(req,res)=>{
+  console.log(req.params.id);
+  console.log("call coming");
+  
+res.sendFile(path.resolve(`public/images/product-images/${req.params.id}.jpg`))
+
+}
 }

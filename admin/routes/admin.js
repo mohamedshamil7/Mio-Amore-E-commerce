@@ -23,7 +23,8 @@ const {
   addNewProduct,
   deleteProduct,
   editProduct,
-  EditProductData
+  EditProductData,
+  ImageSupplier
 } = require("../controller/admincontroller");
 /* GET home page. */
 router.get('/login',renderadminLogin);
@@ -47,7 +48,14 @@ router.post("/deleteCategory",deleteCategory)
 router.get("/add-product",addProductForm)
 
 router.post("/addProduct-submit",addNewProduct)
+
 router.post("/delete-Product",deleteProduct)
+
 router.post("/edit-Product",editProduct)
+
 router.post("/editProduct-submit",EditProductData)
+
+router.get("/ImageSupply/:id",ImageSupplier )
+
+
 module.exports = router;

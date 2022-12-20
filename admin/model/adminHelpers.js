@@ -96,6 +96,7 @@ module.exports={
     },
 
     addNewProduct:(Data)=>{
+        Data.inWishlist=false
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){

@@ -14,7 +14,7 @@ const MY_SECRET = process.env.MY_SECRET
         
 const createToken=(user)=>{
     
-   return jwt.sign({value:user},MY_SECRET,{expiresIn:"30s"})
+   return jwt.sign({value:user},MY_SECRET,{expiresIn:"30m"})
 
 
 }
@@ -81,9 +81,15 @@ else{
 
 
   renderHome:(req,res)=>{
-    let decode= tokenVerify(req)
-    console.log(decode);
-    res.render('userView/home',{user:decode.value.username,userpar:true});
+      let decode= tokenVerify(req)
+      console.log(decode);
+    userHelpers.getAllProducts().then((data)=>{
+        console.log("the then data is :",data);
+        res.render('userView/home',{data,user:decode.value.username,userpar:true});
+    }).catch((err)=>{
+        console.log(err);
+        console.log("didtn get my all Products");
+    })
  },
  redirectHome:(req,res)=>{
 
@@ -142,7 +148,7 @@ next()
         const token=createToken(user)
         res.cookie("token",token,{
             httpOnly:true,
-            maxAge:30000
+
         })
              res.status(201,)
 console.log(token);
@@ -161,6 +167,41 @@ next()
 userLogout:(req,res)=>{
     res.clearCookie("token")
     res.redirect("/user/login")
+},
+productPage:(req,res)=>{
+    let decode= tokenVerify(req)
+    console.log(req.params.id);
+    let prodId=req.params.id
+    userHelpers.viewProduct(prodId).then((response)=>{
+        let data =response
+        res.render("userView/productPage",{data,user:decode.value.username,userpar:true})
+
+    }).catch((err)=>{
+        console.log(err);
+    })
+}
+,
+imageRoute:(req,res)=>{
+    let decode= tokenVerify(req)
+    let id=req.params.id
+    console.log(id);
+
+},
+
+wishlistPage:(req,res)=>{
+    res.render('userView/wishlist',{userpar:true})
+},
+addToWishlist:(req,res)=>{
+    console.log(req.params.id);
+    let decode= tokenVerify(req)
+    userHelpers.addToWishlist(req.params.id,decode.value.insertedId).then((response=>{
+        console.log(response);
+         res.redirect(req.get('referer'))
+        // res.send("added to wishlist")
+        // res.render("userView/productPage",{data,user:decode.value.username,userpar:true})
+    })).catch((err)=>{
+        console.log(err);
+    })
 }
 
 
