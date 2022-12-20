@@ -13,6 +13,7 @@ var router = express.Router();
 
 
 const {
+  adminSession,
   renderadminLogin,
   adminLoginRoute,
   redirectAdminDash,
@@ -31,33 +32,33 @@ const {
   ImageSupplier
 } = require("../controller/admincontroller");
 /* GET home page. */
-router.get('/login',renderadminLogin);
+router.get('/',adminSession,renderadminLogin);
 
 router.post('/login-submit',adminLoginRoute,redirectAdminDash)
 
-router.get("/adminDash",renderadminDash)
+router.get("/adminDash",adminSession,renderadminDash)
 
-router.get("/allUsers",AllUsersPage)
+router.get("/allUsers",adminSession,AllUsersPage)
 
-router.post("/blockManager",userBlock)
+router.post("/blockManager",adminSession,userBlock)
 
-router.get("/stocks",stockPage)
+router.get("/stocks",adminSession,stockPage)
 
 router.get("/categories",categories_Page)
 
-router.post("/addCategory",addCategoryManager)
+router.post("/addCategory",adminSession,addCategoryManager)
 
-router.post("/deleteCategory",deleteCategory)
+router.post("/deleteCategory",adminSession,deleteCategory)
 
-router.get("/add-product",addProductForm)
+router.get("/add-product",adminSession,addProductForm)
 
-router.post("/addProduct-submit",addNewProduct)
+router.post("/addProduct-submit",adminSession,addNewProduct)
 
 router.post("/delete-Product",deleteProduct)
 
-router.post("/edit-Product",editProduct)
+router.post("/edit-Product",adminSession,editProduct)
 
-router.post("/editProduct-submit",EditProductData)
+router.post("/editProduct-submit",adminSession,EditProductData)
 
 router.get("/ImageSupply/:id",ImageSupplier )
 

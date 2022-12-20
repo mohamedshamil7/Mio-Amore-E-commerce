@@ -7,11 +7,13 @@ const hbs = require('express-handlebars');
 const fileUpload = require('express-fileupload')
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
+var session =require('express-session') 
 
 
 var app = express();
 app.use(fileUpload())
 var db=require('../dbconnections/dbConnection')
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +21,7 @@ app.set('view engine', 'hbs');
 
 app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views/'}))
 
+app.use(session({secret: "key",cookie:{maxAge:60000*5},resave:false,saveUninitialized:false }))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

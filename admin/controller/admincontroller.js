@@ -10,11 +10,29 @@ module.exports={
  renderadminLogin:(req,res)=>{
     res.render("adminView/adminlogin")
  },
+
+
+
+
+
  adminLoginRoute:(req,res,next)=>{
-    let password="123"
-    let username="sha"
-    {(password==req.body.password && username==req.body.username)? next() : res.render("adminView/adminlogin",{error:"invalid username or password"})}
+  
+  adminHelper.adminLogin(req.body).then((response)=>{
+    req.session.admin=req.body.adminname;
+
+    req.session.loggedIn=true
+    next()
+
+
+    }).catch(()=>{
+    res.render('adminView/adminlogin',{error:'invalid Admin Id or Password'})
+    })
  },
+ adminSession:(req,res,next)=>{
+  if(req.session.admin) next()
+  else res.render('adminView/adminLogin')
+}, 
+ 
 
  redirectAdminDash:(req,res)=>{
    res.redirect("/admin/adminDash")
@@ -32,11 +50,11 @@ module.exports={
  userBlock:(req,res)=>{
 
   console.log(req.body.id);
-  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+req.body.isBlocked);
+  console.log(">>"+req.body.isBlocked);
 
   adminHelper.userBlockManager(req.body.id,req.body.isBlocked).then((response)=>{
     console.log(response);
-   console.log("block wroked ///////////////////////////////////////////");
+   console.log("block wroked ////////////");
    res.redirect('/admin/allUsers')
   })
 
@@ -152,5 +170,15 @@ ImageSupplier:(req,res)=>{
   
 res.sendFile(path.resolve(`public/images/product-images/${req.params.id}.jpg`))
 
-}
+},
+
+adminLogout:(req,res)=>{
+  req.session.admin=null
+  req.session.loggedIn=false
+  console.log('admin logged Out');
+  res.render('adminView/adminLogin')
+},
+
+
+
 }

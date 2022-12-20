@@ -8,9 +8,28 @@ const { resolve } = require("path")
 const { ObjectId } = require('mongodb')
 const { reject, promiseAllSettled, explainStdin } = require('firebase-tools/lib/utils')
 const { response } = require('../app')
-
+var bcrypt=require('bcrypt')
+const Collections = require('../../dbconnections/Collections')
 
 module.exports={
+    adminLogin:(adminData)=>{
+        console.log(adminData);
+        return new Promise(async(resolve,reject)=>{
+            let admin= await db.get().collection(collection.ADMIN_COLLECTION).findOne({adminname:adminData.adminname})            
+             if(admin){
+                bcrypt.compare(adminData.password,admin.password).then((result)=>{
+                    if(result){
+
+                        resolve(result)
+                    }else{
+                        reject()
+                    }
+                })
+            }else{
+                reject()
+            }
+        })
+    },
     getAllUsers:()=>{
         return new Promise(async(resolve,reject)=>{
             let users= await db.get().collection(collection.USER_COLLECTION).find().toArray()
