@@ -20,6 +20,7 @@
                     <th scope="col">Category</th>
                     
                     <th scope="col">Manufacturing Date</th>
+                    <th>COD</th>
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
@@ -32,6 +33,13 @@
                     <td>{{this.Price}}</td>
                     <td>{{this.category}}</td>
                     <td>>{{this.ManufacturingDate}}</td>
+
+                    <td>
+                      {{#if this.COD}} Enabled
+                      {{else}} Disabled
+                      {{/if}}
+                    </td>
+
                     {{!-- <td>{{this.Description}}</td> --}}
                     <td>
                         <a href=""><form action="/admin/edit-Product" method="post">

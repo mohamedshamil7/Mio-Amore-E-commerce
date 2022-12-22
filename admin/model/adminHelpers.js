@@ -118,7 +118,7 @@ module.exports={
     },
 
     addNewProduct:(Data)=>{
-        Data.inWishlist=false
+
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){
@@ -161,6 +161,7 @@ module.exports={
                     Description:id.Description,
                     category:id.category,
                     ManufacturingDate:id.ManufacturingDate,
+                    COD:id.COD
 
 
                 }

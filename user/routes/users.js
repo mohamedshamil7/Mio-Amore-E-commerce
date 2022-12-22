@@ -51,7 +51,7 @@ router.get('/getImage/:id',imageRoute)
 
 router.get("/wishlistPage",wishlistPage)
 
-router.get("/addToCart/:id",addToWishlist)
+router.get("/addToWishlist/:id",addToWishlist)
 
 router.post('/phone-submit',findbynumber)
 
