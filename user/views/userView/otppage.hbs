@@ -1,0 +1,251 @@
+
+
+
+
+
+<div class="fullpage-loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <!-- Loader End -->
+
+    <!-- Header Start -->
+    <header class="">
+       
+
+        <div class="top-nav top-header ">
+            <div class="container-fluid-lg">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="navbar-top">
+                            <button class="navbar-toggler d-xl-none d-inline navbar-menu-button" type="button"
+                                data-bs-toggle="offcanvas" data-bs-target="#primaryMenu">
+                                <span class="navbar-toggler-icon">
+                                    <i class="fa-solid fa-bars"></i>
+                                </span>
+                            </button>
+                            <a href="/user/home" class="web-logo nav-logo">
+                                <img src="http://localhost:4000/images/logo.jpg" class="img-fluid blur-up lazyload" alt="">
+                            </a>
+
+                            <div class="header-nav-middle">
+                                <div class="main-nav navbar navbar-expand-xl navbar-light navbar-sticky">
+                                    <div class="offcanvas offcanvas-collapse order-xl-2" id="primaryMenu">
+                                        <div class="offcanvas-header navbar-shadow">
+                                            <h5>Menu</h5>
+                                            <button class="btn-close lead" type="button" data-bs-dismiss="offcanvas"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="offcanvas-body">
+                                            <ul class="navbar-nav">
+    
+                                                
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rightside-box">
+                                <div class="search-full">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i data-feather="search" class="font-light"></i>
+                                        </span>
+                                        <input type="text" class="form-control search-type" placeholder="Search here..">
+                                        <span class="input-group-text close-search">
+                                            <i data-feather="x" class="font-light"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <ul class="right-side-menu">
+                                    <li class="right-side">
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <div class="search-box">
+                                                    <i data-feather="search"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                   
+                                    
+                                    <li class="right-side onhover-dropdown">
+                                                                                    
+                                        <div class="delivery-login-box">
+                                            <div class="delivery-icon">
+                                                <button class="btn btn-secondary"><i data-feather="user" ></i>
+                                                {{#if user}}
+                                                 {{user}}
+                                                 {{/if}}
+                                                 </button>
+                                                
+                                            </div>
+                                            <div class="delivery-detail">
+                                                <h6>Hello</h6>
+                                                <h5>My Account</h5>
+                                            </div>
+                                        </div>
+
+                                        <div class="onhover-div onhover-div-login">
+
+                                            <ul class="user-box-name">
+                                                <li class="product-box-contain">
+                                                    <i></i>
+                                                    {{#if user}}
+                                                    <a href="http://localhost:8001/user/logout">Log out</a>
+                                                    {{else}}
+                                                    <a href="/user/login">Log in</a>
+                                                <li class="product-box-contain">
+                                                    <a href="/user/signup">Register</a>
+                                                </li>
+                                                    {{/if}}
+                                                </li>
+
+
+                                                {{!-- <li class="product-box-contain">
+                                                    <a href="forgot.html">Forgot Password</a>
+                                                </li> --}}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header End -->
+        <!-- mobile fix menu start -->
+    <div class="mobile-menu d-md-none d-block mobile-cart">
+        <ul>
+            <li class="active">
+                <a href="index.html">
+                    <i class="iconly-Home icli"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            <li class="mobile-category">
+                <a href="javascript:void(0)">
+                    <i class="iconly-Category icli js-link"></i>
+                    <span>Category</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="search.html" class="search-box">
+                    <i class="iconly-Search icli"></i>
+                    <span>Search</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="wishlist.html" class="notifi-wishlist">
+                    <i class="iconly-Heart icli"></i>
+                    <span>My Wish</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="cart.html">
+                    <i class="iconly-Bag-2 icli fly-cate"></i>
+                    <span>Cart</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- mobile fix menu end -->
+        
+        
+        
+        
+           <!-- log in section start -->
+    <section class="log-in-section background-image-2 section-b-space">
+        <div class="container-fluid-lg w-100">
+            <div class="row">
+                <div class="col-xxl-6 col-xl-5 col-lg-6 d-lg-block d-none ms-auto">
+                    <div class="image-contain">
+                        <img src="http://localhost:4000/assets/images/inner-page/log-in.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-xl-5 col-lg-6 col-sm-8 mx-auto">
+                    <div class="log-in-box">
+                        <div class="log-in-title">
+                            <h3>Welcome To Mio Amore</h3>
+                            <h4>Log In Your Account</h4>
+                        </div>
+
+                        <div class="input-box">
+                            <form class="row g-4"  action="/user/phone-submit" method="post">
+                               <div class="col-12">
+                                    <span style="color: red;" >{{error}}</span>
+                                    <div class="form-floating theme-form-floating">
+                                        <input type="phone" class="form-control"  name="phone" id="s-phone" oninput="validatePhone()"
+                                            placeholder="Phone Number">
+                                        <label for="phone number"> Enter Registered Mobile Number</label>
+                                         <span style="color: red;" id="phone-error"></span>
+
+                                    </div>
+                                  {{!-- <div class="form-floating theme-form-floating">
+                                        <input type="phone" class="form-control"  name="phone" id="otp" oninput="validatePhone()"
+                                            placeholder="OTP">
+                                        <label for="phone number">Enter OTP</label>
+                                         <span style="color: red;" id="otp-error"></span>
+
+                                    </div> --}}
+                                    <div id="recaptcha-container"></div>
+                                   <button class="btn btn-animation w-100 justify-content-center" type="submit"  id="sign-in-button" >submit number</button>
+
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-animation w-100 justify-content-center" id="sign-in" type="submit">Enter</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="other-log-in">
+                            <h6>or</h6>
+                        </div>
+
+                        <div class="log-in-button">
+                            <ul>
+                                <li>
+                                    <a href="user/otplogin" class="btn google-button w-100">
+                                        <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
+                                            alt=""> Log In with OTP?
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="https://www.google.com/" class="btn google-button w-100">
+                                        <img src="../assets/images/inner-page/google.png" class="blur-up lazyload"
+                                            alt=""> Log In with Google
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+
+                        <div class="other-log-in">
+                            <h6></h6>
+                        </div>
+
+                        <div class="sign-up-box">
+                            <h4>Don't have an account?</h4>
+                            <a href="/user/signup">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- log in section end -->
+<script src="http://localhost:4000/javascripts/validation.js"></script>
+<script src="http://localhost:4000/javascripts/validation.js"></script>
+<script src="http://localhost:4000/javascripts/otp-firebase.js"></script>

@@ -1,4 +1,4 @@
-User login
+
 
 
 
@@ -185,7 +185,7 @@ User login
                         <div class="input-box">
                             <form class="row g-4" action="http://localhost:8001/user/login-submit" method="post">
                                 <div class="col-12">
-                                    <span style="color: red;">{{error}}</span>
+                                    <span style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form">
                                         <input type="email" class="form-control"  name="email" id="s-email" oninput="validateEmail()" placeholder="Email Address">
                                         <label for="email">Email Address</label>
@@ -229,17 +229,18 @@ User login
                         <div class="log-in-button">
                             <ul>
                                 <li>
+                                    <a href="/user/otplogin" class="btn google-button w-100">
+                                        <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
+                                            alt=""> Log In with OTP?
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="https://www.google.com/" class="btn google-button w-100">
                                         <img src="../assets/images/inner-page/google.png" class="blur-up lazyload"
                                             alt=""> Log In with Google
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="https://www.facebook.com/" class="btn google-button w-100">
-                                        <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
-                                            alt=""> Log In with Facebook
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </div>
 

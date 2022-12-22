@@ -110,11 +110,11 @@ module.exports={
         console.log("enttered");
         return new Promise(async(resolve,reject)=>{
 
- let product= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)}).then((response)=>{
-    resolve(response)
- }).catch((error)=>{
-    reject(error)
- })
+            let product= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)}).then((response)=>{
+             resolve(response)
+            }).catch((error)=>{
+                 reject(error)
+                })
             // try{
             //     let product= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)})
             //     if(product){
@@ -236,26 +236,32 @@ module.exports={
                 else{
                     reject()
                 }
-                
-                // .then((response)=>{
-                    
-                //     console.log(response);
-                //     resolve(response)
-                // })
-                
-                
-                // .catch((error)=>{
-                //     reject(error)
-                // })
-              
-                
-
+    
                }
-else{
-   resolve()
-}
+            else{
+                 resolve()
+            }
         })
-    }
+    },
+
+inWishlist:(userId,prodId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)}).toArray()
+        if(userwl){
+            resolve(userwl)
+        }else{
+            reject()
+        }
+       
+    })
+},
+findbynumber:(userphone)=>{
+    return new Promise(async(resolve,reject)=>{
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({phone:userphone})
+        if(user) resolve(user)
+        else reject()
+    })
+},
 
    
 }
