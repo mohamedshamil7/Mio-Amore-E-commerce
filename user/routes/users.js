@@ -20,8 +20,11 @@ const {
   wishlistPage,
   addToWishlist,
   otppage,
-  otpcheck,
-  findbynumber
+  // otpcheck,
+  addToCart,
+  getCart,
+  findbynumber,
+  removeCart
 
 } = require("../controller/usercontroller");
 
@@ -54,6 +57,11 @@ router.get("/wishlistPage",wishlistPage)
 router.get("/addToWishlist/:id",addToWishlist)
 
 router.post('/phone-submit',findbynumber)
+
+router.get('/addToCart/:id',addToCart)
+
+router.get('/usercart',getCart)
+router.get('/removeCart/:id',removeCart)
 
 module.exports = router;
 

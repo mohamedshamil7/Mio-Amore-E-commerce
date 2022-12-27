@@ -14,6 +14,7 @@ const { userBlockCheck } = require("../models/userHelpers/userHelpers");
 const { initializeApp } =require ("firebase/app");
 const  { getAnalytics } =require ("firebase/analytics");
 const  { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword ,RecaptchaVerifier,signInWithPhoneNumber} = require ("firebase/auth");
+const { resolve } = require("path");
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -48,6 +49,24 @@ const tokenVerify = (request) => {
   const decode = jwt.verify(request.cookies.token, MY_SECRET);
   return decode;
 };
+
+
+ const cartProd= async (req)=>{
+  
+  const decode= tokenVerify(req)
+  return await userHelpers.getcart(decode.value.insertedId).then((cart)=>{
+    return cart
+  }).catch((error)=>{
+    return error
+  })
+}
+
+
+
+
+
+
+
 module.exports = {
   homeJwtCheck: (req, res, next) => {
     const token = req.cookies.token;
@@ -104,16 +123,20 @@ module.exports = {
     }
   },
 
-  renderHome: (req, res) => {
+  renderHome: async (req, res) => {
     let decode = tokenVerify(req);
     console.log(decode);
+    let cart =await cartProd(req)
+    console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     userHelpers.getAllProducts().then((data) => {
-        // let wishlist=getAllWishist
+      
         console.log("the then data is :", data);
         res.render("userView/home", {
           data,
           user: decode.value.username,
           userpar: true,
+          cart
         });
       })
       .catch((err) => {
@@ -143,13 +166,13 @@ module.exports = {
     } else {
       console.log(req.body);
       let userData = req.body;
-        await createUserWithEmailAndPassword(auth,req.body.email,req.body.password).then((userCredential)=>{
+
         userHelpers.doSignup(userData).then((response) => {
             let user = response;
             console.log( user,".."  );
             console.log( user.isBlocked);
             const token = createToken(user);
-            //  const token=jwt.sign({id:user.insertedId},MY_SECRET,{expiresIn:"15m"})
+
             res.cookie("token", token, {
               httpOnly: true,
             });
@@ -158,7 +181,7 @@ module.exports = {
   
             next();
           }).catch((user) => {
-            console.log(user + "/////// catch is working");
+            console.log(user + "/");
   
             res.render("userView/signup", {
               error: " Username or  email already exsits!!!",
@@ -169,12 +192,8 @@ module.exports = {
             console.log(err);
           });
 
-          const user = userCredential.user;
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        res.render("userView/login",{errorMessage:"invalid username or password"})
-      });
+
+      
       
         
     }
@@ -182,7 +201,6 @@ module.exports = {
   userLoginroute: (req, res, next) => {
     let userData = req.body;
     console.log("?????????");
-    signInWithEmailAndPassword(auth,req.body.email,req.body.password).then((userCredential)=>{
         userHelpers .doLogin(userData).then((response) => {
             console.log(response);
             let user = response;
@@ -211,7 +229,7 @@ module.exports = {
           });
 
 
-    })
+    
 
 
    
@@ -232,13 +250,18 @@ module.exports = {
   },
   productPage: (req, res) => {
     let decode = tokenVerify(req);
+    let user= decode.value.insertedId
     console.log(req.params.id);
     let prodId = req.params.id;
-    userHelpers
+    userHelpers.inWishlist(user,prodId).then((response)=>{
+      let wishlist=response
+      userHelpers
       .viewProduct(prodId)
       .then((response) => {
+        
         let data = response;
         res.render("userView/productPage", {
+          wishlist,
           data,
           user: decode.value.username,
           userpar: true,
@@ -247,6 +270,8 @@ module.exports = {
       .catch((err) => {
         console.log(err);
       });
+    })
+    
   },
   imageRoute: (req, res) => {
     let decode = tokenVerify(req);
@@ -316,10 +341,38 @@ module.exports = {
     })
   },
 
+  addToCart:(req,res)=>{
+    console.log(req.params.id);
+    let decode = tokenVerify(req);
+    userHelpers
+    .addToCart( decode.value.insertedId,req.params.id).then(()=>{
+      res.redirect(req.get("referer"));
+    }).catch((error)=>{
+      console.log(error);
+    })
+
+  },
   
+  getCart:(req,res)=>{
+    let decode= tokenVerify(req)
+    userHelpers.getcart(decode.value.insertedId).then((products)=>{
+
+      res.render("userView/cart",{products,userpar:true})
+    })
+  },
  
+  removeCart:(req,res)=>{
+    let decode= tokenVerify(req)
+    userHelpers.removeCart(decode.value.insertedId,req.params.id).then((response)=>{
+      console.log(response);
+      res.redirect(req.get("referer"));
+    }).catch((error)=>{
+      console.log("failed to dlete from cart");
+    })
+  }
 
 
+  
 
 
 

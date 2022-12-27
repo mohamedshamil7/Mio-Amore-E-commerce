@@ -5,6 +5,7 @@ module.exports={
     ADMIN_COLLECTION:'admin',
     CATTEGORY_COLLECTION :'categories',
     PRODUCT_COLLECTIONS: 'products',
-    WISHLIST_COLLECTION: 'wishlist'
+    WISHLIST_COLLECTION: 'wishlist',
+    CART_COLLECTION:'cart'
 
 }

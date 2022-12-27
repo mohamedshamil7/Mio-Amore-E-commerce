@@ -219,21 +219,23 @@
                                     </div>
                                     
 
-                                    <button onclick="location.href = 'cart.html';"
-                                        class="btn btn-md bg-dark cart-button text-white w-100">Add To Cart</button>
+                                   <a href="/user/addToCart/{{data._id}}">  <button 
+                                        class="btn btn-md bg-dark cart-button text-white w-100">Add To Cart</button></a>
                                 </div>
 
                                 <div class="buy-box">
-                                    {{#if data.inWishlist }}
-                                    <a href=" /user/addToWishlist/{{data._id}}">
-                                        <i data-feather="heart"></i>
-                                        <span>Add To Wishlist</span>
-                                    </a>
-                                    {{else}}
+                                    {{#if wishlist }}
+                                  
                                     <a href="/user/addToWishlist/{{data._id}}">
                                         <i data-feather="heart"></i>
                                         <span style="color: red;">Remove from Wishlist</span>
                                     </a>
+                                    {{else}}
+                                      <a href=" /user/addToWishlist/{{data._id}}">
+                                        <i data-feather="heart"></i>
+                                        <span>Add To Wishlist</span>
+                                    </a>
+                                    
                                     {{/if}}
                                     <a href="compare.html">
                                         <i data-feather="shuffle"></i>

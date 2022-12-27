@@ -7,7 +7,7 @@ var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")
 const { resolve } = require("path")
 const jwt=require("jsonwebtoken");
-const { reject } = require("firebase-tools/lib/utils");
+const { reject, promiseAllSettled } = require("firebase-tools/lib/utils");
 const { ObjectId } = require("mongodb");
 const { response } = require("../../app");
 require("dotenv").config();
@@ -46,7 +46,7 @@ module.exports={
 
       doLogin:(userData)=>{
         return new Promise(async(resolve,reject)=>{
-            let user= await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email})
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email})
             if(user){
                 await bcrypt.compare(userData.password,user.password).then((result)=>{
     
@@ -246,9 +246,29 @@ module.exports={
 
 inWishlist:(userId,prodId)=>{
     return new Promise(async(resolve,reject)=>{
-        let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)}).toArray()
+        let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
         if(userwl){
-            resolve(userwl)
+            let product= await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
+                {
+                    $match:{
+                        user:ObjectId(userId)
+                    }
+                    
+                },
+                {
+                    $unwind:"$wishlist"
+                },
+                {
+                    $match:{
+                       wishlist: ObjectId(prodId)
+                    }
+                }
+
+            ]).toArray()
+            if(product){
+                resolve(product)
+                // console.log(product);
+            }
         }else{
             reject()
         }
@@ -262,6 +282,96 @@ findbynumber:(userphone)=>{
         else reject()
     })
 },
+
+addToCart:(userId,prodId)=>{
+    const prodObj = {
+        item: ObjectId(prodId),
+        quantity: 1,
+      };
+    return new Promise(async(resolve,reject)=>{
+        let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)}) 
+        console.log(userCart);
+        if(userCart){
+            // const proExist = userCart.books.findIndex((book) => book.item == proId);
+           const  cart= userCart.product.findIndex(product=>{
+                return product.item==prodId
+            })
+            console.log(cart);
+
+            if(cart !==-1){
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId),'product.item':ObjectId(prodId)},{
+                    $inc:{'product.$.quantity':1}
+                }).then(()=>{
+                    resolve()
+                })
+            }
+            else{
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId)},{
+                    $push:{
+                        product:prodObj
+                    }
+                }).then(()=>{
+                    resolve()
+                })
+            }
+        }else{
+            const newcart={
+                user:ObjectId(userId),
+                product:[prodObj]
+            }
+            db.get().collection(collection.CART_COLLECTION).insertOne(newcart).then(()=>{
+                resolve()
+            }).catch((error)=>{
+                reject(error)
+            })
+        }
+    })
+},
+
+
+getcart:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+      let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        if(cart){
+                const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match:{
+                        user:ObjectId(userId)
+                    }
+                },
+                {
+                    $unwind:'$product'
+                },{
+                    $project:{
+                        item:'$product.item',
+                        quantity:'$product.quantity'
+                    }
+                },
+                {
+                    $lookup:{
+                        from:collection.PRODUCT_COLLECTIONS,
+                        localField:'item',
+                        foreignField:'_id',
+                        as:'cart_product'
+                    }
+                }
+
+            ]).toArray()
+            console.log(cartItems);
+            resolve(cartItems)
+        }
+    })
+},
+
+removeCart:(userId,prodId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let userCart= db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        if(userCart){
+            db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId),})
+        }
+    })
+}
+
 
    
 }
