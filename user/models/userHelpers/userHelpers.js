@@ -333,6 +333,7 @@ getcart:(userId)=>{
     return new Promise(async(resolve,reject)=>{
       let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
         if(cart){
+           
                 const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
                     $match:{
@@ -370,8 +371,18 @@ removeCart:(userId,prodId)=>{
             db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId),})
         }
     })
+},
+
+getCartCount:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        if(cart){
+            let count=0
+            count=cart.product.length
+            console.log(count);
+            resolve(count)
+        }
+    })
 }
-
-
-   
+ 
 }

@@ -6,15 +6,23 @@ const hbs = require('express-handlebars');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
+var cors= require('cors')
 
 
 var app = express();
 var db=require('../dbconnections/dbConnection')
+// var allowCrossDomain = function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', "*");
+
+
+//   next();
+// }
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
+app.use(cors({Credentials:true,origin:'http://localhost:8001'}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

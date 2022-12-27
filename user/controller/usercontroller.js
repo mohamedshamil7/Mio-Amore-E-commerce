@@ -59,6 +59,15 @@ const tokenVerify = (request) => {
   }).catch((error)=>{
     return error
   })
+};
+
+const CartCount= async (req)=>{
+  let decode= tokenVerify(req)
+  return await userHelpers.getCartCount(decode.value.insertedId).then((count)=>{
+    return count
+  }).catch((error)=>{
+    return error
+  })
 }
 
 
@@ -111,7 +120,7 @@ module.exports = {
             .catch(() => {
               res.clearCookie("token");
               res.render("userView/login", {
-                error: "This account is blocked",
+                errorMessage: "This account is blocked",
               });
             });
         } else {
@@ -127,6 +136,7 @@ module.exports = {
     let decode = tokenVerify(req);
     console.log(decode);
     let cart =await cartProd(req)
+    let count= await CartCount(req)
     console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     userHelpers.getAllProducts().then((data) => {
@@ -136,7 +146,8 @@ module.exports = {
           data,
           user: decode.value.username,
           userpar: true,
-          cart
+          cart,
+          count
         });
       })
       .catch((err) => {
@@ -342,11 +353,12 @@ module.exports = {
   },
 
   addToCart:(req,res)=>{
+    console.log("api called");
     console.log(req.params.id);
     let decode = tokenVerify(req);
     userHelpers
     .addToCart( decode.value.insertedId,req.params.id).then(()=>{
-      res.redirect(req.get("referer"));
+      // res.redirect(req.get("referer"));
     }).catch((error)=>{
       console.log(error);
     })
@@ -370,11 +382,6 @@ module.exports = {
       console.log("failed to dlete from cart");
     })
   }
-
-
-  
-
-
 
 
 };
