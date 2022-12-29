@@ -46,6 +46,7 @@ const createToken = (user) => {
   return jwt.sign({ value: user }, MY_SECRET, { expiresIn: "30m" });
 };
 const tokenVerify = (request) => {
+  console.log(request.cookies.token);
   const decode = jwt.verify(request.cookies.token, MY_SECRET);
   return decode;
 };
@@ -191,16 +192,18 @@ module.exports = {
 
         userHelpers.doSignup(userData).then((response) => {
             let user = response;
+
             console.log( user,".."  );
-            console.log( user.isBlocked);
+            // console.log( user.isBlocked);
             const token = createToken(user);
 
             res.cookie("token", token, {
-              httpOnly: true,
+              httpOnly: true
+              
             });
             res.status(201);
             console.log(token);
-  
+  console.log(res.cookie);
             next();
           }).catch((user) => {
             console.log(user + "/");

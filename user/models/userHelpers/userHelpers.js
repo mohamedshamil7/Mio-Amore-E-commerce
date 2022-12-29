@@ -37,6 +37,13 @@ module.exports={
           console.log("this result>>>>>>>>>>>",result);
 
           if (result.insertedId) {
+            var users={
+                username:userData.username,
+                insertedId:result.insertedId
+
+            }
+            console.log("resolveeddddd");
+          resolve(users)
           resolve(result)
         }
           else {
