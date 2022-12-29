@@ -10,6 +10,8 @@ const jwt=require("jsonwebtoken");
 const { reject, promiseAllSettled } = require("firebase-tools/lib/utils");
 const { ObjectId } = require("mongodb");
 const { response } = require("../../app");
+const { async } = require("@firebase/util");
+const { reload } = require("firebase/auth");
 require("dotenv").config();
 
 var MY_SECRET = process.env.MY_SECRET
@@ -332,8 +334,13 @@ addToCart:(userId,prodId)=>{
 getcart:(userId)=>{
     return new Promise(async(resolve,reject)=>{
       let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
-        if(cart){
-           
+    //   console.log("check cart erere",cart);
+      if(cart){
+
+      }
+      
+    
+           console.log("workingggg");
                 const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
                     $match:{
@@ -355,13 +362,28 @@ getcart:(userId)=>{
                         foreignField:'_id',
                         as:'cart_product'
                     }
+                },
+                {
+                    $project:{
+                        item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
+                    }
                 }
 
             ]).toArray()
-            console.log(cartItems);
-            resolve(cartItems)
-        }
+            // console.log(cartItems);
+            if(cartItems.length != 0){
+                resolve(cartItems)
+            }else{
+                reject({err:'no cart'})
+            }
+        // }
+ 
     })
+    // .catch(()=>{
+    //     console.log("2nd reject");
+
+    //     reject()
+    // })
 },
 
 removeCart:(userId,prodId)=>{
@@ -383,6 +405,146 @@ getCartCount:(userId)=>{
             resolve(count)
         }
     })
-}
+},
+changeProductQuantity:(data)=>{
+    let quantity=parseInt(data.quantity)
+    let count=parseInt(data.count)
+    console.log(data);
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data.cart);
+    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>||",data.product);
+    return new Promise(async(resolve,reject)=>{
+        if(count== -1 && quantity== 1 ){
+            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                $pull:{
+                    product:{item:ObjectId(data.product)}
+                }
+            }).then(()=>{
+                resolve({prodDelete:true})
+            })
+        }else{
+            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                $inc:{'product.$.quantity':count}  
+            }).then(()=>{
+                resolve(true)
+            })
+        }
+       
+
+    })
+
  
+
+},
+getTotalAmount:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+        const total= await db.get().collection(collection.CART_COLLECTION).aggregate([
+            {
+                $match:{
+                    user:ObjectId(userId)
+                }
+            },
+            {
+                $unwind:'$product'
+            },{
+                $project:{
+                    item:'$product.item',
+                    quantity:'$product.quantity'
+                }
+            },
+            {
+                $lookup:{
+                    from:collection.PRODUCT_COLLECTIONS,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'cart_product'
+                }
+            },
+            {
+                $project:{
+                    item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
+                }
+            },
+            {
+                $group:{
+                    _id:null,
+                    total:{$sum:{$multiply:[{$toInt:'$quantity'},{$toInt:'$cart_product.Price'}]}}
+                }
+            }
+    
+        ]).toArray()
+        // console.log(total);
+        resolve(total[0]?.total)
+    })
+    
+},
+
+addAddress:(userId,Data)=>{
+    Data.id=ObjectId()
+    return new Promise(async(resolve,reject)=>{
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId),Address:{$exists:true}})
+        if(user){
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+                $push:{
+                    Address:Data
+                }
+            }).then((response)=>{
+                resolve(response)
+            }).catch((err)=>{
+                reject(err)
+            })
+            // console.log(user,"is herere");
+        }else{
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+                $push:{
+                    Address:Data
+                }
+            }).then((response)=>{
+                resolve(response)
+            }).catch((err)=>{
+                reject(err)
+            })
+        }
+
+    })
+},
+getAddress:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId),Address:{$exists:true}})
+        // resolve(user)
+        if(user){
+            let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
+                {
+                    $match:{
+                        _id:ObjectId(userId)
+                    }
+                },
+                {
+                    $project:{
+                        _id:0,
+                        Address:1
+                    }
+                },
+                {
+                    $unwind:"$Address"
+                },
+                // {
+                //     $project:{
+                //         _id:0,
+                //         "Address.fullName":1
+                //     }
+                // },
+            ]).toArray()
+            resolve(address)
+        }
+    })
+}
+
+
+
+
+
+
+
+
+
 }

@@ -7,30 +7,31 @@
                         <div class="table-responsive-xl">
                             <table class="table">
                                 <tbody>
+                                    {{#if products}}
                                     {{#each products}}
-                                    {{#each this.cart_product}}
+                                    {{!-- {{#each this.cart_product}} --}}
                                     <tr class="product-box-contain">
                                         <td class="product-detail">
                                             <div class="product border-0">
                                                 <a href="product-left-thumbnail.html" class="product-image">
-                                                    <img src="http://localhost:8001/admin/ImageSupply/{{this._id}}"
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{this.cart_product._id}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </a>
                                                 <div class="product-detail">
                                                     <ul>
                                                         <li class="name">
-                                                            <a href="product-left-thumbnail.html">{{this.ProductName}}</a>
+                                                            <a href="product-left-thumbnail.html">{{this.cart_product.ProductName}}</a>
                                                         </li>
 
                                                         <li class="text-content"><span class="text-title">Sold
-                                                                By:</span> {{this.Company}}</li>
+                                                                By:</span> {{this.cart_product.Company}}</li>
                                                           
                                                         {{!-- <li class="text-content"><span
                                                                 class="text-title">Quantity</span> - 500 g</li> --}}
 
                                                         <li>
                                                             <h5 class="text-content d-inline-block">Price :</h5>
-                                                            <span>{{this.Price}}</span>
+                                                            <span>{{this.cart_product.Price}}</span>
                                                             {{!-- <span class="text-content">$45.68</span> --}}
                                                         </li>
                                                           {{!-- {{/each}} --}}
@@ -59,7 +60,7 @@
                                                         </li>
 
                                                         <li>
-                                                            <h5>Total: {{this.Price}}</h5>
+                                                            <h5>Total: {{this.cart_product.Price}}</h5>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -69,10 +70,10 @@
 
                                         <td class="price">
                                             <h4 class="table-title text-content">Price</h4>
-                                            <h5>{{this.Price}} <del class="text-content"></del></h5>
+                                            <h5>{{this.cart_product.Price}} <del class="text-content"></del></h5>
                                             {{!-- <h6 class="theme-color">You Save : $20.68</h6> --}}
                                         </td>
-                                          {{/each}}
+                                          {{!-- {{/each}} --}}
 
                                         <td class="quantity">
                                             <h4 class="table-title text-content">Qty</h4>
@@ -80,13 +81,13 @@
                                                 <div class="cart_qty">
                                                     <div class="input-group">
                                                         <button type="button" class="btn qty-left-minus"
-                                                            data-type="minus" data-field="">
+                                                            data-type="minus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',-1,{{this.quantity}})">
                                                             <i class="fa fa-minus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                         <input class="form-control input-number qty-input" type="text"
-                                                            name="quantity" value={{this.quantity}}>
+                                                            name="quantity" id="{{this.cart_product._id}}" value={{this.quantity}}>
                                                         <button type="button" class="btn qty-right-plus"
-                                                            data-type="plus" data-field="">
+                                                            data-type="plus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',1,{{this.quantity}})">
                                                             <i class="fa fa-plus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -98,18 +99,19 @@
                                                 <h4 class="table-title text-content">Total</h4>
                                                 <h5>$35.10</h5>
                                             </td> --}}
-                                                {{#each this.cart_product}}
+                                               
 
                                         <td class="save-remove">
                                             <h4 class="table-title text-content">Action</h4>
                                             {{!-- <a class="save notifi-wishlist" href="javascript:void(0)">Save for later</a> --}}
-                                            <a class="remove " onclick="return confirm(`Are you sure want to delete {{this.ProductName}}  from your cart ?` )" href="/user/removeCart/{{this._id}}">Remove</a>
+                                            <a class="remove " onclick="return confirm(`Are you sure want to delete {{this.cart_product.ProductName}}  from your cart ?` )" href="/user/removeCart/{{this._id}}">Remove</a>
                                         </td>
                                     </tr>
-                                    {{/each}}
+
                                    
 
                                    {{/each}}
+                                   {{/if}}
                                 </tbody>
                             </table>
                         </div>
@@ -149,17 +151,17 @@
                             </ul>
                         </div> --}}
 
-                        {{!-- <ul class="summery-total">
+                        <ul class="summery-total">
                             <li class="list-total border-top-0">
-                                <h4>Total (USD)</h4>
-                                <h4 class="price theme-color">$132.58</h4>
+                                <h4>Total (INR)</h4>
+                                <h4 class="price theme-color">{{total}}</h4>
                             </li>
-                        </ul> --}}
+                        </ul>
 
-                        {{!-- <div class="button-group cart-button">
+                        <div class="button-group cart-button">
                             <ul>
                                 <li>
-                                    <button onclick="location.href = 'checkout.html';"
+                                    <button onclick="location.href = '/user/checkout';"
                                         class="btn btn-animation proceed-btn fw-bold">Process To Checkout</button>
                                 </li>
 
@@ -169,7 +171,7 @@
                                         <i class="fa-solid fa-arrow-left-long"></i>Return To Shopping</button>
                                 </li>
                             </ul>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>

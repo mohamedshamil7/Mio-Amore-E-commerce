@@ -24,7 +24,10 @@ const {
   addToCart,
   getCart,
   findbynumber,
-  removeCart
+  removeCart,
+  changeProductQuantity,
+  checkoutPage,
+  addAddress
 
 } = require("../controller/usercontroller");
 
@@ -52,7 +55,7 @@ router.get("/product/:id",autherization,productPage)
 
 router.get('/getImage/:id',imageRoute)
 
-router.get("/wishlistPage",wishlistPage)
+router.get("/wishlistPage",autherization,wishlistPage)
 
 router.get("/addToWishlist/:id",addToWishlist)
 
@@ -60,8 +63,15 @@ router.post('/phone-submit',findbynumber)
 
 router.get('/addToCart/:id',addToCart)
 
-router.get('/usercart',getCart)
+router.get('/usercart',autherization,getCart)
+
 router.get('/removeCart/:id',removeCart)
+
+router.post('/changeProductQuantity',changeProductQuantity)
+
+router.get('/checkout',autherization,checkoutPage)
+
+router.post('/addAddress',addAddress)
 
 module.exports = router;
 

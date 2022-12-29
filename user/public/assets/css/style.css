@@ -1391,24 +1391,27 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    border-radius: 0
+    border-radius: 0; 
 }
 
 .counter .qty-left-minus i,
 .counter .qty-right-plus i {
     font-size: 12px;
-    margin-top: 3px
+
+
 }
 
 .counter .qty-left-minus:hover,
 .counter .qty-right-plus:hover {
-    color: #010200
+    color: #010200;
+
 }
 
 .counter .qty-left-minus {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    border-right: 0
+    border-right: 0;
+
 }
 
 [dir="rtl"] .counter .qty-left-minus {
@@ -1417,13 +1420,15 @@
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     border-right: 1px solid #ececec;
-    border-left: 0
+    border-left: 0;
+
 }
 
 .counter .qty-right-plus {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    border-left: 0
+    border-left: 0;
+
 }
 
 [dir="rtl"] .counter .qty-right-plus {
@@ -1446,11 +1451,13 @@
     font-size: 14px;
     font-weight: 500;
     background-color: rgba(0, 0, 0, 0.06);
-    border-radius: 0
+    border-radius: 0;
+
 }
 
 [dir="rtl"] .counter input {
-    text-align: center
+    text-align: center;
+
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -18905,7 +18912,9 @@ header .offcanvas-backdrop {
 
     .product-box-4 .product-detail .price-qty .counter-number .counter .qty-left-minus,
     .product-box-4 .product-detail .price-qty .counter-number .counter .qty-right-plus {
-        width: 85px
+        width: 85px;
+        
+
     }
 }
 

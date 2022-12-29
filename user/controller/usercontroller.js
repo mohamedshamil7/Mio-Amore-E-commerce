@@ -54,9 +54,12 @@ const tokenVerify = (request) => {
  const cartProd= async (req)=>{
   
   const decode= tokenVerify(req)
+
   return await userHelpers.getcart(decode.value.insertedId).then((cart)=>{
+    console.log("new cart:>>>",cart);
     return cart
   }).catch((error)=>{
+    console.log("4th reject",error.err);
     return error
   })
 };
@@ -64,13 +67,19 @@ const tokenVerify = (request) => {
 const CartCount= async (req)=>{
   let decode= tokenVerify(req)
   return await userHelpers.getCartCount(decode.value.insertedId).then((count)=>{
+    console.log("count,,,,,,",count);
     return count
   }).catch((error)=>{
     return error
   })
 }
 
-
+const TotalAmount= async (req)=>{
+  let decode= tokenVerify(req)
+ return userHelpers.getTotalAmount(decode.value.insertedId).then((total)=>{
+  return total
+ })
+}
 
 
 
@@ -135,10 +144,11 @@ module.exports = {
   renderHome: async (req, res) => {
     let decode = tokenVerify(req);
     console.log(decode);
+    let total= await TotalAmount(req)
     let cart =await cartProd(req)
     let count= await CartCount(req)
-    console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-    console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
+    // console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     userHelpers.getAllProducts().then((data) => {
       
         console.log("the then data is :", data);
@@ -147,7 +157,8 @@ module.exports = {
           user: decode.value.username,
           userpar: true,
           cart,
-          count
+           count,
+           total
         });
       })
       .catch((err) => {
@@ -225,19 +236,11 @@ module.exports = {
             next();
           }).catch((err) => {
             res.render("userView/login", {
-              error: "Incorrect emailId or Password",
+              errorMessage: "Incorrect emailId or Password",
             });
             console.log("error ducring login");
             console.log(err);
-          }).catch(() => {
-            //   const errorCode = error.code;
-            //   const errorMessage = error.message;
-              res.render("userView/signup", {
-                  errorMessage:"invalid username or password"
-                })
-            // console.log(errorCode);
-            // console.log(errorMessage);
-          });
+          })
 
 
     
@@ -259,8 +262,11 @@ module.exports = {
     res.clearCookie("token");
     res.redirect("/user/login");
   },
-  productPage: (req, res) => {
+  productPage: async(req, res) => {
     let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
     let user= decode.value.insertedId
     console.log(req.params.id);
     let prodId = req.params.id;
@@ -276,6 +282,9 @@ module.exports = {
           data,
           user: decode.value.username,
           userpar: true,
+          cart,
+          count,
+          total
         });
       })
       .catch((err) => {
@@ -290,15 +299,18 @@ module.exports = {
     console.log(id);
   },
 
-  wishlistPage: (req, res) => {
+  wishlistPage:async (req, res) => {
     let decode = tokenVerify(req);
-
+    let cart =await cartProd(req)
+    let count= await CartCount(req)
     userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
       let data = response;
       res.render("userView/wishlist", {
         data,
         user: decode.value.username,
         userpar: true,
+        cart,
+        count
       });
     });
   },
@@ -358,18 +370,20 @@ module.exports = {
     let decode = tokenVerify(req);
     userHelpers
     .addToCart( decode.value.insertedId,req.params.id).then(()=>{
-      // res.redirect(req.get("referer"));
+      res.json({status:true})
     }).catch((error)=>{
       console.log(error);
     })
 
   },
   
-  getCart:(req,res)=>{
+  getCart:async (req,res)=>{
     let decode= tokenVerify(req)
+    let total= await TotalAmount(req)
+    console.log(total);
     userHelpers.getcart(decode.value.insertedId).then((products)=>{
 
-      res.render("userView/cart",{products,userpar:true})
+      res.render("userView/cart",{products,userpar:true,total})
     })
   },
  
@@ -381,7 +395,38 @@ module.exports = {
     }).catch((error)=>{
       console.log("failed to dlete from cart");
     })
-  }
+  },
+
+  changeProductQuantity:(req,res,next)=>{
+    userHelpers.changeProductQuantity(req.body).then((response)=>{
+      res.json(response)
+    })
+  },
+  checkoutPage:async(req,res)=>{
+    let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+    let Address= await userHelpers.getAddress(decode .value.insertedId)
+    console.log("???????",Address,">>>>>");
+    userHelpers.getcart(decode.value.insertedId).then((products)=>{
+
+      res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total})
+    })
+  },
+
+
+  addAddress:(req,res)=>{
+    let decode = tokenVerify(req);
+    console.log(req.body);
+    userHelpers.addAddress(decode.value.insertedId,req.body).then((response)=>{
+      console.log(response);
+      res.redirect(req.get("referer"));
+
+    })
+  },
+
+  
 
 
 };
