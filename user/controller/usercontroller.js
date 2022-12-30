@@ -10,32 +10,32 @@ const { userBlockCheck } = require("../models/userHelpers/userHelpers");
 
 
 
-// Import the functions you need from the SDKs you need
-const { initializeApp } =require ("firebase/app");
-const  { getAnalytics } =require ("firebase/analytics");
-const  { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword ,RecaptchaVerifier,signInWithPhoneNumber} = require ("firebase/auth");
-const { resolve } = require("path");
+// // Import the functions you need from the SDKs you need
+// const { initializeApp } =require ("firebase/app");
+// const  { getAnalytics } =require ("firebase/analytics");
+// const  { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword ,RecaptchaVerifier,signInWithPhoneNumber} = require ("firebase/auth");
+// const { resolve } = require("path");
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// // TODO: Add SDKs for Firebase products that you want to use
+// // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBWUj1WTYvzTT1F-8cCOkI7Ip4wxupeTl4",
-  authDomain: "mio-amore-abdf4.firebaseapp.com",
-  projectId: "mio-amore-abdf4",
-  storageBucket: "mio-amore-abdf4.appspot.com",
-  messagingSenderId: "133103040937",
-  appId: "1:133103040937:web:951523b5c3659c2f97acb8",
-  measurementId: "G-DCHWS8YQG0"
-};
+// // Your web app's Firebase configuration
+// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBWUj1WTYvzTT1F-8cCOkI7Ip4wxupeTl4",
+//   authDomain: "mio-amore-abdf4.firebaseapp.com",
+//   projectId: "mio-amore-abdf4",
+//   storageBucket: "mio-amore-abdf4.appspot.com",
+//   messagingSenderId: "133103040937",
+//   appId: "1:133103040937:web:951523b5c3659c2f97acb8",
+//   measurementId: "G-DCHWS8YQG0"
+// };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
-const auth = getAuth(app);
-auth.languageCode = 'it';
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+// // const analytics = getAnalytics(app);
+// const auth = getAuth(app);
+// auth.languageCode = 'it';
 
 
 
@@ -43,6 +43,7 @@ auth.languageCode = 'it';
 const MY_SECRET = process.env.MY_SECRET;
 
 const createToken = (user) => {
+  console.log("jwt user",user);
   return jwt.sign({ value: user }, MY_SECRET, { expiresIn: "30m" });
 };
 const tokenVerify = (request) => {
@@ -54,7 +55,7 @@ const tokenVerify = (request) => {
 
  const cartProd= async (req)=>{
   
-  const decode= tokenVerify(req)
+  const decode=  tokenVerify(req)
 
   return await userHelpers.getcart(decode.value.insertedId).then((cart)=>{
     console.log("new cart:>>>",cart);
@@ -190,17 +191,20 @@ module.exports = {
       console.log(req.body);
       let userData = req.body;
 
-        userHelpers.doSignup(userData).then((response) => {
+        userHelpers.doSignup(userData).then(async(response) => {
             let user = response;
 
             console.log( user,".."  );
             // console.log( user.isBlocked);
-            const token = createToken(user);
+            const token =await  createToken(user);
 
-            res.cookie("token", token, {
-              httpOnly: true
+            // res.cookie("token", token, {
+            //   httpOnly: true
               
-            });
+            // });
+            res.cookie("token",token,{
+              httpOnly:true
+            })
             res.status(201);
             console.log(token);
   console.log(res.cookie);

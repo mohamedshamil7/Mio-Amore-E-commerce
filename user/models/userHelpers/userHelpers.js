@@ -44,7 +44,7 @@ module.exports={
             }
             console.log("resolveeddddd");
           resolve(users)
-          resolve(result)
+        //   resolve(result)
         }
           else {
             console.log("second if working or ");
