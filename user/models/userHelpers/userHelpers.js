@@ -343,46 +343,57 @@ getcart:(userId)=>{
       let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
     //   console.log("check cart erere",cart);
       if(cart){
+        const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
+            {
+                $match:{
+                    user:ObjectId(userId)
+                }
+            },
+            {
+                $unwind:'$product'
+            },{
+                $project:{
+                    item:'$product.item',
+                    quantity:'$product.quantity'
+                }
+            },
+            {
+                $lookup:{
+                    from:collection.PRODUCT_COLLECTIONS,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'cart_product'
+                }
+            },
+            {
+                $project:{
+                    item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
+                }
+            }
+
+        ]).toArray()
+        if(cartItems){
+            console.log("workingggg");
+            resolve(cartItems)
+        }
+        else{
+            console.log("this is woring");
+            let status=0
+            resolve(status)
+        }
 
       }
+      else{
+        let status= 0
+            resolve(status)
+      }
+      
       
     
-           console.log("workingggg");
-                const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
-                {
-                    $match:{
-                        user:ObjectId(userId)
-                    }
-                },
-                {
-                    $unwind:'$product'
-                },{
-                    $project:{
-                        item:'$product.item',
-                        quantity:'$product.quantity'
-                    }
-                },
-                {
-                    $lookup:{
-                        from:collection.PRODUCT_COLLECTIONS,
-                        localField:'item',
-                        foreignField:'_id',
-                        as:'cart_product'
-                    }
-                },
-                {
-                    $project:{
-                        item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
-                    }
-                }
-
-            ]).toArray()
+          
+                
             // console.log(cartItems);
-            if(cartItems.length != 0){
-                resolve(cartItems)
-            }else{
-                reject({err:'no cart'})
-            }
+         
         // }
  
     })
@@ -394,21 +405,33 @@ getcart:(userId)=>{
 },
 
 removeCart:(userId,prodId)=>{
+    console.log(userId);
+    
+    console.log("prodd>>>>>>>>>>>>>>>>>",prodId);
     return new Promise(async(resolve,reject)=>{
         let userCart= db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
         if(userCart){
-            db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId),})
+            db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId)},{
+                $pull:{
+                    product:{item:ObjectId(prodId)}
+                }
+            }) 
+            resolve(userCart)
         }
     })
 },
 
 getCartCount:(userId)=>{
     return new Promise(async(resolve,reject)=>{
+        let count=0
         let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
         if(cart){
-            let count=0
+           
             count=cart.product.length
             console.log(count);
+            resolve(count)
+        }
+        else{
             resolve(count)
         }
     })
@@ -542,6 +565,9 @@ getAddress:(userId)=>{
                 // },
             ]).toArray()
             resolve(address)
+        }
+        else{
+            resolve()
         }
     })
 }

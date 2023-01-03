@@ -52,3 +52,5 @@ function quantityChange(cartId,prodId,count,quantity){
 
     })
 }
+
+

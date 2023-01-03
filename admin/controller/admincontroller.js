@@ -62,7 +62,7 @@ module.exports={
 
  stockPage:(req,res)=>{
   adminHelper.getAllStocks().then((stock)=>{
-    console.log(stock);
+    // console.log(stock);
     res.render("adminView/stocks",{admin:true,stock})
   })
  },
@@ -92,6 +92,7 @@ res.render("adminView/categories",{admin:true,error:"category already exists"})
  deleteCategory:(req,res)=>{
   console.log(req.body); 
   adminHelper.deleteCategories(req.body.id).then((response)=>{
+    
     res.redirect("/admin/categories")
   }).catch((error)=>{
     console.log(error);
@@ -127,16 +128,25 @@ addNewProduct:(req,res)=>{
   // console.log(req.body);
   // console.log(req.files.Image);
 },
-
-deleteProduct:(req,res)=>{
-  adminHelper.deleteProduct(req.body.id).then((response)=>{
-    console.log(response);
+availabilityCheck:(req,res)=>{
+  console.log("call came");
+  adminHelper.AvailProduct(req.params.id,req.body.Availability).then((response)=>{
     res.redirect("/admin/stocks")
+
   }).catch((error)=>{
     console.log(error);
   })
-
 },
+
+// deleteProduct:(req,res)=>{
+//   adminHelper.deleteProduct(req.body.id).then((response)=>{
+//     console.log(response);
+//     res.redirect("/admin/stocks")
+//   }).catch((error)=>{
+//     console.log(error);
+//   })
+
+// },
 editProduct:(req,res)=>{
 
   adminHelper.getEditProduct(req.body.id).then((product)=>{

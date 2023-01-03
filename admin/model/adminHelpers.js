@@ -76,7 +76,8 @@ module.exports={
         })
     },
 
-    addcategory:(data)=>{
+    addcategory:(datas)=>{
+        const data=datas.toLowerCase();
         return new Promise(async(resolve,reject)=>{
             let category =await db.get().collection(collection.CATTEGORY_COLLECTION).findOne({categoryName:data})
             console.log(category);
@@ -84,6 +85,7 @@ module.exports={
                 return reject(category)
             }
             else{
+
                 let newcat= await db.get().collection(collection.CATTEGORY_COLLECTION).insertOne({categoryName:data})
                 console.log(newcat)
 
@@ -109,8 +111,14 @@ module.exports={
     },
     deleteCategories:(Id)=>{
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.CATTEGORY_COLLECTION).deleteOne({_id:ObjectId(Id)}).then((response)=>{
-                resolve(response)
+            db.get().collection(collection.CATTEGORY_COLLECTION).findOneAndDelete({_id:ObjectId(Id)}).then((response)=>{
+                console.log(response);
+                 db.get().collection(collection.PRODUCT_COLLECTIONS).updateMany({category:response.value.categoryName},{
+                    $set:{
+                        Availability:false
+                    }
+                 })
+                resolve()
             }).catch((err)=>{
                 reject(err)
             })
@@ -130,13 +138,28 @@ module.exports={
             }
         })
     },
-    deleteProduct:(id)=>{
+    AvailProduct:(id,Availability)=>{
+        console.log(id);
+        console.log(Availability);
+        let status
         return new Promise(async(resolve,reject)=>{
-       db.get().collection(collection.PRODUCT_COLLECTIONS).deleteOne({_id:ObjectId(id)}).then((response)=>{
-        resolve(response)
-       }).catch((error)=>{
-        reject(error)
-       })
+        if(Availability== "true"){
+            status= false
+
+        }else{
+            status= true
+        }
+        await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
+            $set:{
+                Availability:status
+            }
+        }).then((response)=>{
+            console.log(response);
+            resolve(response)
+        }).catch((error)=>{
+         reject(error)
+        })
+
             
         })
     },

@@ -103,8 +103,10 @@
 
                                         <td class="save-remove">
                                             <h4 class="table-title text-content">Action</h4>
-                                            {{!-- <a class="save notifi-wishlist" href="javascript:void(0)">Save for later</a> --}}
-                                            <a class="remove " onclick="return confirm(`Are you sure want to delete {{this.cart_product.ProductName}}  from your cart ?` )" href="/user/removeCart/{{this._id}}">Remove</a>
+                                          <form action="">
+                                            
+                                          </form>  {{!-- <a class="save notifi-wishlist" href="javascript:void(0)">Save for later</a> --}}
+                                            <a class="remove " onclick="return confirm(`Are you sure want to delete {{this.cart_product.ProductName}}  from your cart ?` )" href="/user/removeCart/{{this.cart_product._id}}">Remove</a>
                                         </td>
                                     </tr>
 
@@ -166,7 +168,7 @@
                                 </li>
 
                                 <li>
-                                    <button onclick="location.href = 'index.html';"
+                                    <button onclick="location.href = '/user/home'"
                                         class="btn btn-light shopping-button text-dark">
                                         <i class="fa-solid fa-arrow-left-long"></i>Return To Shopping</button>
                                 </li>

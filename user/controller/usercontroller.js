@@ -61,8 +61,8 @@ const tokenVerify = (request) => {
     console.log("new cart:>>>",cart);
     return cart
   }).catch((error)=>{
-    console.log("4th reject",error.err);
-    return error
+    let cartStatus= "no cart available"
+    return cartStatus
   })
 };
 
@@ -148,8 +148,10 @@ module.exports = {
     console.log(decode);
     let total= await TotalAmount(req)
     let cart =await cartProd(req)
+    console.log(cart);
+
     let count= await CartCount(req)
-    // console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     userHelpers.getAllProducts().then((data) => {
       
@@ -196,18 +198,15 @@ module.exports = {
 
             console.log( user,".."  );
             // console.log( user.isBlocked);
-            const token =await  createToken(user);
+            const token =createToken(user);
 
             // res.cookie("token", token, {
             //   httpOnly: true
               
             // });
-            res.cookie("token",token,{
-              httpOnly:true
-            })
+            res.cookie("token",token,{  httpOnly:true})
             res.status(201);
             console.log(token);
-  console.log(res.cookie);
             next();
           }).catch((user) => {
             console.log(user + "/");
@@ -277,27 +276,39 @@ module.exports = {
     let user= decode.value.insertedId
     console.log(req.params.id);
     let prodId = req.params.id;
-    userHelpers.inWishlist(user,prodId).then((response)=>{
-      let wishlist=response
-      userHelpers
-      .viewProduct(prodId)
-      .then((response) => {
-        
+      userHelpers.viewProduct(prodId).then((response) => {
         let data = response;
-        res.render("userView/productPage", {
-          wishlist,
-          data,
-          user: decode.value.username,
-          userpar: true,
-          cart,
-          count,
-          total
-        });
+        userHelpers.inWishlist(user,prodId).then((response)=>{
+          let wishlist=response
+          res.render("userView/productPage", {
+            wishlist,
+            data,
+            user: decode.value.username,
+            userpar: true,
+            cart,
+            count,
+            total
+          });
+        }).catch(()=>{
+          let wishlist=false
+          res.render("userView/productPage", {
+            wishlist,
+            data,
+            user: decode.value.username,
+            userpar: true,
+            cart,
+            count,
+            total
+          });
+    
+        })
+       
+        
       })
       .catch((err) => {
         console.log(err);
       });
-    })
+
     
   },
   imageRoute: (req, res) => {
@@ -396,9 +407,10 @@ module.exports = {
  
   removeCart:(req,res)=>{
     let decode= tokenVerify(req)
+    console.log(req.params.id,"this is te iddddd");
     userHelpers.removeCart(decode.value.insertedId,req.params.id).then((response)=>{
-      console.log(response);
-      res.redirect(req.get("referer"));
+      console.log("this is the response",response);
+      res.redirect(req.get("referer")); 
     }).catch((error)=>{
       console.log("failed to dlete from cart");
     })

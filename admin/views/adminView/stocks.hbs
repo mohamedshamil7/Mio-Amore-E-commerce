@@ -21,7 +21,8 @@
                     
                     <th scope="col">Manufacturing Date</th>
                     <th>COD</th>
-                    <th scope="col">Actions</th>
+                    <th>Availability</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,24 @@
                       {{else}} Disabled
                       {{/if}}
                     </td>
+                    <td>
+                      {{#if this.Availability}}
+                      <a href="">
+                       <form action="/admin/prodAvailability/{{this._id}}" method="post">
+                            <input type="text" name="Availability" value="{{this.Availability}}" hidden >
+                            <button type="submit" class="btn btn-danger">Unlist
+                            </button>
+                            </form>
+                      </a>
+                      
+                      {{else}}
+                     <form action="/admin/prodAvailability/{{this._id}}" method="post">
+                            <input type="text" name="Availability" value="{{this.Availability}}" hidden >
+                            <button type="submit" class="btn btn-danger">List
+                            </button>
+                            </form>
+                            {{/if}}
+                    </td>
 
                     {{!-- <td>{{this.Description}}</td> --}}
                     <td>
@@ -48,12 +67,7 @@
                             </button>
                             </form></a> 
                             </td>
-                            <td> <a href=""><form action="/admin/delete-Product" method="post">
-                            <input type="text" name="id" value="{{this._id}}" hidden >
-                            <button type="submit" class="btn btn-danger" onclick="return confirm(`Are you sure want to delete {{this.ProductName}} 
-                    ?` )">delete
-                            </button>
-                            </form></a></td>
+                           
                   </tr>
                     {{/each}}
                 </tbody>

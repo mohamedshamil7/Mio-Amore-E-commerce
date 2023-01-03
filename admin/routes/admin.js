@@ -26,10 +26,11 @@ const {
   deleteCategory,
   addProductForm,
   addNewProduct,
-  deleteProduct,
+  // deleteProduct,
   editProduct,
   EditProductData,
-  ImageSupplier
+  ImageSupplier,
+  availabilityCheck
 } = require("../controller/admincontroller");
 /* GET home page. */
 router.get('/',adminSession,renderadminLogin);
@@ -48,13 +49,15 @@ router.get("/categories",categories_Page)
 
 router.post("/addCategory",adminSession,addCategoryManager)
 
+router.post("/prodAvailability/:id",adminSession,availabilityCheck)
+
 router.post("/deleteCategory",adminSession,deleteCategory)
 
 router.get("/add-product",adminSession,addProductForm)
 
 router.post("/addProduct-submit",adminSession,addNewProduct)
 
-router.post("/delete-Product",deleteProduct)
+// router.post("/delete-Product",deleteProduct)
 
 router.post("/edit-Product",adminSession,editProduct)
 
