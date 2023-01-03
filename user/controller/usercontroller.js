@@ -47,7 +47,7 @@ const createToken = (user) => {
   return jwt.sign({ value: user }, MY_SECRET, { expiresIn: "30m" });
 };
 const tokenVerify = (request) => {
-  console.log(request.cookies.token);
+  console.log("this is that token from cookie",request.cookies.token);
   const decode = jwt.verify(request.cookies.token, MY_SECRET);
   return decode;
 };
