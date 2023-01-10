@@ -55,7 +55,7 @@ router.post("/addCategory",adminSession,addCategoryManager)
 
 router.post("/prodAvailability/:id",adminSession,availabilityCheck)
 
-router.post("/deleteCategory",adminSession,deleteCategory)
+router.post("/deleteCategory/:id",adminSession,deleteCategory)
 
 router.get("/add-product",adminSession,addProductForm)
 

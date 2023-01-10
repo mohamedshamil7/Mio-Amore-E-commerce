@@ -6,6 +6,7 @@ const { response } = require('../app')
 const adminHelper= require('../model/adminHelpers')
 const multer = require("multer");
 const { functionsOrigin } = require('firebase-tools/lib/api');
+const { resolve } = require('path');
 
 const storage=multer.diskStorage({
   destination:function(request,file,cb){
@@ -105,17 +106,19 @@ module.exports={
     console.log(response);
 res.redirect("/admin/categories")
   }).catch((categories)=>{
-res.render("adminView/categories",{admin:true,error:"category already exists"})
+    error = 'Category already exists';
+      res.redirect('/admin/categories');
+
+// res.render("adminView/categories",{admin:true,error:"category already exists",categories})
   }).catch((err)=>{
     console.log("some other error ocuured whiile adding categories");
   })
  },
 
  deleteCategory:(req,res)=>{
-  console.log(req.body); 
-  adminHelper.deleteCategories(req.body.id).then((response)=>{
-    
-    res.redirect("/admin/categories")
+  console.log(req.params.id); 
+  adminHelper.deleteCategories(req.params.id).then((response)=>{
+    res.json({status:true})
   }).catch((error)=>{
     console.log(error);
   })
