@@ -27,61 +27,89 @@
         </div>
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
+          <img style="width: 50px;" src="./images/product-images/{{product.Image1}}" alt="no">
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image1" id="formFile">
+          </div>
+        </div>
+
+          <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">File Upload</label>
+          <img style="width: 50px;" src="./images/product-images/{{product.Image2}}" alt="no">
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image2" id="formFile">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">File Upload</label>
+          <img style="width: 50px;" src="./images/product-images/{{product.Image3}}" alt="no">
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image3" id="formFile">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">File Upload</label>
+          <img style="width: 50px;" src="./images/product-images/{{product.Image4}}" alt="no">
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image4" id="formFile">
+          </div>
+        </div>
+
+
+        <div class="row mb-3">
+          <label for="inputDate" class="col-sm-2 col-form-label">Manufacturing Date</label>
+          <div class="col-sm-4">
+            <input type="date" name="ManufacturingDate" class="form-control" value="{{product.ManufacturingDate}}">
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <label class="col-sm-2 col-form-label">Payment Options</label>
           <div class="col-sm-10">
-            <img style="width: 50px;" src="./images/product-images/{{product._id}}.jpg" alt="no">
-            <input class="form-control" type="file" name="Image" id="formFile" >
-          </div>
-          <div class="row mb-3">
-            <label for="inputDate" class="col-sm-2 col-form-label">Manufacturing Date</label>
-            <div class="col-sm-4">
-              <input type="date" name="ManufacturingDate" class="form-control" value="{{product.ManufacturingDate}}">
-            </div>
-          </div>
-
-                  <div class="row mb-5">
-                  <label class="col-sm-2 col-form-label">Payment Options</label>
-                  <div class="col-sm-10">
-                    
-                    
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox"  id="flexSwitchCheckCheckedDisabled" checked disabled>
-                      <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Online payment (mandidatory)</label>
-                    </div>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" name="COD" value={{product.COD}} id="flexSwitchCheckDefault">
-                      <label class="form-check-label" for="flexSwitchCheckDefault">COD(optional)</label>
-                    </div>
-                  </div>
-                </div>
 
 
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label">Category</label>
-            <div class="col-sm-4">
-              <select class="form-select" name="category" aria-label="Default select example">
-                {{#if categories}}
-                <option value="{{product.category}}">{{product.category}}</option>
-                {{else}}
-                <option selected>select Category</option>
-                {{/if}}
-                {{#each categories}}
-                <option value="{{this.categoryName}}">{{this.categoryName}}</option>
-                {{/each}}
-              </select>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" checked disabled>
+              <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Online payment (mandidatory)</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" name="COD" value={{product.COD}}
+                id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">COD(optional)</label>
             </div>
           </div>
-          <div class="row mb-3">
-            <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
-            <div class="col-sm-6">
-              <textarea class="form-control" id="myTextarea1" name="Description" style="height: 100px"></textarea>
-            </div>
+        </div>
+
+
+        <div class="row mb-3">
+          <label class="col-sm-2 col-form-label">Category</label>
+          <div class="col-sm-4">
+            <select class="form-select" name="category" aria-label="Default select example">
+              {{#if categories}}
+              <option value="{{product.category}}">{{product.category}}</option>
+              {{else}}
+              <option selected>select Category</option>
+              {{/if}}
+              {{#each categories}}
+              <option value="{{this.categoryName}}">{{this.categoryName}}</option>
+              {{/each}}
+            </select>
           </div>
-          <div class="row mb-3">
-            {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
-            <div class="col-sm-4 col-form-label">
-              <button type="submit" class="btn btn-primary">Add Product</button>
-            </div>
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+          <div class="col-sm-6">
+            <textarea class="form-control" id="myTextarea1" name="Description" style="height: 100px"></textarea>
           </div>
+        </div>
+        <div class="row mb-3">
+          {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
+          <div class="col-sm-4 col-form-label">
+            <button type="submit" class="btn btn-primary">Add Product</button>
+          </div>
+        </div>
 
       </form><!-- End General Form Elements -->
     </div>

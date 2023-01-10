@@ -4,12 +4,34 @@
 var path = require('path');
 const { response } = require('../app')
 const adminHelper= require('../model/adminHelpers')
+const multer = require("multer");
+const { functionsOrigin } = require('firebase-tools/lib/api');
+
+const storage=multer.diskStorage({
+  destination:function(request,file,cb){
+    cb(null,'./public/images/product-images/')
+  },
+  filename:function(request,file,cb){
+    cb(null,Date.now() + '-' + file.originalname)
+  }
+})
+
+const upload=multer({storage:storage})
+
 
 
 module.exports={
  renderadminLogin:(req,res)=>{
     res.render("adminView/adminlogin")
  },
+
+// // storage:multer.diskStorage({
+// //   destination:(req,file,cb)=>{
+// //     cb(null,"./public/images/product-images")
+// //   }
+
+// }),
+
 
 
 
@@ -111,23 +133,54 @@ res.render("adminView/categories",{admin:true,error:"category already exists"})
 
  },
 
+//  Addimage:(upload.fields([{name:"Image1",maxCount:1}]),function(req,res,next){
+//   console.log(req.file);
+//   next()
+//  }),
+
 addNewProduct:(req,res)=>{
-  var image=req.files.Image
-  console.log(image);
+
+  // res.send("reached")
+  console.log(req.files.Image1[0].filename);
+  req.body.Image1=req.files.Image1[0].filename
   adminHelper.addNewProduct(req.body).then((response)=>{
-    console.log(response);
-    console.log(req.files);
-    image.mv('./public/images/product-images/'+response+'.jpg',(err,done)=>{
-      if(err){
-        console.log(err);
-      }else{
-        res.redirect("/admin/stocks")
-      }
-    })
+
+    res.redirect("/admin/stocks")
   })
+  // var image=req.files.Image
+  // console.log(",this is the issue",image);
+  // adminHelper.addNewProduct(req.body).then((response)=>{
+  //   console.log(response);
+  //   req.prod=response
+  //   // console.log("this is req.prod,",req.prod);
+  //   // next()
+    
+    
+  //   // console.log(req.files);
+  //   // image.mv('./public/images/product-images/'+response+'.jpg',(err,done)=>{
+  //   //   if(err){
+  //   //     console.log(err);
+  //   //   }else{
+  //   //     res.redirect("/admin/stocks")
+  //   //   }
+  //   // })
+  // }).catch((error)=>{
+  //   console.log(error);
+  // })
   // console.log(req.body);
   // console.log(req.files.Image);
-},
+  
+  
+}, 
+
+// Addimage:(upload.fields({name:'Image1',maxCount:1,}),function(req,res){
+//   console.log(req.prod);
+//   console.log("entereed");
+
+//   res.redirect("/admin/stocks")
+// }),
+
+
 availabilityCheck:(req,res)=>{
   console.log("call came");
   adminHelper.AvailProduct(req.params.id,req.body.Availability).then((response)=>{
@@ -161,24 +214,48 @@ editProduct:(req,res)=>{
 
   
 },
-EditProductData:(req,res)=>{
-  console.log("enettererere");
-  let id= req.body.id
+EditProductData:async (req,res)=>{
+  console.log(req.files.Image2);
+  if(req.files.Image1==null){
+    Image1=await adminHelper.fetchImage1(req.body.id)
+  }else{
+    Image1=req.files.Image1[0].filename
+  }
+
+  if(req.files.Image2==null){
+    Image2= await adminHelper.fetchImage2(req.body.id)
+  }else{
+    Image2= req.files.Image2[0].filename
+  }
+  if(req.files.Image3==null){
+    Image3= await adminHelper.fetchImage3(req.body.id)
+  }else{
+    Image3= req.files.Image3[0].filename
+  }
+
+  if(req.files.Image4==null){
+    Image4= await adminHelper.fetchImage4(req.body.id)
+  }else{
+    Image4= req.files.Image4[0].filename
+  }
+
+  req.body.Image1= Image1
+  req.body.Image2= Image2
+  req.body.Image3= Image3
+  req.body.Image4= Image4
+
 adminHelper.editProduct(req.body).then((response)=>{
   console.log(response);
- if(req.files.Image){
-  var image=req.files.Image
-  image.mv('./public/images/product-images/'+id+'.jpg' )
- }
+ 
   res.redirect("/admin/stocks")
 })
 },
 
 ImageSupplier:(req,res)=>{
-  console.log(req.params.id);
+  console.log(req.params.Image,"??????/////////////////////");
   console.log("call coming");
   
-res.sendFile(path.resolve(`public/images/product-images/${req.params.id}.jpg`))
+res.sendFile(path.resolve(`public/images/product-images/${req.params.Image}`))
 
 },
 

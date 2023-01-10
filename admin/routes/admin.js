@@ -30,8 +30,12 @@ const {
   editProduct,
   EditProductData,
   ImageSupplier,
-  availabilityCheck
+  availabilityCheck,
+  Addimage
 } = require("../controller/admincontroller");
+const{
+  uploadMultiple
+}=require("../public/javascripts/multer")
 /* GET home page. */
 router.get('/',adminSession,renderadminLogin);
 
@@ -55,15 +59,15 @@ router.post("/deleteCategory",adminSession,deleteCategory)
 
 router.get("/add-product",adminSession,addProductForm)
 
-router.post("/addProduct-submit",adminSession,addNewProduct)
+router.post("/addProduct-submit",adminSession,uploadMultiple,addNewProduct)
 
 // router.post("/delete-Product",deleteProduct)
 
 router.post("/edit-Product",adminSession,editProduct)
 
-router.post("/editProduct-submit",adminSession,EditProductData)
+router.post("/editProduct-submit",adminSession,uploadMultiple,EditProductData)
 
-router.get("/ImageSupply/:id",ImageSupplier )
+router.get("/ImageSupply/:Image",ImageSupplier )
 
 
 module.exports = router;

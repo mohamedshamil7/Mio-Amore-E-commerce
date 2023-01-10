@@ -27,7 +27,8 @@ const {
   removeCart,
   changeProductQuantity,
   checkoutPage,
-  addAddress
+  addAddress,
+  shopProducts
 
 } = require("../controller/usercontroller");
 
@@ -72,6 +73,8 @@ router.post('/changeProductQuantity',changeProductQuantity)
 router.get('/checkout',autherization,checkoutPage)
 
 router.post('/addAddress',addAddress)
+
+router.get('/shop',autherization,shopProducts)
 
 module.exports = router;
 

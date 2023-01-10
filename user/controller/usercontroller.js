@@ -314,6 +314,7 @@ module.exports = {
   imageRoute: (req, res) => {
     let decode = tokenVerify(req);
     let id = req.params.id;
+    
     console.log(id);
   },
 
@@ -444,6 +445,23 @@ module.exports = {
 
     })
   },
+
+  shopProducts:async(req,res)=>{
+    let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+    userHelpers.getAllProducts().then((data) => {
+      
+      console.log("the then data is :", data);
+      res.render("userView/shop",{userpar:true,data,user:decode.value.username,cart,count,total})
+    })
+    .catch((err) => {
+      console.log(err);
+      console.log("didtn get my all Products");
+    });
+   
+  }
 
   
 

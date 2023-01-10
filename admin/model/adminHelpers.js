@@ -184,7 +184,11 @@ module.exports={
                     Description:id.Description,
                     category:id.category,
                     ManufacturingDate:id.ManufacturingDate,
-                    COD:id.COD
+                    COD:id.COD,
+                    Image1:id.Image1,
+                    Image2:id.Image2,
+                    Image3:id.Image3,
+                    Image4:id.Image4,
 
 
                 }
@@ -198,5 +202,32 @@ module.exports={
                 console.log("else wooo");
                 reject()}
         })
-    }
+    },
+
+        fetchImage1:(prodId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image1:true}})
+                resolve(data.Image1)
+            })
+        },
+        fetchImage2:(prodId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image2:true}})
+                resolve(data.Image2)
+            })
+        },
+        fetchImage3:(prodId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image3:true}})
+                resolve(data.Image3)
+            })
+        },
+        fetchImage4:(prodId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image4:true}})
+                resolve(data.Image4)
+            })
+        }
+
 }
+

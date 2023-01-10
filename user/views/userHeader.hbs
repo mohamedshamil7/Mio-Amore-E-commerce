@@ -129,8 +129,10 @@
     
                                                 <li class="nav-item">
                                                     <a class="nav-link " href="/user/wishlistPage">wishlist</a>
-    
-                                                   
+                                                </li>
+
+                                                 <li class="nav-item">
+                                                    <a class="nav-link " href="/user/shop">Shop</a>
                                                 </li>
     
                                                 
@@ -190,19 +192,19 @@
                                                     <li class="product-box-contain">
                                                         <div class="drop-cart">
                                                             <a href="/user/product/{{this.cart_product._id}}" class="drop-image">
-                                                                <img src="http://localhost:8001/admin/ImageSupply/{{this.cart_product._id}}"
+                                                                <img src="http://localhost:8001/admin/ImageSupply/{{this.cart_product.Image1}}"
                                                                     class="blur-up lazyload" alt="">
                                                             </a>
 
                                                             <div class="drop-contain">
-                                                                <a href="http://localhost:8001/admin/ImageSupply/{{this.cart_product._id}}">
+                                                                <a href="http://localhost:8001/admin/ImageSupply/{{this.cart_product.Image1}}">
                                                                     <h5>{{this.cart_product.ProductName}}</h5>
                                                                 </a>
 
                                                                 <h6><span>{{this.quantity}} X</span> 
                                                                 
                                                                 
-                                                                {{this.cart_product.Price}}</h6>
+                                                               ₹ {{this.cart_product.Price}}</h6>
                                                                 {{!-- <button class="close-button close_button">
                                                                     <i class="fa-solid fa-xmark"></i>
                                                                 </button> --}}
@@ -215,7 +217,7 @@
 
                                                 <div class="price-box">
                                                     <h5>Total :</h5>
-                                                    <h4 class="theme-color fw-bold">{{total}}</h4>
+                                                    <h4 class="theme-color fw-bold"> ₹ {{total}}</h4>
                                                 </div>
 
                                                 <div class="button-group">

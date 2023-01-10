@@ -9,98 +9,72 @@
                             <div class="product-left-box">
                                 <div class="row g-sm-4 g-2">
                                     <div class="col-12">
-                                        <div class="product-main no-arrow" >
+                                        <div class="product-main no-arrow">
                                             <div>
-                                                <div class="slider-image " id="homd" >
-                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}" id="img-1" >
+                                                <div class="slider-image" id="img1">
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image1}}" id="img-1">
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <div class="slider-image">
-                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data._id}}" >
+                                                <div class="slider-image" id="img2">
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image2}} " id="img-2" >
                                                 </div>
                                             </div>
 
-                                            {{!-- <div>
-                                                <div class="slider-image">
-                                                    <img src="../assets/images/product/category/3.jpg"
-                                                        data-zoom-image="../assets/images/product/category/3.jpg" class="
-                                                        img-fluid image_zoom_cls-2 blur-up lazyload" alt="">
+                                            <div>
+                                                <div class="slider-image" id="img3" >
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image3}}">
                                                 </div>
-                                            </div> --}}
+                                            </div>
 
-                                            {{!-- <div>
-                                                <div class="slider-image">
-                                                    <img src="../assets/images/product/category/4.jpg"
-                                                        data-zoom-image="../assets/images/product/category/4.jpg" class="
-                                                        img-fluid image_zoom_cls-3 blur-up lazyload" alt="">
+                                            <div>
+                                                <div class="slider-image" id="img4">
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image4}}">
                                                 </div>
-                                            </div> --}}
+                                            </div>
 
-                                            {{!-- <div>
-                                                <div class="slider-image">
-                                                    <img src="../assets/images/product/category/5.jpg"
-                                                        data-zoom-image="../assets/images/product/category/5.jpg" class="
-                                                        img-fluid image_zoom_cls-4 blur-up lazyload" alt="">
-                                                </div>
-                                            </div> --}}
+                                            
 
-                                            {{!-- <div>
-                                                <div class="slider-image">
-                                                    <img src="../assets/images/product/category/6.jpg"
-                                                        data-zoom-image="../assets/images/product/category/6.jpg" class="
-                                                        img-fluid image_zoom_cls-5 blur-up lazyload" alt="">
-                                                </div>
-                                            </div> --}}
+                                           
                                         </div>
                                     </div>
 
-                                    {{!-- <div class="col-12">
+                                    <div class="col-12">
                                         <div class="left-slider-image left-slider no-arrow slick-top">
                                             <div>
                                                 <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/1.jpg"
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image1}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/2.jpg"
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image2}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/3.jpg"
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image3}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
 
                                             <div>
                                                 <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/4.jpg"
+                                                    <img src="http://localhost:8001/admin/ImageSupply/{{data.Image4}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </div>
                                             </div>
 
-                                            <div>
-                                                <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/5.jpg"
-                                                        class="img-fluid blur-up lazyload" alt="">
-                                                </div>
-                                            </div>
+                                           
 
-                                            <div>
-                                                <div class="sidebar-image">
-                                                    <img src="../assets/images/product/category/6.jpg"
-                                                        class="img-fluid blur-up lazyload" alt="">
-                                                </div>
-                                            </div>
+                                            
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -399,10 +373,12 @@
         zoomWidth: 400,
         scale: 1,
         offset: {
-            vertical: 35,
             horizontal: -420
         }
     };
-    new ImageZoom(document.getElementById('homd'), options)
+    new ImageZoom(document.getElementById('img1'), options)
+     new ImageZoom(document.getElementById('img2'), options)
+         new ImageZoom(document.getElementById('img3'), options)
+     new ImageZoom(document.getElementById('img4'), options)
 
 </script>
