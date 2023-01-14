@@ -8,11 +8,19 @@ const bcrypt=require("bcrypt")
 const { resolve } = require("path")
 const jwt=require("jsonwebtoken");
 const { reject, promiseAllSettled } = require("firebase-tools/lib/utils");
-const { ObjectId } = require("mongodb");
+const { ObjectId, OrderedBulkOperation } = require("mongodb");
 const { response } = require("../../app");
-const { async } = require("@firebase/util");
-const { reload } = require("firebase/auth");
+
+const crypto = require('crypto');
+
 require("dotenv").config();
+const razorPay= require("razorpay")
+const Key_ID=process.env.RAZORPAY_KEY_ID
+const KEY_SECRET=process.env.RAZORPAY_KEY_SECRET
+var instance =new razorPay({
+    key_id:Key_ID,
+   key_secret:KEY_SECRET
+})
 
 var MY_SECRET = process.env.MY_SECRET
 
@@ -570,14 +578,124 @@ getAddress:(userId)=>{
             resolve()
         }
     })
+},
+
+
+placeOrder:(order,cart,total)=>{
+return new Promise(async(resolve,reject)=>{
+let userId=order.userId
+console.log(typeof userId);
+    console.log("/////////?///",userId);
+    // if(order.PaymentOption==='COD'?)
+    let order_status= order.PaymentOption==='COD'?'placed':'pending'
+
+    let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
+
+        {
+            $unwind:'$Address'
+        },
+         {
+            $match:{
+               'Address.id':ObjectId(order.Address)
+            },
+            
+        },
+        {
+            $project:{
+                _id:0,
+                Address:1
+            }
+        },
+        {
+            $project:{
+                // fullName:'$Address.fullName',
+                // houseNo:'$Address.houseNo',
+                // pin:'$Address.pin',
+                // locality:'$Address.locality',
+                // useradd:'$Address.useradd',
+                // district:'$Address.district',
+                deleviryDetails:{
+                    fullName:'$Address.fullName',
+                houseNo:'$Address.houseNo',
+                pin:'$Address.pin',
+                locality:'$Address.locality',
+                useradd:'$Address.useradd',
+                district:'$Address.district',
+                }
+                
+            }
+        }
+    ]).toArray()
+    console.log("((((((((((((((((((((((((((((((((",address);
+
+    let orderObj={
+        deleviryDetails:address[0].deleviryDetails ,
+        userId:userId,
+        
+        totalAmount:total,
+        paymentMethod:order.PaymentOption,
+        cart:cart,
+        status:order_status
+    }
+    console.log(userId);
+    db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
+        // db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId) })
+        console.log("response:",response);
+        resolve(response.insertedId)
+    }).catch((error)=>{
+        console.log(error);
+    })
+    console.log(orderObj);
+})
+
+
+},
+
+generateRazorPay:(orderId,total)=>{
+    return new Promise(async(resolve,reject)=>{
+        console.log(total);
+        var options = {
+            amount:total*100,
+            currency:"INR",
+            receipt:`${orderId}`
+        }
+        instance.orders.create(options,function(err,order){
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log("order created herre",order);
+                resolve(order)
+
+            }
+        })
+    })
+},
+verifyPayment:(details)=>{
+    
+    return new Promise(async(resolve,reject)=>{
+        const { createHmac, } = await import('node:crypto');
+        let hmac = createHmac('sha256', 'xslbBw99lI0wSbcbW3c2oUkJ');
+        hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
+        hmac = hmac.digest('hex')
+        if (hmac == details['payment[razorpay_signature]']) {
+            resolve()
+        } else {
+            reject()
+        }
+    })
+},
+
+changePaymentStatus:(orderId)=>{
+    console.log('efnriuerfvyvbbbbv',orderId);
+    return new Promise(async(resolve,reject)=>{
+        db.get().collection(collection.ORDER_COLLECTION).updateOne({_di:ObjectId(orderId)},{
+            $set: { status: 'Order placed' },
+        })
+        resolve()
+    })
+
 }
-
-
-
-
-
-
-
 
 
 }

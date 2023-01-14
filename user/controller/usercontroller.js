@@ -1,4 +1,4 @@
-const { response } = require("../app");
+
 require("dotenv").config();
 const userHelpers = require("../models/userHelpers/userHelpers");
 const jwt = require("jsonwebtoken");
@@ -6,6 +6,24 @@ const { read } = require("fs");
 const { send } = require("process");
 const { reset } = require("nodemon");
 const { userBlockCheck } = require("../models/userHelpers/userHelpers");
+const { ObjectId } = require("mongodb");
+
+const cc= require("currency-converter-lt")
+
+var paypal= require('paypal-rest-sdk')
+
+
+const PAYPAL_CLIENT_ID=process.env.PAYPAL_CLIENT_ID
+const PAYPAL_CLIENT_SECRET=process.env.PAYPAL_CLIENT_SECRET
+
+paypal.configure({
+  "mode" :'sandbox',
+  "client_id" :PAYPAL_CLIENT_ID,
+  "client_secret":PAYPAL_CLIENT_SECRET
+})
+
+const { request } = require("http");
+const { match } = require("assert");
 
 
 
@@ -428,10 +446,12 @@ module.exports = {
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let Address= await userHelpers.getAddress(decode .value.insertedId)
+    let user=decode.value.insertedId
+    console.log("@#############@@@@@@@###",user);
     console.log("???????",Address,">>>>>");
     userHelpers.getcart(decode.value.insertedId).then((products)=>{
 
-      res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total})
+      res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total,user})
     })
   },
 
@@ -461,9 +481,147 @@ module.exports = {
       console.log("didtn get my all Products");
     });
    
-  }
+  },
 
+
+  placeOrder:async(req,res)=>{
+    console.log(req.body,"msa");
+    let decode= tokenVerify(req);
+    let cart= await cartProd(req)
+    let total= await TotalAmount(req)
+
+    let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
+          let response = await currencyConverter.convert();
+          console.log("response",response); 
+          var usdtotal=Math.round(response)
+    // console.log(total);
+    console.log(req.body);
+    
+    userHelpers. placeOrder  (req.body,cart,total).then((orderId)=>{
+      console.log("/////////////////////////////////////////////////////////",orderId);
+      if(req.body.PaymentOption==='COD'){
+        res.json({status:"COD"})
+
+      }
+      else if(req.body.PaymentOption=='razorPay'){
+        console.log("entered");
+        userHelpers.generateRazorPay(orderId,total).then((response)=>{
+          // console.log("this.response",response);
+          res.json({status:"razorpay",response})
+
+        })
+
+      }
+      else if(req.body.PaymentOption=='paypal'){
+        console.log("?????????????????/");
+
+        console.log(usdtotal);
+            var create_payment_json = {
+      "intent": "sale",
+      "payer": {
+          "payment_method": "paypal"
+      },
+      "redirect_urls": {
+          "return_url": "http://localhost:8001/user/orderSuccess",
+          "cancel_url": "http://cancel.url"
+      },
+      "transactions": [{
+          "amount": {
+              "currency": "USD",
+              "total": usdtotal
+          },
+          "description": "This is the payment description."
+      }]
+  };
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+        console.log(error.response);
+        throw error;
+    } else {
+        for (var i = 0; i < payment.links.length; i++) {
+        //Redirect user to this endpoint for redirect url
+            if (payment.links[i].rel ==='approval_url') {
+              console.log(payment.links[i].href);
+              // res.redirect(`${payment.links[i].href}`)
+              res.json({status:"paypal",forwardLink: payment.links[i].href});
+            }
+        }
+        // console.log(payment);
+    }
+}); 
+  
+      }
+      else{
+        res.send("nothind")
+      }
+    })
+    
+   
+    
+  },
+
+
+  paypalSucces: (req, res) => {
+    const payerId = req.query.PayerID;
+    const paymentId = req.query.paymentId;
+
+    const execute_payment_json = {
+      "payer_id": payerId,
+      "transactions": [{
+        "amount": {
+          "currency": "USD",
+          "total": "25.00"
+        }
+      }]
+    }
+    paypal.payment.execute(paymentId,execute_payment_json,function(err,paymemt){
+      if (error) {
+        console.log(error.response);
+        throw error;
+      }else {
+        console.log(JSON.stringify(payment));
+
+        res.redirect('http://localhost:8001/user/orderSuccess');
+      }
+    })
+  },
+    
   
 
+  
+    
+    
+  verifyPayment:(req,res)=>{
 
-};
+    console.log(req.body);
+    userHelpers.verifyPayment(req.body).then(()=>{
+      console.log("herer");
+      userHelpers.changePaymentStatus(req.body['[receipt]']).then(()=>{
+        console.log("succes pay");
+        res.json({status:true})
+      })
+    }).catch((err)=>{
+      
+      console.log(err);
+      res.json({status:'Payment Failed'})
+      
+    })
+  },
+  
+  orderSuccess:(req,res)=>{
+    const payer=req.body.PayerID;
+    const paymentId=req.body.paymentId
+    res.render("userView/orderSuccess")
+  }
+  
+  
+  
+  
+
+}
+
+
+
+
+
+

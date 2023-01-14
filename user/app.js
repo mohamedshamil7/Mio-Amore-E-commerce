@@ -34,7 +34,12 @@ db.connect((err)=>{
   if(err) console.log(' Connection error '+err);
   else console.log('database connected');
 })
-
+// const config = {
+//   headers: {
+//     "Access-Control-Allow-Origin": "*",
+//     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+//   }
+// };
 app.use('/', usersRouter);
 app.use('/admin',adminRouter );
 

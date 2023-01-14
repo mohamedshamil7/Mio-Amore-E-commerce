@@ -28,7 +28,10 @@ const {
   changeProductQuantity,
   checkoutPage,
   addAddress,
-  shopProducts
+  shopProducts,
+  placeOrder,
+  verifyPayment,
+  orderSuccess
 
 } = require("../controller/usercontroller");
 
@@ -76,5 +79,10 @@ router.post('/addAddress',addAddress)
 
 router.get('/shop',autherization,shopProducts)
 
+router.post('/placeOrder',placeOrder)
+
+router.post('/verifyPayment',verifyPayment)
+
+router.get('/orderSuccess',orderSuccess)
 module.exports = router;
 
