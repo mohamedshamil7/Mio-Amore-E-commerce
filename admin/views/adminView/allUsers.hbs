@@ -1,0 +1,51 @@
+<section class="page-align mt-5 " id="footer">
+     <!-- Table with stripped rows -->
+              <table id="mydata" class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">action </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {{#each users}}
+                  <tr>
+
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.phone}}</td>
+                    <td>{{this.createdAt}}</td>
+                    <td>
+                     {{#if this.isBlocked}}
+                    Blocked
+                    {{else}}
+                    Active
+                    {{/if}}
+                    </td>
+                    <td>
+                        <a href="">
+                            <form action="/admin/blockManager" method="post">
+                            <input type="text" name="isBlocked" value="{{this.isBlocked}}" hidden >
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-secondary">
+                               {{#if this.isBlocked}}
+                               Unblock
+                               {{else}}
+                               Block
+                               {{/if}}
+                            </button>
+                            </form>
+                        </a>
+                    </td>
+
+
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+</section>
