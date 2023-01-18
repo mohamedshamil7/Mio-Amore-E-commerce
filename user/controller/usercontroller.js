@@ -28,7 +28,7 @@ const { match } = require("assert");
 
 
 
-// // Import the functions you need from the SDKs you need
+// Import the functions you need from the SDKs you need
 // const { initializeApp } =require ("firebase/app");
 // const  { getAnalytics } =require ("firebase/analytics");
 // const  { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword ,RecaptchaVerifier,signInWithPhoneNumber} = require ("firebase/auth");
@@ -40,16 +40,15 @@ const { match } = require("assert");
 // // Your web app's Firebase configuration
 // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // const firebaseConfig = {
-//   apiKey: "AIzaSyBWUj1WTYvzTT1F-8cCOkI7Ip4wxupeTl4",
-//   authDomain: "mio-amore-abdf4.firebaseapp.com",
-//   projectId: "mio-amore-abdf4",
-//   storageBucket: "mio-amore-abdf4.appspot.com",
-//   messagingSenderId: "133103040937",
-//   appId: "1:133103040937:web:951523b5c3659c2f97acb8",
-//   measurementId: "G-DCHWS8YQG0"
+//   apiKey: "AIzaSyCNaypDDBtu3WZWta6H3MEpNOI4DSb0MWg",
+//   authDomain: "eccom-7f406.firebaseapp.com",
+//   projectId: "eccom-7f406",
+//   storageBucket: "eccom-7f406.appspot.com",
+//   messagingSenderId: "16269643748",
+//   appId: "1:16269643748:web:dd38f931ae7fd6b797c1f1"
 // };
 
-// // Initialize Firebase
+// Initialize Firebase
 // const app = initializeApp(firebaseConfig);
 // // const analytics = getAnalytics(app);
 // const auth = getAuth(app);
@@ -162,6 +161,7 @@ module.exports = {
   },
 
   renderHome: async (req, res) => {
+    console.log("got in here");
     let decode = tokenVerify(req);
     console.log(decode);
     let total= await TotalAmount(req)
@@ -189,6 +189,7 @@ module.exports = {
       });
   },
   redirectHome: (req, res) => {
+    console.log("entereddd");
     res.redirect("/user/home");
   },
 
@@ -612,6 +613,41 @@ module.exports = {
     const payer=req.body.PayerID;
     const paymentId=req.body.paymentId
     res.render("userView/orderSuccess")
+  },
+
+  loginWtihOtpPage:(req,res)=>{
+
+     res.render("userView/loginWithOtp")
+  },
+  otpVerification:(req,res)=>{
+
+    console.log(req.body.number);
+    userHelpers.checkNumber(req.body.number).then((user)=>{
+      res.json({status:"found"})
+    }).catch((error)=>{
+      res.json({status:error})
+    })
+
+  },
+  otpverified:(req,res,next)=>{
+
+    console.log("?///////////////////..................>>>>>>>>>>>>>>>....,,,,,,,,,,,,,,,,,<<<<<<<<<<<<<");
+console.log(req.params.num,"khjhkkhkkuuuu8889988989898998998");
+    userHelpers.checkNumber(req.params.num).then((response)=>{
+      console.log(response);
+            let user = response;
+            const token = createToken(user);
+            res.cookie("token", token, {
+              httpOnly: true,
+            });
+            res.status(201);
+            console.log("tpoek n",token);
+    
+            next();
+    }).catch((err)=>{
+      console.log(err);
+    })
+
   }
   
   

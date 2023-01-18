@@ -171,7 +171,7 @@
             <div class="row">
                 <div class="col-xxl-6 col-xl-5 col-lg-6 d-lg-block d-none ms-auto">
                     <div class="image-contain">
-                        <img src="http://localhost:4000/assets/images/inner-page/log-in.png" class="img-fluid" alt="">
+                        <img src="http://localhost:4000/assets/images/inner-page/otp.png" class="img-fluid" alt="">
                     </div>
                 </div>
 
@@ -179,48 +179,57 @@
                     <div class="log-in-box">
                         <div class="log-in-title">
                             <h3>Welcome To Mio Amore</h3>
-                            <h4>Log In Your Account</h4>
+                            <h4>Log with OTP</h4>
                         </div>
 
                         <div class="input-box">
-                            <form class="row g-4" action="http://localhost:8001/user/login-submit" method="post">
+                            <form class="row g-4"  id="PhoneNumSubmit">
                                 <div class="col-12">
-                                    <span style="color: red;">{{errorMessage}}</span>
+                                    <span id="error" style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form">
-                                        <input type="email" class="form-control"  name="email" id="s-email" oninput="validateEmail()" placeholder="Email Address">
-                                        <label for="email">Email Address</label>
+                                        <input type="phone" class="form-control"  name="phone" id="phonenumber_f"  placeholder="Email Address">
+                                        <label for="phone">Enter Mobile Number</label>
                                         <span style="color: red;" id="email-error"></span>
                                     
                                     </div>
                                 </div>
-
-                                <div class="col-12">
-                                    <div class="form-floating theme-form-floating log-in-form">
-                                        <input type="password" class="form-control" name="password" id="s-password1" oninput="validatePassword()"
-                                            placeholder="Password">
-
-                                        <label for="password">Password</label>
-                                               <span style="color: red;"  id="password-error"></span>
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <div class="forgot-box">
-                                        <div class="form-check ps-0 m-0 remember-box">
-                                            {{!-- <input class="checkbox_animated check-box" type="checkbox"
-                                                id="flexCheckDefault"> --}}
-                                            {{!-- <label class="form-check-label" for="flexCheckDefault">Remember me</label> --}}
-                                        </div>
-                                        {{!-- <a href="forgot.html" class="forgot-password">Forgot Password?</a> --}}
-                                    </div>
-                                </div>
-
-                                <div class="col-12">
-                                    <button class="btn btn-animation w-100 justify-content-center" type="submit">Log
-                                        In</button>
-                                </div>
-                            </form>
                         </div>
+
+                                
+
+                               
+
+                                <div class="col-12">
+                                    <button class="btn btn-animation w-100 justify-content-center" id="submitbtn" type="button">Submit
+                                        </button>
+                                </div>
+                                <div id="recaptcha-container"></div>
+                            </form>
+                            <form action="">
+                        <div id="otpDiv">
+                         <div class="log-in-box">
+                            <div class="log-in-title">
+                                <h3 class="text-title">Please enter the one time password to verify your account</h3>
+                                <h5 class="text-content">A code has been sent to <span>*******9897</span></h5>
+                            </div>
+                            </div>
+                            <div class="input-box">
+                            <form class="row g-4"  id="PhoneNumSubmit">
+                                <div class="col-12">
+                                    <span id="error" style="color: red;">{{errorMessage}}</span>
+                                    <div class="form-floating theme-form-floating log-in-form ">
+                                        <input type="phone" class="form-control"  name="phone" id="userOtp"  placeholder="enter OTP">
+                                        <label for="phone">Enter OTP</label>
+                                        <span style="color: red;" id="email-error"></span>
+                                    
+                                    </div>
+                                </div>
+                        </div>
+                        </div>
+                        <button  class="btn btn-animation w-100 mt-3" id="Validate"  type="button">Validate</button>
+                        
+                            </form>
+
 
                         <div class="other-log-in">
                             <h6>or</h6>
@@ -228,13 +237,13 @@
 
                         <div class="log-in-button">
                             <ul>
-                                <li>
-                                    {{!-- <button class="btn google-button w-100" onclick="loginwithOtp()">Log In with OTP?</button> --}}
-                                    <a href="/user/loginwithOtpPage" class="btn google-button w-100">
+                                {{!-- <li>
+                                    <button class="btn google-button w-100" onclick="loginwithOtp()">Log In with OTP?</button>
+                                    {{!-- <a href="/user/otplogin" class="btn google-button w-100">
                                         <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
                                             alt=""> Log In with OTP?
-                                    </a>
-                                </li>
+                                    </a> --}}
+                                </li> --}}
                                 <li>
                                     <a href="https://www.google.com/" class="btn google-button w-100">
                                         <img src="../assets/images/inner-page/google.png" class="blur-up lazyload"
@@ -258,13 +267,125 @@
             </div>
         </div>
     </section>
+
+    
+   
+
     <!-- log in section end -->
-    <script>
 
-    </script>
-
-
-<script src="http://localhost:4000/javascripts/validation.js"></script>
+    <script type="module" >
+  // Import the functions you need from the SDKs you need
 
 
-<script src="http://localhost:4000/javascripts/validation.js"></script>
+
+ {{!-- import Swal from '../node_modules/sweetalert2/src/sweetalert2.js ' --}}
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+
+  // https://firebase.google.com/docs/web/setup#available-libraries
+  import { getAuth,RecaptchaVerifier ,signInWithPhoneNumber} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCNaypDDBtu3WZWta6H3MEpNOI4DSb0MWg",
+    authDomain: "eccom-7f406.firebaseapp.com",
+    projectId: "eccom-7f406",
+    storageBucket: "eccom-7f406.appspot.com",
+    messagingSenderId: "16269643748",
+    appId: "1:16269643748:web:dd38f931ae7fd6b797c1f1"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
+
+
+
+
+     const phoneNumber = document.getElementById('phonenumber_f')
+
+
+      const submit=document.getElementById("submitbtn")
+      const validate=document.getElementById("Validate")
+   
+    const auth = getAuth();
+     
+
+
+    
+
+
+    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
+
+
+
+const sendVerificationCode =()=>{
+
+
+    const phone= `+91${phoneNumber.value}`
+     console.log("thisisthephone:",phone)
+     const appVerifier = window.recaptchaVerifier;
+  
+
+      signInWithPhoneNumber(auth, phone, appVerifier).then((confirmationResult) => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+   
+      window.confirmationResult = confirmationResult;
+
+
+     
+
+      // ...
+    }).catch((error) => {
+      alert(error)
+    });
+      }
+   
+   
+
+
+const ValidateOTP=()=>{
+const code = document.getElementById("userOtp").value
+
+confirmationResult.confirm(code).then((result) => {
+ const numb=phoneNumber.value
+ alert(numb)
+  const user = result.user;
+
+  alert("succesfully loggedin")
+
+ location.href=`http://localhost:8001/user/otpverified/${numb}`
+  // ...
+}).catch((error) => {
+  // User couldn't sign in (bad verification code?)
+  // ...
+  console.log(error)
+  alert("some error occured")
+});
+
+}
+
+submit.addEventListener('click',sendVerificationCode)
+validate.addEventListener('click',ValidateOTP)
+
+
+
+
+
+
+</script>
+    
+
+
+
+
+   
+
+{{!-- <script src="http://localhost:4000/javascripts/validation.js"></script> --}}
+
+
+{{!-- <script src="http://localhost:4000/javascripts/validation.js"></script> --}}
+
+      

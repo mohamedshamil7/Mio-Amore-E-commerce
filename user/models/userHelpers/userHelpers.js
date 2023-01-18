@@ -695,7 +695,32 @@ changePaymentStatus:(orderId)=>{
         resolve()
     })
 
-}
+},
+
+checkNumber:(phone)=>{
+    console.log("iths thheirjjej");
+    let number=phone
+    console.log(number,"kdkdkdkdkdn vknvnnnn");
+    return new Promise(async(resolve,reject)=>{
+        let user=await  db.get().collection(collection.USER_COLLECTION).findOne({phone:number})
+        console.log("this is the user from the otp succes",user);
+        if(user){
+         if(user.isBlocked){
+             reject({err:"this account is blocked"})
+         }else{
+            var userData={
+                username:user.username,
+                insertedId:user._id
+            }
+            resolve(userData)
+         }
+        }else{
+         reject({err:"account not found"})
+        }
+    })
+
+  
+},
 
 
 }

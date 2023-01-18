@@ -54,3 +54,10 @@ function quantityChange(cartId,prodId,count,quantity){
 }
 
 
+function loginwithOtp(){
+    $.ajax({
+        url:"http://localhost:8001/user/loginwithOtpPage",
+        method:'get'
+    })
+}
+

@@ -31,7 +31,10 @@ const {
   shopProducts,
   placeOrder,
   verifyPayment,
-  orderSuccess
+  orderSuccess,
+  loginWtihOtpPage,
+  otpVerification,
+  otpverified
 
 } = require("../controller/usercontroller");
 
@@ -42,7 +45,7 @@ router.get('/',homeJwtCheck, function(req, res, next) {
 
 router.get('/login',homeJwtCheck,renderLogin)
 
-router.get("/otplogin",otppage)
+// router.get("/otplogin",otppage)
 // router.post("/otp-submit",otpcheck)
 
 router.post('/login-submit',userLoginroute,redirectHome)
@@ -84,5 +87,12 @@ router.post('/placeOrder',placeOrder)
 router.post('/verifyPayment',verifyPayment)
 
 router.get('/orderSuccess',orderSuccess)
+
+router.get("/loginwithOtpPage",loginWtihOtpPage),
+
+
+router.post("/otpVerification",otpVerification),
+router.get("/otpverified/:num",otpverified,redirectHome)
+
 module.exports = router;
 
