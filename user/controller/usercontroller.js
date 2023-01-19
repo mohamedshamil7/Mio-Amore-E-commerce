@@ -28,38 +28,14 @@ const { match } = require("assert");
 
 
 
-// Import the functions you need from the SDKs you need
-// const { initializeApp } =require ("firebase/app");
-// const  { getAnalytics } =require ("firebase/analytics");
-// const  { getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword ,RecaptchaVerifier,signInWithPhoneNumber} = require ("firebase/auth");
-// const { resolve } = require("path");
-
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
-
-// // Your web app's Firebase configuration
-// // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCNaypDDBtu3WZWta6H3MEpNOI4DSb0MWg",
-//   authDomain: "eccom-7f406.firebaseapp.com",
-//   projectId: "eccom-7f406",
-//   storageBucket: "eccom-7f406.appspot.com",
-//   messagingSenderId: "16269643748",
-//   appId: "1:16269643748:web:dd38f931ae7fd6b797c1f1"
-// };
-
-// Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-// // const analytics = getAnalytics(app);
-// const auth = getAuth(app);
-// auth.languageCode = 'it';
 
 
 
 
-const MY_SECRET = process.env.MY_SECRET;
 
-const createToken = (user) => {
+const MY_SECRET =process.env.MY_SECRET;
+
+const createToken =   (user) => {
   console.log("jwt user",user);
   return jwt.sign({ value: user }, MY_SECRET, { expiresIn: "30m" });
 };
@@ -215,18 +191,16 @@ module.exports = {
         userHelpers.doSignup(userData).then(async(response) => {
             let user = response;
 
-            console.log( user,".."  );
+          
+          next()
             // console.log( user.isBlocked);
-            const token =createToken(user);
-
-            // res.cookie("token", token, {
-            //   httpOnly: true
-              
-            // });
-            res.cookie("token",token,{  httpOnly:true})
-            res.status(201);
-            console.log(token);
-            next();
+//             const token =createToken(user);
+// console.log(token);
+      
+//               res.cookie("tokehn",token)
+//             res.status(201);
+//             console.log(token);
+//             next();
           }).catch((user) => {
             console.log(user + "/");
   
@@ -252,6 +226,7 @@ module.exports = {
             console.log(response);
             let user = response;
             const token = createToken(user);
+            console.log(token);
             res.cookie("token", token, {
               httpOnly: true,
             });

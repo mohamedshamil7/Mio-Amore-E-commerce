@@ -54,7 +54,7 @@ router.get("/logout",userLogout)
 router.get('/signup',renderSignup,renderHome)
 
 
-router.post("/signup-submit",userSignupRoute,renderHome)
+router.post("/signup-submit",userSignupRoute,renderLogin)
 
 router.get("/home",autherization,renderHome)
 
