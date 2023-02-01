@@ -146,6 +146,9 @@ addNewProduct:(req,res)=>{
   // res.send("reached")
   console.log(req.files.Image1[0].filename);
   req.body.Image1=req.files.Image1[0].filename
+  req.body.Image2=req.files.Image2[0].filename
+  req.body.Image3=req.files.Image3[0].filename
+  req.body.Image4=req.files.Image4[0].filename
   adminHelper.addNewProduct(req.body).then((response)=>{
 
     res.redirect("/admin/stocks")
@@ -176,12 +179,7 @@ addNewProduct:(req,res)=>{
   
 }, 
 
-// Addimage:(upload.fields({name:'Image1',maxCount:1,}),function(req,res){
-//   console.log(req.prod);
-//   console.log("entereed");
 
-//   res.redirect("/admin/stocks")
-// }),
 
 
 availabilityCheck:(req,res)=>{

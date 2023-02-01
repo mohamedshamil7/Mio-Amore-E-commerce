@@ -185,6 +185,7 @@ module.exports={
                     category:id.category,
                     ManufacturingDate:id.ManufacturingDate,
                     COD:id.COD,
+                    Stock:id.Stock,
                     Image1:id.Image1,
                     Image2:id.Image2,
                     Image3:id.Image3,
