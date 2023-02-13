@@ -184,6 +184,7 @@ addNewProduct:(req,res)=>{
 
 availabilityCheck:(req,res)=>{
   console.log("call came");
+  console.log(req.body);
   adminHelper.AvailProduct(req.params.id,req.body.Availability).then((response)=>{
     res.redirect("/admin/stocks")
 
