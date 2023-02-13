@@ -7,6 +7,8 @@ var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var cors= require('cors')
+const Handlebars = require('handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
 
 var app = express();
@@ -28,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views'}))
+app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',handlebars: allowInsecurePrototypeAccess(Handlebars),layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views'}))
 
 db.connect((err)=>{
   if(err) console.log(' Connection error '+err);

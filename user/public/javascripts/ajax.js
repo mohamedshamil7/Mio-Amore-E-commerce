@@ -1,6 +1,7 @@
 
 
 
+
 function addToCart(prodId){
     $.ajax({
         url:' http://localhost:8001/user/addToCart/'+prodId,
@@ -59,5 +60,8 @@ function loginwithOtp(){
         url:"http://localhost:8001/user/loginwithOtpPage",
         method:'get'
     })
+
 }
+
+
 

@@ -4,6 +4,7 @@ var emailError = document.getElementById('email-error');
 var phoneError = document.getElementById('phone-error');
 var passwordError = document.getElementById('password-error');
 var submitError = document.getElementById('submit-error');
+var otpError = document.getElementById('otp-error')
 
 function validateName(){
     var name=document.getElementById('username').value;
@@ -36,11 +37,25 @@ function validateEmail() {
 function validatePhone() {
     
     var phone=document.getElementById('s-phone').value
+
     if(phone.length == 0){
         phoneError.innerHTML='Phone number is required'
         return false
     }
     if(!phone.match(/^\d{10}$/)){
+        phoneError.innerHTML='Enter valied Phone number'
+        return false
+    }
+    phoneError.innerHTML=''
+    return true
+}
+function validatePhoneOtp(){
+    var phoneOtp=document.getElementById('phonenumber_f').value
+    if(phoneOtp.length == 0){
+        phoneError.innerHTML='Phone number is required'
+        return false
+    }
+    if(!phoneOtp.match(/^\d{10}$/)){
         phoneError.innerHTML='Enter valied Phone number'
         return false
     }
@@ -63,6 +78,19 @@ function validatePassword(){
         return false
     }
     passwordError.innerHTML=''
+    return true
+}
+function validateOtp(){
+    var otp= document.getElementById('userOtp').value
+    if(otp.length==0){
+        otpError.innerHTML='Enter Otp'
+        return false
+    }
+    if(otp.length<6){
+        otpError.innerHTML='Enter Valid  Otp'
+        return false
+    }
+    otpError.innerHTML=''
     return true
 }
 

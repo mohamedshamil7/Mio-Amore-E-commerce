@@ -187,9 +187,9 @@
                                 <div class="col-12">
                                     <span id="error" style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form">
-                                        <input type="phone" class="form-control"  name="phone" id="phonenumber_f"  placeholder="Email Address">
+                                        <input type="phone" class="form-control"  name="phone" id="phonenumber_f" oninput="validatePhoneOtp()"  placeholder="Email Address">
                                         <label for="phone">Enter Mobile Number</label>
-                                        <span style="color: red;" id="email-error"></span>
+                                            <span style="color: red;" id="phone-error"></span>
                                     
                                     </div>
                                 </div>
@@ -205,8 +205,8 @@
                                 </div>
                                 <div id="recaptcha-container"></div>
                             </form>
+                        <div id="otpDiv" style="display: none;">
                             <form action="">
-                        <div id="otpDiv">
                          <div class="log-in-box">
                             <div class="log-in-title">
                                 <h3 class="text-title">Please enter the one time password to verify your account</h3>
@@ -218,17 +218,17 @@
                                 <div class="col-12">
                                     <span id="error" style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form ">
-                                        <input type="phone" class="form-control"  name="phone" id="userOtp"  placeholder="enter OTP">
+                                        <input type="phone" class="form-control"  name="phone" id="userOtp" oninput="validateOtp()"  placeholder="enter OTP">
                                         <label for="phone">Enter OTP</label>
-                                        <span style="color: red;" id="email-error"></span>
+                                        <span style="color: red;" id="otp-error"></span>
                                     
                                     </div>
                                 </div>
                         </div>
-                        </div>
                         <button  class="btn btn-animation w-100 mt-3" id="Validate"  type="button">Validate</button>
                         
                             </form>
+                        </div>
 
 
                         <div class="other-log-in">
@@ -237,18 +237,16 @@
 
                         <div class="log-in-button">
                             <ul>
-                                {{!-- <li>
-                                    <button class="btn google-button w-100" onclick="loginwithOtp()">Log In with OTP?</button>
-                                    {{!-- <a href="/user/otplogin" class="btn google-button w-100">
-                                        <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
-                                            alt=""> Log In with OTP?
-                                    </a> --}}
-                                </li> --}}
+                                
                                 <li>
-                                    <a href="https://www.google.com/" class="btn google-button w-100">
+                        <button  class="btn google-button w-100" id="loginGoogle"  type="button">
+                          <img src="http://localhost:4000/assets/images/inner-page/google.png" width="20" style="margin-right: 5%;" class="blur-up lazyload"  alt="">
+                            Log In with Google</button>
+
+                                    {{!-- <a href="" id="loginGoogle" class="btn google-button w-100">
                                         <img src="../assets/images/inner-page/google.png" class="blur-up lazyload"
                                             alt=""> Log In with Google
-                                    </a>
+                                    </a> --}}
                                 </li>
                                 
                             </ul>
@@ -273,117 +271,15 @@
 
     <!-- log in section end -->
 
-    <script type="module" >
-  // Import the functions you need from the SDKs you need
-
-
-
- {{!-- import Swal from '../node_modules/sweetalert2/src/sweetalert2.js ' --}}
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-
-  // https://firebase.google.com/docs/web/setup#available-libraries
-  import { getAuth,RecaptchaVerifier ,signInWithPhoneNumber} from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
-
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCNaypDDBtu3WZWta6H3MEpNOI4DSb0MWg",
-    authDomain: "eccom-7f406.firebaseapp.com",
-    projectId: "eccom-7f406",
-    storageBucket: "eccom-7f406.appspot.com",
-    messagingSenderId: "16269643748",
-    appId: "1:16269643748:web:dd38f931ae7fd6b797c1f1"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-
-
-
-
-
-
-     const phoneNumber = document.getElementById('phonenumber_f')
-
-
-      const submit=document.getElementById("submitbtn")
-      const validate=document.getElementById("Validate")
-   
-    const auth = getAuth();
-     
-
-
-    
-
-
-    window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {}, auth);
-
-
-
-const sendVerificationCode =()=>{
-
-
-    const phone= `+91${phoneNumber.value}`
-     console.log("thisisthephone:",phone)
-     const appVerifier = window.recaptchaVerifier;
-  
-
-      signInWithPhoneNumber(auth, phone, appVerifier).then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-   
-      window.confirmationResult = confirmationResult;
-
-
-     
-
-      // ...
-    }).catch((error) => {
-      alert(error)
-    });
-      }
-   
-   
-
-
-const ValidateOTP=()=>{
-const code = document.getElementById("userOtp").value
-
-confirmationResult.confirm(code).then((result) => {
- const numb=phoneNumber.value
- alert(numb)
-  const user = result.user;
-
-  alert("succesfully loggedin")
-
- location.href=`http://localhost:8001/user/otpverified/${numb}`
-  // ...
-}).catch((error) => {
-  // User couldn't sign in (bad verification code?)
-  // ...
-  console.log(error)
-  alert("some error occured")
-});
-
-}
-
-submit.addEventListener('click',sendVerificationCode)
-validate.addEventListener('click',ValidateOTP)
-
-
-
-
-
-
-</script>
-    
+    <script  type="module" src="http://localhost:4000/javascripts/firebase-otp.js"></script>
+    <script  type="module" src="http://localhost:4000/javascripts/firebase-google.js"></script>
 
 
 
 
    
 
-{{!-- <script src="http://localhost:4000/javascripts/validation.js"></script> --}}
+<script src="http://localhost:4000/javascripts/validation.js"></script>
 
 
 {{!-- <script src="http://localhost:4000/javascripts/validation.js"></script> --}}

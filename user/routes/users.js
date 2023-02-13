@@ -19,6 +19,7 @@ const {
   imageRoute,
   wishlistPage,
   addToWishlist,
+  renderOrdersPage,
   otppage,
   // otpcheck,
   addToCart,
@@ -34,7 +35,9 @@ const {
   orderSuccess,
   loginWtihOtpPage,
   otpVerification,
-  otpverified
+  otpverified,
+  googleSignupData,
+  googleLoginData
 
 } = require("../controller/usercontroller");
 
@@ -87,11 +90,14 @@ router.post('/placeOrder',placeOrder)
 router.post('/verifyPayment',verifyPayment)
 
 router.get('/orderSuccess',orderSuccess)
+router.get("/orders",renderOrdersPage)
 
 router.get("/loginwithOtpPage",loginWtihOtpPage),
 
 
 router.post("/otpVerification",otpVerification),
+router.get("/googleSignUp/:userData",googleSignupData,redirectHome)
+router.get("/googleLogin/:userData",googleLoginData,redirectHome)
 router.get("/otpverified/:num",otpverified,redirectHome)
 
 module.exports = router;

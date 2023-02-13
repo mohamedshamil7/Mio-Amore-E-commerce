@@ -448,8 +448,8 @@ changeProductQuantity:(data)=>{
     let quantity=parseInt(data.quantity)
     let count=parseInt(data.count)
     console.log(data);
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",data.cart);
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>||",data.product);
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>",data.cart);
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>||",data.product);
     return new Promise(async(resolve,reject)=>{
         if(count== -1 && quantity== 1 ){
             await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
@@ -582,6 +582,7 @@ getAddress:(userId)=>{
 
 
 placeOrder:(order,cart,total)=>{
+    console.log("dfjhdjndkjf this i s place order cart ::::",cart);
 return new Promise(async(resolve,reject)=>{
 let userId=order.userId
 console.log(typeof userId);
@@ -608,12 +609,6 @@ console.log(typeof userId);
         },
         {
             $project:{
-                // fullName:'$Address.fullName',
-                // houseNo:'$Address.houseNo',
-                // pin:'$Address.pin',
-                // locality:'$Address.locality',
-                // useradd:'$Address.useradd',
-                // district:'$Address.district',
                 deleviryDetails:{
                     fullName:'$Address.fullName',
                 houseNo:'$Address.houseNo',
@@ -626,7 +621,7 @@ console.log(typeof userId);
             }
         }
     ]).toArray()
-    console.log("((((((((((((((((((((((((((((((((",address);
+    console.log("(((((((((",address);
 
     let orderObj={
         deleviryDetails:address[0].deleviryDetails ,
@@ -642,15 +637,43 @@ console.log(typeof userId);
         // db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId) })
         console.log("response:",response);
         resolve(response.insertedId)
+
     }).catch((error)=>{
         console.log(error);
     })
-    console.log(orderObj);
+    // console.log( ` this is orer :::::${orderObj}`);
 })
 
-
 },
+            
+        removeCartAfterOrder:(items,userId)=>{
 
+    console.log("this is ccart",items);
+
+
+    return new Promise(async(resolve,reject)=>{
+        console.log("ullilkeri");
+        for(let i =0;i<items.length;i++){
+            items[i].quantity=Number(items[i].quantity)
+            db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
+                $inc: {Stock:-items[i].quantity}
+            }).then(()=>{
+                db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)}).then(()=>{
+                resolve()
+                 }).catch((error=>{
+                    reject()
+                 }))
+            })
+        }
+    
+
+
+            
+
+        
+        
+    })
+},
 generateRazorPay:(orderId,total)=>{
     return new Promise(async(resolve,reject)=>{
         console.log(total);
@@ -721,6 +744,67 @@ checkNumber:(phone)=>{
 
   
 },
+googleSignup:(userData)=>{
+    // console.log(typeof userData);
+    // console.log(userData,"userdata google signup helper")
+    // const email= userData.email
+    // const username= userData.username
+ 
+    const Data={
+        email:userData.email,
+        username:userData.username,
+        createdAt: new Date().toDateString(),
+        isBlocked:false
+
+    }
+    return new Promise(async(resolve,reject)=>{
+        try{
+            const user= await db.get().collection(collection.USER_COLLECTION).findOne({email:Data.email})
+            if(user){
+                reject(user)
+            }else{
+                let newuser=  await db.get().collection(collection.USER_COLLECTION).insertOne(Data)
+                console.log(`newuser signup using Google : ${newuser}`)
+                console.log(newuser._id)
+                if(newuser.insertedId){
+                    var users={
+                        username:Data.username,
+                        insertedId:newuser.insertedId
+        
+                    }
+                    console.log("resolveeddddd");
+                  resolve(users)
+                }
+            }
+        }
+        catch(e){
+            console.log(e);
+            // alert(e)
+            reject()
+        }
+    })
+},
+googleLogin:(userData)=>{
+    return new Promise(async(resolve,reject)=>{
+        try{
+            let user= await db.get().collection(collection.USER_COLLECTION).findOne({email:userData.email})
+            if(user){
+                // console.log(user)
+                var Data={
+                    username:user.username,
+                    insertedId:user._id
+                }
+                resolve(Data)
+            }else{
+                reject()
+            }
+        }
+        catch(e){
+            reject(e)
+        }
+        
+    })
+}
 
 
 }

@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.5",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "bcrypt": "^5.1.0",
     "cookie-parser": "~1.4.4",
@@ -17,6 +18,7 @@
     "express-handlebars": "^6.0.6",
     "fast-gateway": "^3.4.4",
     "firebase": "^9.15.0",
+    "firebase-admin": "^11.5.0",
     "firebaseui": "^6.0.2",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",

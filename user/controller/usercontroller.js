@@ -24,6 +24,7 @@ paypal.configure({
 
 const { request } = require("http");
 const { match } = require("assert");
+const { resolve } = require("path");
 
 
 
@@ -476,8 +477,35 @@ module.exports = {
     userHelpers. placeOrder  (req.body,cart,total).then((orderId)=>{
       console.log("/////////////////////////////////////////////////////////",orderId);
       if(req.body.PaymentOption==='COD'){
-        res.json({status:"COD"})
+        // let ids = cart.map( custom =>{
+        //   return [{
+        //     prod:custom.item
+        //   }]
+        // })
+        console.log(cart);
+        function destruct(cart) { 
+          let data =[]
+          for(let i=0;i<cart.length;i++){
+            let obj ={}  
+            obj.prod= cart[i].item
+            obj.quantity= cart[i].quantity
+            data.push(obj)
+          }
+          return data
+        }
+        let ids = destruct(cart)
+        console.log(ids,"ids");
+  
 
+        console.log(`this is the idss :: ${ids}`);
+        userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
+        .then(()=>{
+          res.json({status:"COD"})
+
+        }).catch(()=>{
+          console.log("error occured while removing from cart after order");
+        })
+        
       }
       else if(req.body.PaymentOption=='razorPay'){
         console.log("entered");
@@ -535,7 +563,6 @@ module.exports = {
    
     
   },
-
 
   paypalSucces: (req, res) => {
     const payerId = req.query.PayerID;
@@ -623,8 +650,56 @@ console.log(req.params.num,"khjhkkhkkuuuu8889988989898998998");
       console.log(err);
     })
 
-  }
+  },
+
+  renderOrdersPage:(req,res)=>{
+    res.render("userView/orders")
+  },
   
+  googleSignupData:(req,res,next)=>{
+    // console.log(req.userData)
+   let data=  JSON.parse('{"' + decodeURI(req.params.userData.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
+console.log(data);
+    userHelpers.googleSignup(data).then((user)=>{
+        const token= createToken(user)
+               // console.log( user.isBlocked);
+//             const token =createToken(user);
+        res.cookie("token", token, {
+          httpOnly: true,
+        });
+        console.log(token);
+      next()
+
+    }).catch(()=>{
+      alert('try not worked')
+    }).catch((user)=>{
+      
+      res.render("userView/signup", {
+        errorMessage: "email id already exists in the database",
+      });
+    })
+  },
+
+    googleLoginData:(req,res,next)=>{
+      let data=  JSON.parse('{"' + decodeURI(req.params.userData.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
+      console.log(data);
+      userHelpers.googleLogin(data).then((Data)=>{
+        let user = Data;
+        const token = createToken(user);
+        res.cookie("token", token, {
+          httpOnly: true,
+        });
+        console.log(token);
+      next()
+
+      }).catch((err) => {
+        res.render("userView/login", {
+          errorMessage: "Some error Occured",
+        });
+        console.log("error ducring login");
+        console.log(err);
+      })
+  }
   
   
   
