@@ -5,8 +5,10 @@ const jwt = require("jsonwebtoken");
 const { read } = require("fs");
 const { send } = require("process");
 const { reset } = require("nodemon");
-const { userBlockCheck } = require("../models/userHelpers/userHelpers");
+const { userBlockCheck, inStockcheck } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
+const Swal = require('sweetalert2')
+// import Swal from 'sweetalert2'
 
 const cc= require("currency-converter-lt")
 
@@ -25,6 +27,7 @@ paypal.configure({
 const { request } = require("http");
 const { match } = require("assert");
 const { resolve } = require("path");
+const { database } = require("firebase-admin");
 
 
 
@@ -51,10 +54,11 @@ const tokenVerify = (request) => {
   
   const decode=  tokenVerify(req)
 
-  return await userHelpers.getcart(decode.value.insertedId).then((cart)=>{
-    console.log("new cart:>>>",cart);
-    return cart
-  }).catch((error)=>{
+  return await userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+  
+    // console.log("new cart:>>>",cart);
+    return obj
+  }).catch(()=>{
     let cartStatus= "no cart available"
     return cartStatus
   })
@@ -76,6 +80,7 @@ const TotalAmount= async (req)=>{
   return total
  })
 }
+
 
 
 
@@ -143,6 +148,8 @@ module.exports = {
     console.log(decode);
     let total= await TotalAmount(req)
     let cart =await cartProd(req)
+      let products= cart.cartItems
+    let outofStock= cart.outofStock
     console.log(cart);
 
     let count= await CartCount(req)
@@ -155,9 +162,10 @@ module.exports = {
           data,
           user: decode.value.username,
           userpar: true,
-          cart,
+          products,
            count,
-           total
+           total,
+           outofStock
         });
       })
       .catch((err) => {
@@ -266,6 +274,8 @@ module.exports = {
   productPage: async(req, res) => {
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let user= decode.value.insertedId
@@ -273,6 +283,7 @@ module.exports = {
     let prodId = req.params.id;
       userHelpers.viewProduct(prodId).then((response) => {
         let data = response;
+        console.log(`data:?????????//// ${data.isStock}`);
         userHelpers.inWishlist(user,prodId).then((response)=>{
           let wishlist=response
           res.render("userView/productPage", {
@@ -280,7 +291,8 @@ module.exports = {
             data,
             user: decode.value.username,
             userpar: true,
-            cart,
+            products,
+            outofStock,
             count,
             total
           });
@@ -291,7 +303,8 @@ module.exports = {
             data,
             user: decode.value.username,
             userpar: true,
-            cart,
+            products,
+            outofStock,
             count,
             total
           });
@@ -316,6 +329,8 @@ module.exports = {
   wishlistPage:async (req, res) => {
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
     let count= await CartCount(req)
     userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
       let data = response;
@@ -323,7 +338,8 @@ module.exports = {
         data,
         user: decode.value.username,
         userpar: true,
-        cart,
+        products,
+        outofStock,
         count
       });
     });
@@ -394,19 +410,25 @@ module.exports = {
   getCart:async (req,res)=>{
     let decode= tokenVerify(req)
     let total= await TotalAmount(req)
+    let count= await CartCount(req)
     console.log(total);
-    userHelpers.getcart(decode.value.insertedId).then((products)=>{
-
-      res.render("userView/cart",{products,userpar:true,total})
+    userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+      console.log(obj.outofStock);
+      let products = obj.cartItems
+      let outofStock= obj.outofStock
+      // console.log(obj.cartItems);
+      // console.log(products,"?????????///////////////////");
+       res.render("userView/cart",{products,userpar:true,total,outofStock,count})
     })
   },
  
   removeCart:(req,res)=>{
     let decode= tokenVerify(req)
-    console.log(req.params.id,"this is te iddddd");
-    userHelpers.removeCart(decode.value.insertedId,req.params.id).then((response)=>{
+    console.log(req.body.prodId,"this is te iddddd");
+    userHelpers.removeCart(decode.value.insertedId,req.body.prodId).then((response)=>{
       console.log("this is the response",response);
-      res.redirect(req.get("referer")); 
+      // res.redirect(req.get("referer")); 
+      res.json(response)
     }).catch((error)=>{
       console.log("failed to dlete from cart");
     })
@@ -415,20 +437,34 @@ module.exports = {
   changeProductQuantity:(req,res,next)=>{
     userHelpers.changeProductQuantity(req.body).then((response)=>{
       res.json(response)
+    }).catch(()=>{
+      console.log("here");
+      let error = "Stock limit Exceeded"
+
+    res.status(404).json({error: 'Ha Ocurrido un error'});
     })
   },
   checkoutPage:async(req,res)=>{
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
+    // let products= cart.cartItems
+    // let outofStock= cart.outofStock
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let Address= await userHelpers.getAddress(decode .value.insertedId)
+    // let inStock= await checkinStock(req)
     let user=decode.value.insertedId
     console.log("@#############@@@@@@@###",user);
     console.log("???????",Address,">>>>>");
-    userHelpers.getcart(decode.value.insertedId).then((products)=>{
+    userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+      let products = obj.cartItems
+      let outofStock= obj.outofStock
+     
 
-      res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total,user})
+
+
+  return res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total,outofStock})
+
     })
   },
 
@@ -446,12 +482,14 @@ module.exports = {
   shopProducts:async(req,res)=>{
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     userHelpers.getAllProducts().then((data) => {
       
       console.log("the then data is :", data);
-      res.render("userView/shop",{userpar:true,data,user:decode.value.username,cart,count,total})
+      res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total})
     })
     .catch((err) => {
       console.log(err);
@@ -465,6 +503,8 @@ module.exports = {
     console.log(req.body,"msa");
     let decode= tokenVerify(req);
     let cart= await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
     let total= await TotalAmount(req)
 
     let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
@@ -673,7 +713,7 @@ console.log(data);
     }).catch(()=>{
       alert('try not worked')
     }).catch((user)=>{
-      
+      console.log("eroorroorro");
       res.render("userView/signup", {
         errorMessage: "email id already exists in the database",
       });

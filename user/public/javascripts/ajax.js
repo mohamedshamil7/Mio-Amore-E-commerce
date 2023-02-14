@@ -2,6 +2,7 @@
 
 
 
+
 function addToCart(prodId){
     $.ajax({
         url:' http://localhost:8001/user/addToCart/'+prodId,
@@ -42,17 +43,72 @@ function quantityChange(cartId,prodId,count,quantity){
         method:'post',
         success:(response)=>{
             if(response.prodDelete){
-                alert("product has been removed from cart")
-                location.reload()
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted',
+                    showConfirmButton: false,
+                    timer: 1000
+                  })
+                  setTimeout(()=>{
+                     location.reload()
+                },1000)
             }
             else{
                 location.reload()
                 document.getElementById(prodId).innerHTML=quantity+count
             }
+        },
+        error:(xhr, thrownError)=>{
+            console.log("isdda")
+            Swal.fire({
+                icon: 'error',
+                title: 'Stock Unavailable',
+                text: 'Something went wrong!',
+               
+              })
         }
 
     })
-}
+};
+
+function removeFromCart(prodId){
+    // console.log(prodId)
+    Swal.fire({
+        title: 'Are you sure you want to delete this Product ?',
+        // text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+
+        if (result.isConfirmed) {
+            $.ajax({
+                url:"http://localhost:8001/user/removeCart",
+                method:'post',
+                data:{
+                prodId
+                },
+                success:(response)=>{
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        showConfirmButton: false,
+                        timer: 1000
+                      })
+                      setTimeout(()=>{
+                         location.reload()
+                    },1000)
+                    }
+            })
+         
+        }
+      })
+
+   
+};
 
 
 function loginwithOtp(){

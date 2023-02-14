@@ -179,7 +179,7 @@
                                         </a>
                                     </li>
                                     <li class="right-side">
-                                               {{#if cart}}
+                                               {{#if products}}
                                         <div class="onhover-dropdown header-badge">
                                             <button type="button" class="btn p-0 position-relative header-wishlist">
                                                 <i data-feather="shopping-cart"></i>
@@ -189,7 +189,7 @@
 
 
                                             <div class="onhover-div">
-                                                    {{#each cart}}
+                                                    {{#each products}}
 
                                                 <ul class="cart-list">
                                                     <li class="product-box-contain">
@@ -224,9 +224,16 @@
                                                 </div>
 
                                                 <div class="button-group">
+
                                                     <a href="/user/usercart" class="btn btn-sm cart-button">View Cart</a>
+                                                    {{#if outofStock}}
+                                                    <button onclick="stockpop()" class="btn btn-sm cart-button theme-bg-color
+                                                    text-white">Checkout</button>
+                                                   
+                                                    {{else}}
                                                     <a href="/user/checkout" class="btn btn-sm cart-button theme-bg-color
                                                     text-white">Checkout</a>
+                                                    {{/if}}
                                                 </div>
                                             </div>
                                         </div>
@@ -320,3 +327,5 @@
         </ul>
     </div>
     <!-- mobile fix menu end -->
+
+    <script src="http://localhost:4000/javascripts/headerpopup.js"></script>

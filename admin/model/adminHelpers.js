@@ -126,7 +126,8 @@ module.exports={
     },
 
     addNewProduct:(Data)=>{
-
+        Data.Stock= Number(Data.Stock)
+        Data.inStock= true
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){
@@ -149,6 +150,7 @@ module.exports={
         }else{
             status= true
         }
+
         await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
             $set:{
                 Availability:status
@@ -174,7 +176,10 @@ module.exports={
 
     editProduct:(id)=>{
         console.log(">>>>");
-        // console.log(id);
+        id.Stock=Number(id.Stock)
+        if(id.Stock<1){
+            id.inStock=false
+        }
         return new Promise(async(resolve,reject)=>{
             let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
                 $set:{
@@ -185,7 +190,8 @@ module.exports={
                     category:id.category,
                     ManufacturingDate:id.ManufacturingDate,
                     COD:id.COD,
-                    Stock:id.Stock,
+                    Stock :id.Stock,
+                    inStock :id?.inStock,
                     Image1:id.Image1,
                     Image2:id.Image2,
                     Image3:id.Image3,

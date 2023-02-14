@@ -127,8 +127,10 @@ module.exports={
         console.log("enttered");
         return new Promise(async(resolve,reject)=>{
 
-            let product= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)}).then((response)=>{
-             resolve(response)
+            await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)}).then((response)=>{
+            
+                console.log(response)
+              resolve(response)
             }).catch((error)=>{
                  reject(error)
                 })
@@ -381,8 +383,24 @@ getcart:(userId)=>{
 
         ]).toArray()
         if(cartItems){
+            let outofStock= false
             console.log("workingggg");
-            resolve(cartItems)
+            for(let i=0;i<cartItems.length;i++){
+                console.log(cartItems.length);
+                console.log(cartItems[i].cart_product.inStock,"<<<<<<<<<");
+                if(cartItems[i].cart_product.inStock==false){
+                    console.log("hereeeere");
+                    outofStock=true
+                }
+            }
+            console.log(outofStock);
+            console.log(cartItems);
+            let obj={
+                cartItems:cartItems,
+                outofStock:outofStock
+            }
+            console.log("helper obj",obj);
+            resolve(obj)
         }
         else{
             console.log("this is woring");
@@ -446,26 +464,35 @@ getCartCount:(userId)=>{
 },
 changeProductQuantity:(data)=>{
     let quantity=parseInt(data.quantity)
+
     let count=parseInt(data.count)
     console.log(data);
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>",data.cart);
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>||",data.product);
+
     return new Promise(async(resolve,reject)=>{
-        if(count== -1 && quantity== 1 ){
-            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
-                $pull:{
-                    product:{item:ObjectId(data.product)}
-                }
-            }).then(()=>{
-                resolve({prodDelete:true})
-            })
+        let stock= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(data.product)})
+        stock=stock.Stock
+        if(stock<(quantity + count)){
+            console.log("entered reject");
+            return reject()
         }else{
-            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
-                $inc:{'product.$.quantity':count}  
-            }).then(()=>{
-                resolve(true)
-            })
+            if(count== -1 && quantity== 1 ){
+                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                    $pull:{
+                        product:{item:ObjectId(data.product)}
+                    }
+                }).then(()=>{
+                    resolve({prodDelete:true})
+                })
+            }else{
+                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                    $inc:{'product.$.quantity':count}  
+                }).then(()=>{
+                    resolve(true)
+                })
+            }
+
         }
+       
        
 
     })
@@ -655,9 +682,16 @@ console.log(typeof userId);
         console.log("ullilkeri");
         for(let i =0;i<items.length;i++){
             items[i].quantity=Number(items[i].quantity)
-            db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
+            await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
                 $inc: {Stock:-items[i].quantity}
-            }).then(()=>{
+                 
+             })
+
+
+           await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},[{
+               $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
+            }]).then(()=>{
+                // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
                 db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)}).then(()=>{
                 resolve()
                  }).catch((error=>{
@@ -803,6 +837,41 @@ googleLogin:(userData)=>{
             reject(e)
         }
         
+    })
+},
+inStockcheck:(userId)=>{
+    console.log(userId,"//");
+    return new Promise(async(resolve,reject)=>{
+        let stock= await db.get().collection(collection.CART_COLLECTION).aggregate([
+            {
+                $match:{
+                    user:ObjectId(userId)
+                }
+            },
+            {
+                $unwind:'$product'
+            },
+            {
+                $project:{
+                    item:'$product.item',
+                    // inStock:'$product.inStock'
+                }
+            },
+            {
+                $lookup:{
+                    from:collection.PRODUCT_COLLECTIONS,
+                    localField:'item',
+                    foreignField:'_id',
+                    as:'cart_product'
+                }
+            },
+            {
+                $project:{
+                    item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
+                }
+            }
+        ]).toArray()
+        console.log(stock);
     })
 }
 

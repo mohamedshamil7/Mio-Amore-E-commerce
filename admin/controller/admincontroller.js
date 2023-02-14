@@ -193,15 +193,8 @@ availabilityCheck:(req,res)=>{
   })
 },
 
-// deleteProduct:(req,res)=>{
-//   adminHelper.deleteProduct(req.body.id).then((response)=>{
-//     console.log(response);
-//     res.redirect("/admin/stocks")
-//   }).catch((error)=>{
-//     console.log(error);
-//   })
 
-// },
+
 editProduct:(req,res)=>{
 
   adminHelper.getEditProduct(req.body.id).then((product)=>{

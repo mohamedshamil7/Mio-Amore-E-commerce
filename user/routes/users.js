@@ -75,7 +75,7 @@ router.get('/addToCart/:id',addToCart)
 
 router.get('/usercart',autherization,getCart)
 
-router.get('/removeCart/:id',removeCart)
+router.post('/removeCart',removeCart)
 
 router.post('/changeProductQuantity',changeProductQuantity)
 
