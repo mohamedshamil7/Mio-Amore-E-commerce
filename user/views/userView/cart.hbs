@@ -3,11 +3,11 @@
         <div class="container-fluid-lg">
             <div class="row g-sm-5 g-3">
                 <div class="col-xxl-9">
+                                    {{#if products}}
                     <div class="cart-table">
                         <div class="table-responsive-xl">
                             <table class="table">
                                 <tbody>
-                                    {{#if products}}
                                     {{#each products}}
                                     {{!-- {{#each this.cart_product}} --}}
                                     <tr class="product-box-contain">
@@ -125,13 +125,18 @@
                                    
 
                                    {{/each}}
-                                   {{/if}}
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                </div>
 
+
+                                   {{else}}
+                <img style="margin-left:5% ;" src="http://localhost:8001/user/images/112087-empty.gif" alt="">
+                                   {{/if}}
+                </div>
+                {{#if products}}
                 <div class="col-xxl-3">
                     <div class="summery-box p-sticky">
                         <div class="summery-header">
@@ -200,6 +205,7 @@
                         </div>
                     </div>
                 </div>
+                {{/if}}
             </div>
         </div>
     </section>

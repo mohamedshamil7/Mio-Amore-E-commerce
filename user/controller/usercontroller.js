@@ -497,6 +497,15 @@ module.exports = {
     });
    
   },
+  renderOrdersPage:async(req,res)=>{
+    let decode= tokenVerify(req);
+    let cart= await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
+    let total= await TotalAmount(req)
+    let count= await CartCount(req)
+    res.render("userView/orders",{userpar:true,user:decode.value.username,products,outofStock,count,total})
+  },
 
 
   placeOrder:async(req,res)=>{
@@ -514,7 +523,7 @@ module.exports = {
     // console.log(total);
     console.log(req.body);
     
-    userHelpers. placeOrder  (req.body,cart,total).then((orderId)=>{
+    userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
       console.log("/////////////////////////////////////////////////////////",orderId);
       if(req.body.PaymentOption==='COD'){
         // let ids = cart.map( custom =>{
@@ -523,17 +532,17 @@ module.exports = {
         //   }]
         // })
         console.log(cart);
-        function destruct(cart) { 
+        function destruct(products) { 
           let data =[]
-          for(let i=0;i<cart.length;i++){
+          for(let i=0;i<products.length;i++){
             let obj ={}  
-            obj.prod= cart[i].item
-            obj.quantity= cart[i].quantity
+            obj.prod= products[i].item
+            obj.quantity= products[i].quantity
             data.push(obj)
           }
           return data
         }
-        let ids = destruct(cart)
+        let ids = destruct(products)
         console.log(ids,"ids");
   
 
@@ -692,9 +701,7 @@ console.log(req.params.num,"khjhkkhkkuuuu8889988989898998998");
 
   },
 
-  renderOrdersPage:(req,res)=>{
-    res.render("userView/orders")
-  },
+
   
   googleSignupData:(req,res,next)=>{
     // console.log(req.userData)

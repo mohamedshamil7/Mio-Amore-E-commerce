@@ -616,6 +616,7 @@ console.log(typeof userId);
     console.log("/////////?///",userId);
     // if(order.PaymentOption==='COD'?)
     let order_status= order.PaymentOption==='COD'?'placed':'pending'
+    console.log(order_status);
 
     let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
 
@@ -681,6 +682,7 @@ console.log(typeof userId);
     return new Promise(async(resolve,reject)=>{
         console.log("ullilkeri");
         for(let i =0;i<items.length;i++){
+            console.log(";;");
             items[i].quantity=Number(items[i].quantity)
             await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
                 $inc: {Stock:-items[i].quantity}
@@ -691,8 +693,10 @@ console.log(typeof userId);
            await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},[{
                $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
             }]).then(()=>{
+                console.log("herehhrehehhe");
                 // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
                 db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)}).then(()=>{
+                    console.log("resolve stage");
                 resolve()
                  }).catch((error=>{
                     reject()
