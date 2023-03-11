@@ -19,7 +19,7 @@ const {
   imageRoute,
   wishlistPage,
   addToWishlist,
-  renderOrdersPage,
+  renderProfilePage,
   otppage,
   // otpcheck,
   addToCart,
@@ -90,7 +90,7 @@ router.post('/placeOrder',placeOrder)
 router.post('/verifyPayment',verifyPayment)
 
 router.get('/orderSuccess',orderSuccess)
-router.get("/orders",renderOrdersPage)
+router.get("/profile",autherization,renderProfilePage)
 
 router.get("/loginwithOtpPage",loginWtihOtpPage),
 

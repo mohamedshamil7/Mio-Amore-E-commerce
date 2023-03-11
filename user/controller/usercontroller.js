@@ -28,6 +28,7 @@ const { request } = require("http");
 const { match } = require("assert");
 const { resolve } = require("path");
 const { database } = require("firebase-admin");
+const { stringify } = require("querystring");
 
 
 
@@ -283,7 +284,7 @@ module.exports = {
     let prodId = req.params.id;
       userHelpers.viewProduct(prodId).then((response) => {
         let data = response;
-        console.log(`data:?????????//// ${data.isStock}`);
+        console.log(`data:?????????//// ${data.inStock}`);
         userHelpers.inWishlist(user,prodId).then((response)=>{
           let wishlist=response
           res.render("userView/productPage", {
@@ -453,7 +454,9 @@ module.exports = {
     let total= await TotalAmount(req)
     let Address= await userHelpers.getAddress(decode .value.insertedId)
     // let inStock= await checkinStock(req)
-    let user=decode.value.insertedId
+    let user=decode.value.username
+    let userID = ObjectId(decode.value.insertedId) 
+    console.log( "uer if", userID);
     console.log("@#############@@@@@@@###",user);
     console.log("???????",Address,">>>>>");
     userHelpers.getcart(decode.value.insertedId).then((obj)=>{
@@ -463,13 +466,38 @@ module.exports = {
 
 
 
-  return res.render("userView/checkout",{Address,products,user:decode.value.username,userpar:true,cart,count,total,outofStock})
+   return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock})
 
     })
   },
 
 
   addAddress:(req,res)=>{
+    if(!req.body.fname ||
+      !req.body.mobile ||
+      !req.body.pin ||
+      !req.body.houseNo ||
+      !req.body.landMark ||
+      !req.body.useradd ||
+      !req.body.town){
+        // res.render("userView/checkout", { error: "please enter details" });
+       return  Swal.fire({
+          title: 'Do you want to save the changes?',
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: 'Save',
+          denyButtonText: `Don't save`,
+        })
+        // .then((result) => {
+        //   /* Read more about isConfirmed, isDenied below */
+        //   if (result.isConfirmed) {
+        //     Swal.fire('Saved!', '', 'success')
+        //   } else if (result.isDenied) {
+        //     Swal.fire('Changes are not saved', '', 'info')
+        //   }
+        // })
+
+      }
     let decode = tokenVerify(req);
     console.log(req.body);
     userHelpers.addAddress(decode.value.insertedId,req.body).then((response)=>{
@@ -497,14 +525,27 @@ module.exports = {
     });
    
   },
-  renderOrdersPage:async(req,res)=>{
+  renderProfilePage:async(req,res)=>{
     let decode= tokenVerify(req);
     let cart= await cartProd(req)
     let products= cart.cartItems
     let outofStock= cart.outofStock
     let total= await TotalAmount(req)
     let count= await CartCount(req)
-    res.render("userView/orders",{userpar:true,user:decode.value.username,products,outofStock,count,total})
+    let data
+    let orderData
+    // console.log(decode.value.insertedId);
+     await userHelpers.getUserData(decode.value.insertedId).then((response)=>{
+      console.log("/////?",response);
+    data= response
+    })
+     await userHelpers.getOrderDetails(decode.value.insertedId).then((response)=>{
+      // console.log(response);
+      orderData = response
+    })
+    // for(let i= 0 ;i<orderData.length;i++)
+    // console.log(";;;",orderData[0].cart[0]);
+  res.render("userView/profile",{userpar:true,user:decode.value.username,products,outofStock,count,total,data,orderData})
   },
 
 
@@ -521,7 +562,13 @@ module.exports = {
           console.log("response",response); 
           var usdtotal=Math.round(response)
     // console.log(total);
-    console.log(req.body);
+    console.log(typeof req.body.userId,"::::::");
+    let user= stringify(req.body.userId)
+    console.log(user);
+    let id= ObjectId(req.body.userId)
+    console.log(id);
+    req.body.id= id
+
     
     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
       console.log("/////////////////////////////////////////////////////////",orderId);
@@ -715,6 +762,7 @@ console.log(data);
           httpOnly: true,
         });
         console.log(token);
+
       next()
 
     }).catch(()=>{

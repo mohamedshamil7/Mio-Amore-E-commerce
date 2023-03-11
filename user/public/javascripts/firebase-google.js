@@ -49,6 +49,12 @@ import {
        var queryString = $.param(userData);
        if(newuser){
         alert("new user")
+
+
+        
+
+
+
         if(userData){
 
           location.href = `http://localhost:8001/user/googleSignUp/${queryString}`;

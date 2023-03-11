@@ -6,6 +6,7 @@ var passwordError = document.getElementById('password-error');
 var submitError = document.getElementById('submit-error');
 var otpError = document.getElementById('otp-error')
 
+
 function validateName(){
     var name=document.getElementById('username').value;
     if(name.length == 0){

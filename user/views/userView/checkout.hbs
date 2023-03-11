@@ -6,7 +6,6 @@
                 <div class="col-lg-8">
                     <div class="left-sidebar-checkout">
                         <div class="checkout-detail-box">
-                            {{!-- <div id="swal"></div> --}}
                             <ul>
                                 <li>
                                     <div class="checkout-icon">
@@ -27,7 +26,7 @@
                                         
 
                                         <div class="checkout-detail">
-                                             <input type="text" name="userId" value="{{user}} " hidden>
+                                             <input  name="userId" value="{{userID}}" hidden>
                                             <div class="row g-4">
                                                 {{#if Address}}
                                                 {{#each Address}}
@@ -63,14 +62,22 @@
                                                                     <h6 class="text-content"><span
                                                                             class="text-title">Pin Code :</span> {{this.Address.pin}}</h6>
                                                                 </li>
+                                                                <li>
+                                                                    <h6 class="text-content"><span
+                                                                            class="text-title">House N :</span> {{this.Address.houseNo}}</h6>
+                                                                </li>
 
                                                                 <li>
                                                                     <h6 class="text-content mb-0"><span
-                                                                            class="text-title">locality:</span> {{this.Address.locality}}</h6>
+                                                                            class="text-title">locality:</span> {{this.Address.landMark}}</h6>
                                                                 </li>
                                                                 <li>
                                                                     <h6 class="text-content mb-0"><span
-                                                                            class="text-title">locality:</span> {{this.Address.district}}</h6>
+                                                                            class="text-title">mobile:</span> {{this.Address.mobile}}</h6>
+                                                                </li>
+                                                                <li>
+                                                                    <h6 class="text-content mb-0"><span
+                                                                            class="text-title">town:</span> {{this.Address.town}}</h6>
                                                                 </li>
                                                             </ul>
                                                  
@@ -241,11 +248,11 @@
 
                             </ul>
                         </div>
-                    </div>
-                </div>
+                        </div>
+                        </div>
 
-                <div class="col-lg-4">
-                    <div class="right-side-summery-box">
+                        <div class="col-lg-4">
+                        <div class="right-side-summery-box">
                         <div class="summery-box-2">
                             <div class="summery-header">
                                 <h3>Order Summery</h3>
@@ -345,43 +352,55 @@
                                 </div>
                             <div class="form-floating mb-4 theme-form-floating">
                                 <input type="text" class="form-control" id="fname" name="fullName"
-                                    placeholder="Enter Full Name">
+                                    placeholder="Enter Full Name" oninput="validateName()">
                                 <label for="fname">Full Name</label>
+                                <span id="name-error" style="color: red;"></span>
+                            </div>
+                             <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    placeholder="mobile No" oninput="validatePhone()">
+                                <label for="lname">mobile No</label>
+                             <span id="phone-error" style="color: red;"></span>
+
                             </div>
                             <div class="form-floating mb-4 theme-form-floating">
-                                <input type="number" class="form-control" id="pin" name="houseNo"
-                                    placeholder="Enter Pin Code">
-                                <label for="Houseno">Pin Code</label>
-                            </div>
-                            {{!-- <div class="form-floating mb-4 theme-form-floating">
-                                <input type="email" class="form-control" id="email" placeholder="Enter Email Address">
-                                <label for="email">Email Address</label>
-                            </div> --}}
-                            <div class="form-floating mb-4 theme-form-floating">
-                                <input type="number" class="form-control" id="pin" name="pin" placeholder="Enter Pin Code">
+                                <input type="number" class="form-control" id="pin" name="pin" placeholder="Enter Pin Code" oninput="validatePin()">
                                 <label for="pin">Pin Code</label>
+                                  <span id="pin-error" style="color: red;"></span>
                             </div>
                             <div class="form-floating mb-4 theme-form-floating">
-                                <input type="text" class="form-control" id="Locality" name="locality"
-                                    placeholder="Locality">
-                                <label for="lname">Locality</label>
+                                <input type="number" class="form-control" id="houseNo" name="houseNo"
+                                    placeholder="" oninput="validateHouse()">
+                                <label for="Houseno"> House No/flat No</label>
+                                  <span id="house-error" style="color: red;"></span>
+                            </div>
+
+                          
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="landmarkad" name="landMark"
+                                    placeholder="landmark" oninput="validateLandmark()">
+                                <label for="lname">LandMark</label>
+                                  <span id="landmark-error" style="color: red;"></span>
                             </div>
                             <div class="form-floating mb-4 theme-form-floating">
                                 <textarea class="form-control" placeholder="Leave a comment here" name="useradd"
-                                    id="address" style="height: 100px"></textarea>
+                                    id="address" style="height: 100px" oninput="validateAddress()"></textarea>
                                 <label for="address">Enter Address</label>
+                                  <span id="address-error" style="color: red;"></span>
                             </div>
                             <div class="form-floating mb-4 theme-form-floating">
-                                <input type="text" class="form-control" id="district" name="district"
-                                    placeholder="District">
-                                <label for="lname">District</label>
+                                <input type="text" class="form-control" id="town" name="town" oninput="validateTown()">
+                                <label for="lname">town/city</label>
+                                  <span id="town-error" style="color: red;"></span>
                             </div>
     
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary btn-md"
                                     data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn theme-bg-color btn-md text-white"
+                                <button type="submit"  class="btn theme-bg-color btn-md text-white"
+
                                     data-bs-dismiss="modal">Add </button>
+                                    <span id="error" style="color: red;" >{{error}}</span>
                             </div>
                     </form>
                 </div>
@@ -394,6 +413,7 @@
     </section>
 
     <!-- Checkout section End -->
+<script src="http://localhost:4000/javascripts/address-val.js"></script>
 
     <script>
          

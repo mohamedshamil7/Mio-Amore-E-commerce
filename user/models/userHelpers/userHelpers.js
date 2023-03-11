@@ -14,7 +14,8 @@ const { response } = require("../../app");
 const crypto = require('crypto');
 
 require("dotenv").config();
-const razorPay= require("razorpay")
+const razorPay= require("razorpay");
+const { stringify } = require("querystring");
 const Key_ID=process.env.RAZORPAY_KEY_ID
 const KEY_SECRET=process.env.RAZORPAY_KEY_SECRET
 var instance =new razorPay({
@@ -611,7 +612,8 @@ getAddress:(userId)=>{
 placeOrder:(order,cart,total)=>{
     console.log("dfjhdjndkjf this i s place order cart ::::",cart);
 return new Promise(async(resolve,reject)=>{
-let userId=order.userId
+    // console.log(order.userId);
+let userId=  order.id
 console.log(typeof userId);
     console.log("/////////?///",userId);
     // if(order.PaymentOption==='COD'?)
@@ -639,22 +641,27 @@ console.log(typeof userId);
             $project:{
                 deleviryDetails:{
                     fullName:'$Address.fullName',
-                houseNo:'$Address.houseNo',
-                pin:'$Address.pin',
-                locality:'$Address.locality',
-                useradd:'$Address.useradd',
-                district:'$Address.district',
+                    mobile:'$Address.mobile',
+                    houseNo:'$Address.houseNo',
+                    pin:'$Address.pin',
+                    landmark:'$Address.landMark',
+                    useradd:'$Address.useradd',
+                    town:'$Address.town',
                 }
                 
             }
         }
     ]).toArray()
     console.log("(((((((((",address);
+    // console.log(typeof userId);
+    // let user = userId
+
+    // console.log("??????/////",user);
 
     let orderObj={
         deleviryDetails:address[0].deleviryDetails ,
         userId:userId,
-        
+    
         totalAmount:total,
         paymentMethod:order.PaymentOption,
         cart:cart,
@@ -877,6 +884,24 @@ inStockcheck:(userId)=>{
         ]).toArray()
         console.log(stock);
     })
+},
+getUserData:(userId)=>{
+    // console.log(userId);
+    return new  Promise(async(resolve,reject)=>{
+        let Data=await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId) })
+        console.log(Data);
+        if(Data){
+            resolve(Data)
+        }
+
+    })
+},
+getOrderDetails:(userid)=>{
+    console.log("///////",userid);
+    return new Promise(async(resolve,reject)=>{
+        let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).toArray()
+        if(Data) resolve(Data)
+        })
 }
 
 
