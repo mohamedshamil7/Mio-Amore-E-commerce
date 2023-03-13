@@ -906,6 +906,31 @@ getOrderDetails:(userid)=>{
         let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).toArray()
         if(Data) resolve(Data)
         })
+},
+cancelOrderSubmit:(orderId)=>{
+    console.log(orderId);
+    return new Promise(async(resolve,reject)=>{
+        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+        // let data 
+        for(let i =0;i<fullOrder.cart.length;i++){
+
+     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
+        }
+
+       let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+            $set:{
+                status: 'Cancelled',
+                "cart.$[].deliveryStatus": 'Cancelled',
+                btnStatus: false,
+            },
+        },{multi:true})
+        if(order){
+            resolve(order)
+        }else{
+            reject()
+        }
+        
+    })
 }
 
 

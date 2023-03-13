@@ -802,6 +802,11 @@ console.log(data);
         console.log("error ducring login");
         console.log(err);
       })
+  },
+  cancelOrderSubmit:(req,res)=>{
+    userHelpers.cancelOrderSubmit(req.body.orderId).then((response)=>{
+      res.json(response)
+    })
   }
   
   

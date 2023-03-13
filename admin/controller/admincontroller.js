@@ -270,8 +270,9 @@ adminLogout:(req,res)=>{
 
 
  cancelOrderAdmin:(req, res)=> {
- adminHelper. cancelOrderAdminSubmit(req.params.id).then(() => {
-    res.redirect('/admin/allorders');
+ adminHelper. cancelOrderAdminSubmit(req.body.orderId).then((response) => {
+    // res.redirect('/admin/allorders');
+    res.json(response)
   });
 },
 

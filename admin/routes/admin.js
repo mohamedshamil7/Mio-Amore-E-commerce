@@ -74,7 +74,7 @@ router.get("/ImageSupply/:Image",ImageSupplier )
 
 router.get("/allorders",allorders)
 
-router.get('/cancelOrder/:id', cancelOrderAdmin);
+router.post('/cancelOrder', cancelOrderAdmin);
 
 router.get('/view-order-product/:id', viewOrderProduct);
 router.post("/delivery-status", deliveryStatus)

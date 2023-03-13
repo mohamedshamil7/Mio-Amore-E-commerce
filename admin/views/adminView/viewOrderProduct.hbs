@@ -25,13 +25,13 @@
                 <td>{{this.quantity}}</td>
                 <td>₹{{this.cart_product.Price}}</td>
                  <td>
-                    {{!-- {{#if this.btnStatus}} --}}
                     <form action="/admin/delivery-status" method="post">
                     <input type="text" value="{{this.item}}" name="id" hidden>
                     <h6 class="badge badge-info">{{this.deliveryStatus}}</h6><br>
                         {{/each}}
                     <input type="text" value="{{products._id}}" name="orderid" hidden >
 
+                    {{#if products.btnStatus}}
                         <select class="shipping" name="status" >
                             <option value="Preparing">Order Confirmed</option>
                             <option value="Shipped">Shipped</option>
@@ -40,9 +40,9 @@
                         
                         <input class="shipping" type="submit" value="Change">
                     </form>
-                    {{!-- {{else}} --}}
+                    {{else}}
                     <p class="badge badge-secondary">{{products.status}}</p> <br>
-                    {{!-- {{/if}} --}}
+                    {{/if}}
                 </td>
             </tr>
         </tbody>
@@ -52,3 +52,7 @@
     </div>
    
 </section>
+
+
+
+

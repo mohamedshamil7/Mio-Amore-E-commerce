@@ -24,8 +24,9 @@
                 <td>
 
                     {{#if this.btnStatus}}
-                    <p class="badge badge-success">{{this.status}}</p> <br>
-                        <a href="/admin/cancelOrder/{{this._id}}"> <p class="cancel badge badge-danger" >Cancel Order</p></a>
+                    <p class="badge badge-success" style="color: yellow;">{{this.status}}</p> <br>
+                        {{!-- <a href="/admin/cancelOrder/{{this._id}}"> <p class="cancel badge badge-danger" >Cancel Order</p></a> --}}
+                         <p onclick="cancelOrder('{{this._id}}')" class="cancel badge badge-danger" >Cancel Order</p>
                         
                         {{else}}
                     <p class="badge badge-secondary">{{this.status}}</p> <br>
@@ -43,6 +44,7 @@
 
 
 </section>
+
 
 
 {{!-- 
