@@ -1,0 +1,54 @@
+<section class="page-align" id="footer">
+    <div class="container">
+        <div class="row">
+             <h1>View Product</h1>
+    <table class="table table-bordered border-primary mt-5">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th scope="col">Product</th>
+                <th scope="col">Address</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Shipping Status</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products.cart}}
+            <tr>
+            <td scope="row"><img style="width: 50px;" src="../images/product-images/{{this.cart_product.Image1}}" alt="no"></td>           
+                 <td>{{this.cart_product.ProductName}}</td>
+                <td>{{products.deleviryDetails.town}}
+                    {{!-- {{Orders.address}} --}}
+                </td>
+                <td>{{this.quantity}}</td>
+                <td>₹{{this.cart_product.Price}}</td>
+                 <td>
+                    {{!-- {{#if this.btnStatus}} --}}
+                    <form action="/admin/delivery-status" method="post">
+                    <input type="text" value="{{this.item}}" name="id" hidden>
+                    <h6 class="badge badge-info">{{this.deliveryStatus}}</h6><br>
+                        {{/each}}
+                    <input type="text" value="{{products._id}}" name="orderid" hidden >
+
+                        <select class="shipping" name="status" >
+                            <option value="Preparing">Order Confirmed</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                        </select>
+                        
+                        <input class="shipping" type="submit" value="Change">
+                    </form>
+                    {{!-- {{else}} --}}
+                    <p class="badge badge-secondary">{{products.status}}</p> <br>
+                    {{!-- {{/if}} --}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+        </div>
+    </div>
+   
+</section>

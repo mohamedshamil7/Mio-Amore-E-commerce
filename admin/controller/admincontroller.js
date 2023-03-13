@@ -254,6 +254,13 @@ res.sendFile(path.resolve(`public/images/product-images/${req.params.Image}`))
 
 },
 
+allorders:(req,res)=>{
+  adminHelper.getAllorders().then((orders)=>{
+    console.log(orders);
+    res.render("adminView/orders",{admin:true,orders})
+  })
+},
+
 adminLogout:(req,res)=>{
   req.session.admin=null
   req.session.loggedIn=false
@@ -262,7 +269,36 @@ adminLogout:(req,res)=>{
 },
 
 
+ cancelOrderAdmin:(req, res)=> {
+ adminHelper. cancelOrderAdminSubmit(req.params.id).then(() => {
+    res.redirect('/admin/allorders');
+  });
+},
 
+viewOrderProduct:(req,res)=>{
+  // let Orderid
+  adminHelper. viewSingleOrder(req.params.id).then((products) => {
+    // products.cart.Orderid= 
+    let cart= products.cart
+    cart.Orderid= products._id.toString()
+    console.log(cart);
+    
+    let address =products.deleviryDetails.town
+    Orderid= products._id.toString()
+    res.render('adminView/viewOrderProduct', { admin: true, products});
+  }).catch(() => {
+
+  });
+},
+
+deliveryStatus:(req,res)=>{
+  console.log(req.body);
+  adminHelper.deliveryStatusChange(req.body.id,req.body.orderid,req.body.status).then(()=>{
+    res.redirect(req.get('referer'));
+  }).catch(()=>{
+    console.log("error in updating deliveryStatus");
+  })
+}
 
 
 }

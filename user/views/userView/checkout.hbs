@@ -481,6 +481,8 @@
 
         function verifyPayment(payment,order){
             console.log("entered verify")
+            console.log(payment)
+            console.log(order.receipt)
             $.ajax({
                 url:'http://localhost:8001/user/verifyPayment',
                 data:{

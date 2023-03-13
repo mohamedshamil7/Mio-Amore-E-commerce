@@ -1,0 +1,62 @@
+<section class="page-align mt-5" id="footer">
+    <div class="container">
+        <div class="row">
+<h1 >Orders</h1>
+    {{!-- {{message}} --}}
+    <table class="table table-bordered border-primary mt-5" id="orders">
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total Price</th>
+                <th scope="col">Method</th>
+                <th scope="col">Status</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each orders}}
+            <tr>
+                <td>{{this.user.username}}</td>
+                <td>{{this.date}}</td>
+                <td>₹{{this.totalAmount}}</td>
+                <td>{{this.paymentMethod}}</td>
+                <td>
+
+                    {{#if this.btnStatus}}
+                    <p class="badge badge-success">{{this.status}}</p> <br>
+                        <a href="/admin/cancelOrder/{{this._id}}"> <p class="cancel badge badge-danger" >Cancel Order</p></a>
+                        
+                        {{else}}
+                    <p class="badge badge-secondary">{{this.status}}</p> <br>
+                    {{/if}}
+                </td>
+                
+                <td><a href="/admin/view-order-product/{{this._id}}"><button class="btn btn-secondary">ViewProducts</button></a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+        </div>
+    </div>
+    
+
+
+</section>
+
+
+{{!-- 
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+      $(document).ready(function () {
+        $('#orders').DataTable({
+            responsive: true,
+            dom: 'Pfrtip'
+        });
+      });
+  
+  
+  
+  </script> --}}

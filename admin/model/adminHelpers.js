@@ -178,7 +178,13 @@ module.exports={
         console.log(">>>>");
         id.Stock=Number(id.Stock)
         if(id.Stock<1){
+            console.log(id.Stock);
+            console.log("false do");
             id.inStock=false
+        }else if( id.Stock>=1){
+            console.log(id.Stock);
+            console.log("true ");
+            id.inStock=true
         }
         return new Promise(async(resolve,reject)=>{
             let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
@@ -234,7 +240,95 @@ module.exports={
                 let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image4:true}})
                 resolve(data.Image4)
             })
+        },
+
+        getAllorders:()=>{
+            // date not updated
+            return new Promise(async(resolve,reject)=>{
+                let allOrders =await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $lookup:{
+                            from:'user',
+                            localField:'userId',
+                            foreignField:'_id',
+                            as:'user'
+                        }
+                    },
+                    {
+                        $unwind:'$user'
+                    },
+                    {
+                        $project:{
+                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1
+                        }
+                    }
+                ]).toArray()
+                if(allOrders.length ==0){
+                    reject()
+                }
+                else{
+                    console.log(allOrders.length);
+                    // console.log(allOrders);
+                    resolve(allOrders)
+
+                }
+            })
+        },
+
+        cancelOrderAdminSubmit:(orderId)=>{
+            return new Promise(async(resolve,reject)=>{
+                await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+                    $set:{
+                        status:"Cancelled",
+                        deliveryStatus: 'Cancelled',
+                        btnStatus:false
+                    }
+                }).then(()=>{
+                    resolve();
+                }).catch(()=>{
+                    reject();
+                })
+            })
+        },
+
+        viewSingleOrder:(orderId)=>{
+            return new Promise(async(resolve,reject)=>{
+                const singleOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+                if(singleOrder){
+                    resolve(singleOrder)
+                }else{
+                    reject()
+                }
+            })
+        },
+        deliveryStatusChange:(prodId,orderId,status)=>{
+            let returnOption
+            if(status==="Delivered"){
+                returnOption = true;
+                cancelOption = false;
+            }else{
+                returnOption = false;
+                cancelOption = true;
+
+            }
+            return new Promise(async(resolve,reject)=>{
+           await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId),cart:{$elemMatch:{'item':ObjectId(prodId)}} },{
+                    $set:{
+                        "cart.$.deliveryStatus":status,
+                        "cart.$.returnOption":returnOption,
+                        btnStatus: cancelOption,
+
+                    },
+                    
+                }).then(()=>{  
+                    resolve()
+                }).catch(()=>{
+                    reject()
+                })
+            })
         }
-
-}
-
+        
+    }
+    
+    
+  

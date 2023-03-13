@@ -664,19 +664,23 @@ console.log(typeof userId);
     
         totalAmount:total,
         paymentMethod:order.PaymentOption,
-        cart:cart,
-        status:order_status
+        // cart:cart,
+        cart,
+        date: new Date().toDateString(),
+        fullDate: new Date(),
+        status:order_status,
+        btnStatus: true,
     }
     console.log(userId);
     db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
-        // db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId) })
-        console.log("response:",response);
+        db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(response.insertedId)},{
+            $set:{  'cart.$[].deliveryStatus':'Order Confirmed'},
+        },{ multi: true })
         resolve(response.insertedId)
 
     }).catch((error)=>{
         console.log(error);
     })
-    // console.log( ` this is orer :::::${orderObj}`);
 })
 
 },
@@ -757,8 +761,8 @@ verifyPayment:(details)=>{
 changePaymentStatus:(orderId)=>{
     console.log('efnriuerfvyvbbbbv',orderId);
     return new Promise(async(resolve,reject)=>{
-        db.get().collection(collection.ORDER_COLLECTION).updateOne({_di:ObjectId(orderId)},{
-            $set: { status: 'Order placed' },
+        db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+            $set: { status: 'placed' },
         })
         resolve()
     })

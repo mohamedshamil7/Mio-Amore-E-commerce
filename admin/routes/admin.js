@@ -31,7 +31,10 @@ const {
   EditProductData,
   ImageSupplier,
   availabilityCheck,
-  Addimage
+  allorders,
+  cancelOrderAdmin,
+  viewOrderProduct,
+  deliveryStatus,
 } = require("../controller/admincontroller");
 const{
   uploadMultiple
@@ -68,6 +71,13 @@ router.post("/edit-Product",adminSession,editProduct)
 router.post("/editProduct-submit",adminSession,uploadMultiple,EditProductData)
 
 router.get("/ImageSupply/:Image",ImageSupplier )
+
+router.get("/allorders",allorders)
+
+router.get('/cancelOrder/:id', cancelOrderAdmin);
+
+router.get('/view-order-product/:id', viewOrderProduct);
+router.post("/delivery-status", deliveryStatus)
 
 
 module.exports = router;

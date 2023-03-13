@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { read } = require("fs");
 const { send } = require("process");
 const { reset } = require("nodemon");
-const { userBlockCheck, inStockcheck } = require("../models/userHelpers/userHelpers");
+const { userBlockCheck, inStockcheck, changePaymentStatus } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
 // import Swal from 'sweetalert2'
@@ -24,10 +24,7 @@ paypal.configure({
   "client_secret":PAYPAL_CLIENT_SECRET
 })
 
-const { request } = require("http");
-const { match } = require("assert");
-const { resolve } = require("path");
-const { database } = require("firebase-admin");
+
 const { stringify } = require("querystring");
 
 
@@ -572,23 +569,21 @@ module.exports = {
     
     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
       console.log("/////////////////////////////////////////////////////////",orderId);
-      if(req.body.PaymentOption==='COD'){
-        // let ids = cart.map( custom =>{
-        //   return [{
-        //     prod:custom.item
-        //   }]
-        // })
-        console.log(cart);
-        function destruct(products) { 
-          let data =[]
-          for(let i=0;i<products.length;i++){
-            let obj ={}  
-            obj.prod= products[i].item
-            obj.quantity= products[i].quantity
-            data.push(obj)
-          }
-          return data
+      function destruct(products) { 
+        let data =[]
+        for(let i=0;i<products.length;i++){
+          let obj ={}  
+          obj.prod= products[i].item
+          obj.quantity= products[i].quantity
+          data.push(obj)
         }
+        return data
+      }
+
+      if(req.body.PaymentOption==='COD'){
+
+        console.log(cart);
+       
         let ids = destruct(products)
         console.log(ids,"ids");
   
@@ -606,8 +601,12 @@ module.exports = {
       else if(req.body.PaymentOption=='razorPay'){
         console.log("entered");
         userHelpers.generateRazorPay(orderId,total).then((response)=>{
-          // console.log("this.response",response);
-          res.json({status:"razorpay",response})
+          let ids  = destruct(products)
+          userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+            // console.log("this.response",response);
+            res.json({status:"razorpay",response})
+
+          })
 
         })
 
@@ -617,12 +616,14 @@ module.exports = {
 
         console.log(usdtotal);
             var create_payment_json = {
-      "intent": "sale",
+      "id":`${orderId}`,
+      "intent": "AUTHORIZE",
       "payer": {
           "payment_method": "paypal"
       },
       "redirect_urls": {
           "return_url": "http://localhost:8001/user/orderSuccess",
+          // "return_url": "http://localhost:8001/user/o",
           "cancel_url": "http://cancel.url"
       },
       "transactions": [{
@@ -641,12 +642,14 @@ module.exports = {
         for (var i = 0; i < payment.links.length; i++) {
         //Redirect user to this endpoint for redirect url
             if (payment.links[i].rel ==='approval_url') {
-              console.log(payment.links[i].href);
+              // console.log(payment.links[i].href);
               // res.redirect(`${payment.links[i].href}`)
+              let ids = destruct(products)
               res.json({status:"paypal",forwardLink: payment.links[i].href});
+              userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
             }
         }
-        // console.log(payment);
+        changePaymentStatus(orderId)
     }
 }); 
   
@@ -660,30 +663,33 @@ module.exports = {
     
   },
 
-  paypalSucces: (req, res) => {
-    const payerId = req.query.PayerID;
-    const paymentId = req.query.paymentId;
+  // paypalSucces: (req, res) => {
+  //   console.log("woeking");
+  //   console.log(req.query);
+  //   const payerId = req.query.PayerID;
+  //   const paymentId = req.query.paymentId;
 
-    const execute_payment_json = {
-      "payer_id": payerId,
-      "transactions": [{
-        "amount": {
-          "currency": "USD",
-          "total": "25.00"
-        }
-      }]
-    }
-    paypal.payment.execute(paymentId,execute_payment_json,function(err,paymemt){
-      if (error) {
-        console.log(error.response);
-        throw error;
-      }else {
-        console.log(JSON.stringify(payment));
+  //   const execute_payment_json = {
+  //     "payer_id": payerId,
+  //     "transactions": [{
+  //       "amount": {
+  //         "currency": "USD",
+  //         "total": "25.00"
+  //       }
+  //     }]
+  //   }
+  //   paypal.payment.execute(paymentId,execute_payment_json,function(err,paymemt){
+  //     if (error) {
+  //       console.log(error.response);
+  //       throw error;
+  //     }else {
+  //       console.log("//////");
+  //       console.log(JSON.stringify(payment));
 
-        res.redirect('http://localhost:8001/user/orderSuccess');
-      }
-    })
-  },
+  //       // res.redirect('http://localhost:8001/user/orderSuccess');
+  //     }
+  //   })
+  // },
     
   
 
@@ -695,7 +701,9 @@ module.exports = {
     console.log(req.body);
     userHelpers.verifyPayment(req.body).then(()=>{
       console.log("herer");
-      userHelpers.changePaymentStatus(req.body['[receipt]']).then(()=>{
+console.log(typeof req.body);
+console.log( req.body);
+      userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
         console.log("succes pay");
         res.json({status:true})
       })
