@@ -11,6 +11,7 @@
                 <th scope="col">Total Price</th>
                 <th scope="col">Method</th>
                 <th scope="col">Status</th>
+                <th scope="col">DeliveryStatus</th>
                 <th>View</th>
             </tr>
         </thead>
@@ -24,11 +25,28 @@
                 <td>
 
                     {{#if this.btnStatus}}
-                    <p class="badge badge-success" style="color: yellow;">{{this.status}}</p> <br>
+                    <p class="badge badge-success">{{this.status}}</p> <br>
                         {{!-- <a href="/admin/cancelOrder/{{this._id}}"> <p class="cancel badge badge-danger" >Cancel Order</p></a> --}}
                          <p onclick="cancelOrder('{{this._id}}')" class="cancel badge badge-danger" >Cancel Order</p>
                         
                         {{else}}
+                    <p class="badge badge-secondary">{{this.status}}</p> <br>
+                    {{/if}}
+                </td>
+                <td>
+                    <form action="/ admin/delivery-status" method="post">
+                    <input type="text" value="{{this._id}}" name="orderid" hidden >
+                    {{#if this.btnStatus}}
+                        <select class="shipping" name="status"   >
+                            <option  value="Preparing">Order Confirmed</option>
+                            <option  value="Shipped">Shipped</option>
+                            <option  value="Delivered">Delivered</option>
+                        </select>
+                    
+                    <input type="submit" value="Change">
+                    </form>
+
+                    {{else}}
                     <p class="badge badge-secondary">{{this.status}}</p> <br>
                     {{/if}}
                 </td>
@@ -62,3 +80,6 @@
   
   
   </script> --}}
+
+
+  <!---///onclick="changeDeliveryStatus('{{this._id}}','shipped')"

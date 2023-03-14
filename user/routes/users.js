@@ -38,7 +38,8 @@ const {
   otpverified,
   googleSignupData,
   googleLoginData,
-  cancelOrderSubmit
+  cancelOrderSubmit,
+  returnOrderSubmit
 
 } = require("../controller/usercontroller");
 
@@ -101,6 +102,7 @@ router.get("/googleSignUp/:userData",googleSignupData,redirectHome)
 router.get("/googleLogin/:userData",googleLoginData,redirectHome)
 router.get("/otpverified/:num",otpverified,redirectHome)
 router.post("/cancelOrder",cancelOrderSubmit)
+router.post("/returnOrder",returnOrderSubmit)
 
 module.exports = router;
 

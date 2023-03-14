@@ -807,6 +807,12 @@ console.log(data);
     userHelpers.cancelOrderSubmit(req.body.orderId).then((response)=>{
       res.json(response)
     })
+  },
+
+  returnOrderSubmit:(req,res)=>{
+    userHelpers.returnOrderSubmit(req.body.orderId).then((response)=>{
+      res.json(response)
+    })
   }
   
   

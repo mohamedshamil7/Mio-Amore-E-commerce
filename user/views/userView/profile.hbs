@@ -212,12 +212,21 @@
                                                 <h5>Status : <span class="">{{this.status}}</span></h5>
                                                 <h6>Ordered on: <span>{{this.date}}</span></h6>
                                                 <h6>Total price: <span>{{this.totalAmount}}</span></h6>
+                                                {{#if this.deliveredDate}}
+                                                <h6>Delivered on: <span>{{this.deliveredDate}}</span></h6>
+                                                {{/if}}
+                                                 {{#if this.returnedDate}}
+                                                <h6>Returned on: <span>{{this.returnedDate}}</span></h6>
+                                                {{/if}}
                                             </div>
                                         </div>
                                         {{#if this.btnStatus}}
                     <button  onclick="cancelOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> 
-                                                   {{!-- <button style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> --}}
+                                                   
                                                    {{/if}}
+                                        {{#if this.returnOption}}
+                                         <button  onclick="returnOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">return ?</button> 
+                                        {{/if}}
                                         {{#each this.cart}}
                                         <div class="product-order-detail">
                                             <h3 >{{this.deliveryStatus}}</h3>

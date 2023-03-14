@@ -19,8 +19,11 @@ module.exports={
              if(admin){
                 bcrypt.compare(adminData.password,admin.password).then((result)=>{
                     if(result){
-
-                        resolve(result)
+                        var adminData={
+                            adminname:admin.adminname,
+                            insertedId:admin._id
+                        }
+                        resolve(adminData)
                     }else{
                         reject()
                     }
@@ -259,7 +262,7 @@ module.exports={
                     },
                     {
                         $project:{
-                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1
+                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1
                         }
                     }
                 ]).toArray()
@@ -267,8 +270,8 @@ module.exports={
                     reject()
                 }
                 else{
-                    console.log(allOrders.length);
-                    // console.log(allOrders);
+                    // console.log(allOrders.length);
+                    console.log(allOrders);
                     resolve(allOrders)
 
                 }
@@ -309,22 +312,25 @@ module.exports={
                 }
             })
         },
-        deliveryStatusChange:(prodId,orderId,status)=>{
+        deliveryStatusChange:(orderId,status)=>{
             let returnOption
+            let deliveryDate= null
             if(status==="Delivered"){
                 returnOption = true;
                 cancelOption = false;
+                deliveryDate = new Date().toDateString()
             }else{
                 returnOption = false;
                 cancelOption = true;
 
             }
             return new Promise(async(resolve,reject)=>{
-           await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId),cart:{$elemMatch:{'item':ObjectId(prodId)}} },{
+           await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId), },{
                     $set:{
-                        "cart.$.deliveryStatus":status,
-                        "cart.$.returnOption":returnOption,
+                        deliveryStatus:status,
+                        returnOption:returnOption,
                         btnStatus: cancelOption,
+                        deliveredDate:deliveryDate
 
                     },
                     
@@ -340,3 +346,6 @@ module.exports={
     
     
   
+
+
+    ///cart:{$elemMatch:{'item':ObjectId(prodId)}}

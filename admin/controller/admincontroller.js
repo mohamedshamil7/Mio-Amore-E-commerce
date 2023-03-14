@@ -7,7 +7,8 @@ const adminHelper= require('../model/adminHelpers')
 const multer = require("multer");
 const { functionsOrigin } = require('firebase-tools/lib/api');
 const { resolve } = require('path');
-
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const storage=multer.diskStorage({
   destination:function(request,file,cb){
     cb(null,'./public/images/product-images/')
@@ -19,6 +20,19 @@ const storage=multer.diskStorage({
 
 const upload=multer({storage:storage})
 
+const MY_SECRET =process.env.MY_SECRET;
+
+const createToken =   (admin) => {
+  console.log("jwt user",admin);
+  // return jwt.sign({ value: admin }, MY_SECRET, { expiresIn: "30m" });
+  return jwt.sign({value:admin},MY_SECRET,{expiresIn: "30m"})
+};
+
+const tokenVerify = (request) => {
+  console.log("this is that token from cookie",request.cookies.token);
+  const decode = jwt.verify(request.cookies.token, MY_SECRET);
+  return decode;
+};
 
 
 module.exports={
@@ -41,9 +55,18 @@ module.exports={
  adminLoginRoute:(req,res,next)=>{
   
   adminHelper.adminLogin(req.body).then((response)=>{
-    req.session.admin=req.body.adminname;
-
-    req.session.loggedIn=true
+    // req.session.admin=req.body.adminname;
+    let admin = response
+    console.log(admin);
+    const token = createToken(admin);
+    console.log("here");
+    res.cookie("token",token,{
+      httpOnly : true,
+    });
+    res.status(201);
+    console.log(token);
+    // req.session.loggedIn=true
+    console.log("calling next");
     next()
 
 
@@ -55,7 +78,33 @@ module.exports={
   if(req.session.admin) next()
   else res.render('adminView/adminLogin')
 }, 
- 
+  
+autherization: (req, res, next) => {
+  console.log("entered auth");
+
+  const token = req.cookies.token;
+  console.log(token);
+  if (!token) {
+    res.render("adminView/adminlogin");
+  } else {
+    try {
+      const user = tokenVerify(req);
+      // console.log(user);
+      if (user) {
+        const decode = tokenVerify(req);
+        console.log(decode, "+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
+        console.log(decode.value.insertedId);
+          next();
+
+      } else {
+        res.render("adminView/adminlogin");
+      }
+    } catch {
+      res.render("adminView/adminlogin");
+    }
+  }
+},
+
 
  redirectAdminDash:(req,res)=>{
    res.redirect("/admin/adminDash")
@@ -294,7 +343,7 @@ viewOrderProduct:(req,res)=>{
 
 deliveryStatus:(req,res)=>{
   console.log(req.body);
-  adminHelper.deliveryStatusChange(req.body.id,req.body.orderid,req.body.status).then(()=>{
+  adminHelper.deliveryStatusChange(req.body.orderid,req.body.status).then(()=>{
     res.redirect(req.get('referer'));
   }).catch(()=>{
     console.log("error in updating deliveryStatus");

@@ -75,3 +75,7 @@ function cancelOrder(orderId){
 
 
 
+function changeDeliveryStatus(orderid,status){
+  console.log(orderid);
+  console.log(status);
+}

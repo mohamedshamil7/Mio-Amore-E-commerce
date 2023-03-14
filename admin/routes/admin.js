@@ -13,7 +13,7 @@ var router = express.Router();
 
 
 const {
-  adminSession,
+  autherization,
   renderadminLogin,
   adminLoginRoute,
   redirectAdminDash,
@@ -40,44 +40,44 @@ const{
   uploadMultiple
 }=require("../public/javascripts/multer")
 /* GET home page. */
-router.get('/',adminSession,renderadminLogin);
+router.get('/',renderadminLogin);
 
 router.post('/login-submit',adminLoginRoute,redirectAdminDash)
 
-router.get("/adminDash",adminSession,renderadminDash)
+router.get("/adminDash",autherization,renderadminDash)
 
-router.get("/allUsers",adminSession,AllUsersPage)
+router.get("/allUsers",autherization,AllUsersPage)
 
-router.post("/blockManager",adminSession,userBlock)
+router.post("/blockManager",autherization,userBlock)
 
-router.get("/stocks",adminSession,stockPage)
+router.get("/stocks",autherization,stockPage)
 
-router.get("/categories",categories_Page)
+router.get("/categories",autherization,categories_Page)
 
-router.post("/addCategory",adminSession,addCategoryManager)
+router.post("/addCategory",autherization,addCategoryManager)
 
-router.post("/prodAvailability/:id",adminSession,availabilityCheck)
+router.post("/prodAvailability/:id",autherization,availabilityCheck)
 
-router.post("/deleteCategory/:id",adminSession,deleteCategory)
+router.post("/deleteCategory/:id",autherization,deleteCategory)
 
-router.get("/add-product",adminSession,addProductForm)
+router.get("/add-product",autherization,addProductForm)
 
-router.post("/addProduct-submit",adminSession,uploadMultiple,addNewProduct)
+router.post("/addProduct-submit",autherization,uploadMultiple,addNewProduct)
 
 // router.post("/delete-Product",deleteProduct)
 
-router.post("/edit-Product",adminSession,editProduct)
+router.post("/edit-Product",autherization,editProduct)
 
-router.post("/editProduct-submit",adminSession,uploadMultiple,EditProductData)
+router.post("/editProduct-submit",autherization,uploadMultiple,EditProductData)
 
 router.get("/ImageSupply/:Image",ImageSupplier )
 
-router.get("/allorders",allorders)
+router.get("/allorders",autherization,allorders)
 
-router.post('/cancelOrder', cancelOrderAdmin);
+router.post('/cancelOrder',autherization, cancelOrderAdmin);
 
-router.get('/view-order-product/:id', viewOrderProduct);
-router.post("/delivery-status", deliveryStatus)
+router.get('/view-order-product/:id',autherization, viewOrderProduct);
+router.post("/delivery-status",autherization, deliveryStatus)
 
 
 module.exports = router;

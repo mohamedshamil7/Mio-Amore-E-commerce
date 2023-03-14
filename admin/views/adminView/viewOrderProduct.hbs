@@ -24,25 +24,17 @@
                 </td>
                 <td>{{this.quantity}}</td>
                 <td>₹{{this.cart_product.Price}}</td>
-                 <td>
-                    <form action="/admin/delivery-status" method="post">
-                    <input type="text" value="{{this.item}}" name="id" hidden>
-                    <h6 class="badge badge-info">{{this.deliveryStatus}}</h6><br>
                         {{/each}}
-                    <input type="text" value="{{products._id}}" name="orderid" hidden >
+                 <td>
+                    <h6 class="badge badge-info">{{products.deliveryStatus}}</h6><br>
 
-                    {{#if products.btnStatus}}
-                        <select class="shipping" name="status" >
+                        {{!-- <select class="shipping" name="status"  >
                             <option value="Preparing">Order Confirmed</option>
                             <option value="Shipped">Shipped</option>
                             <option value="Delivered">Delivered</option>
-                        </select>
-                        
-                        <input class="shipping" type="submit" value="Change">
-                    </form>
-                    {{else}}
+                        </select> --}}
                     <p class="badge badge-secondary">{{products.status}}</p> <br>
-                    {{/if}}
+
                 </td>
             </tr>
         </tbody>
