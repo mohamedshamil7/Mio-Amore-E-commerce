@@ -34,16 +34,21 @@
                     {{/if}}
                 </td>
                 <td>
-                    <form action="/ admin/delivery-status" method="post">
-                    <input type="text" value="{{this._id}}" name="orderid" hidden >
+                     <p class="badge badge-secondary">{{this.deliveryStatus}}</p> <br>
+                    <form action="/admin/delivery-status/{{this._id}}" method="post">
+                    {{!-- <input type="text " value="{{this.cart.item}} " name="id"> --}}
+                    {{!-- <input type="text" value="{{this._id}}" name="orderid" > --}}
                     {{#if this.btnStatus}}
-                        <select class="shipping" name="status"   >
-                            <option  value="Preparing">Order Confirmed</option>
-                            <option  value="Shipped">Shipped</option>
+                        <select class="shipping" name="status" id="select"   >
+                            {{#if this.deliveryStatus}}
+                            <option selected value={{this.deliveryStatus}}  >{{this.deliveryStatus}}</option>
+                            {{/if}}
+                            <option  value="Preparing"  >Preparing</option>
+                            <option value="Shipped"  >Shipped</option>
                             <option  value="Delivered">Delivered</option>
                         </select>
                     
-                    <input type="submit" value="Change">
+                     <input type="submit" value="Change">
                     </form>
 
                     {{else}}
@@ -82,4 +87,19 @@
   </script> --}}
 
 
-  <!---///onclick="changeDeliveryStatus('{{this._id}}','shipped')"
+  <!---///onclick="changeDeliveryStatus('{{this._id}}','shipped')"-->
+
+  <script>
+    let status= null
+    function change(){
+        let c = document.getElementById("Shipped")
+        console.log(c)
+    }
+    function log(id){
+        console.log(id)
+    }
+    function stat(id,stat){
+        console.log(id)
+        console.log(stat)
+    }
+  </script>

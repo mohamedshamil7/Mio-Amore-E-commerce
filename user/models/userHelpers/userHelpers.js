@@ -669,13 +669,14 @@ console.log(typeof userId);
         date: new Date().toDateString(),
         fullDate: new Date(),
         status:order_status,
+        deliveryStatus:Preparing,
         btnStatus: true,
     }
     console.log(userId);
     db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
-        db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(response.insertedId)},{
-            $set:{  'cart.$[].deliveryStatus':'Order Confirmed'},
-        },{ multi: true })
+        // db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(response.insertedId)},{
+        //     $set:{  'cart.$[].deliveryStatus':'Order Confirmed'},
+        // },{ multi: true })
         resolve(response.insertedId)
 
     }).catch((error)=>{

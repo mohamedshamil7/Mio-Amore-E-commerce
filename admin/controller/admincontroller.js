@@ -29,8 +29,8 @@ const createToken =   (admin) => {
 };
 
 const tokenVerify = (request) => {
-  console.log("this is that token from cookie",request.cookies.token);
-  const decode = jwt.verify(request.cookies.token, MY_SECRET);
+  console.log("this is that token from cookie",request.cookies.admintoken);
+  const decode = jwt.verify(request.cookies.admintoken, MY_SECRET);
   return decode;
 };
 
@@ -60,7 +60,7 @@ module.exports={
     console.log(admin);
     const token = createToken(admin);
     console.log("here");
-    res.cookie("token",token,{
+    res.cookie("admintoken",token,{
       httpOnly : true,
     });
     res.status(201);
@@ -343,7 +343,7 @@ viewOrderProduct:(req,res)=>{
 
 deliveryStatus:(req,res)=>{
   console.log(req.body);
-  adminHelper.deliveryStatusChange(req.body.orderid,req.body.status).then(()=>{
+  adminHelper.deliveryStatusChange(req.params.id,req.body.status).then(()=>{
     res.redirect(req.get('referer'));
   }).catch(()=>{
     console.log("error in updating deliveryStatus");

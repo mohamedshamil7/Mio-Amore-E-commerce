@@ -77,7 +77,7 @@ router.get("/allorders",autherization,allorders)
 router.post('/cancelOrder',autherization, cancelOrderAdmin);
 
 router.get('/view-order-product/:id',autherization, viewOrderProduct);
-router.post("/delivery-status",autherization, deliveryStatus)
+router.post("/delivery-status/:id",autherization, deliveryStatus)
 
 
 module.exports = router;
