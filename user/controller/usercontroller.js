@@ -8,6 +8,7 @@ const { reset } = require("nodemon");
 const { userBlockCheck, inStockcheck, changePaymentStatus } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
+// const Swal = window.Swal;
 // import Swal from 'sweetalert2'
 
 const cc= require("currency-converter-lt")
@@ -752,6 +753,7 @@ console.log(req.params.num,"khjhkkhkkuuuu8889988989898998998");
             next();
     }).catch((err)=>{
       console.log(err);
+      res.render("userView/loginWithOtp",{err})
     })
 
   },

@@ -184,12 +184,16 @@
 
                         <div class="input-box">
                             <form class="row g-4"  id="PhoneNumSubmit">
+                                
                                 <div class="col-12">
-                                    <span id="error" style="color: red;">{{errorMessage}}</span>
+                                    
                                     <div class="form-floating theme-form-floating log-in-form">
-                                        <input type="phone" class="form-control"  name="phone" id="phonenumber_f" oninput="validatePhoneOtp()"  placeholder="Email Address">
+                                        <input type="phone" class="form-control"  name="phone" id="phonenumber_f"  placeholder="Email Address">
                                         <label for="phone">Enter Mobile Number</label>
                                             <span style="color: red;" id="phone-error"></span>
+                                                <span id="error" style="color: red;" >{{errorMessage}}</span>
+                                                    <span id="error" style="color: red;">{{err.err}}</span>
+                                                    <span id="submit-error" style="color: red;" ></span>
                                     
                                     </div>
                                 </div>
@@ -200,7 +204,7 @@
                                
 
                                 <div class="col-12">
-                                    <button class="btn btn-animation w-100 justify-content-center" id="submitbtn" type="button">Submit
+                                    <button class="btn btn-animation w-100 justify-content-center" onclick="SubmitBtn()" id="submitbtn" type="button">Submit
                                         </button>
                                 </div>
                                 <div id="recaptcha-container"></div>

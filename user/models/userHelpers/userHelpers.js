@@ -912,7 +912,7 @@ cancelOrderSubmit:(orderId)=>{
     console.log(orderId);
     return new Promise(async(resolve,reject)=>{
         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
-        // let data 
+
         for(let i =0;i<fullOrder.cart.length;i++){
 
      await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
@@ -921,7 +921,7 @@ cancelOrderSubmit:(orderId)=>{
        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
                 status: 'Cancelled',
-                "cart.$[].deliveryStatus": 'Cancelled',
+                deliveryStatus: 'Cancelled',
                 btnStatus: false,
             },
         },{multi:true})
@@ -937,15 +937,17 @@ cancelOrderSubmit:(orderId)=>{
 returnOrderSubmit:(orderId)=>{
     let returnedDate= null
     return new Promise(async(resolve,reject)=>{
+        // full Order details with all Product
         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
         for(let i =0;i<fullOrder.cart.length;i++){
-
-     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
+            // stock incrimenting 
+          await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
         }
+        // updating status of return
         let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
                 status: 'returned',
-                "cart.$[].deliveryStatus": 'returned',
+                deliveryStatus: 'returned',
                 btnStatus: false,
                 returnOption:false,
                 returnedDate: new Date().toDateString()

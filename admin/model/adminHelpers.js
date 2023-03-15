@@ -289,7 +289,7 @@ module.exports={
               let order=  await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
                     $set:{
                         status:"Cancelled",
-                        "cart.$[].deliveryStatus": 'Cancelled',
+                        deliveryStatus: 'Cancelled',
                         btnStatus:false
                     }
                 },{multi:true})

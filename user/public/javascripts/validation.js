@@ -93,5 +93,18 @@ function validateOtp(){
     }
     otpError.innerHTML=''
     return true
+
 }
+
+// function SubmitBtn(){
+//     if(phoneError){
+//         submitError.innerHTML= "enter valid Data"
+//         return false
+//     }else{
+//         submitError.innerHTML=''
+//         return true
+//     }
+// }
+
+
 

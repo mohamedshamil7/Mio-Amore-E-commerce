@@ -1,5 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-
+// const Swal = require('sweetalert2')
+// import {Swal} from '"https://cdn.jsdelivr.net/npm/sweetalert2@11"'
+// import Swal from 'sweetalert2';
+const Swal = window.Swal;
 import {
   getAuth,
   RecaptchaVerifier,
@@ -21,7 +24,7 @@ const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
 
 const phoneNumber = document.getElementById("phonenumber_f");
-
+var submitError = document.getElementById('submit-error');
 const submit = document.getElementById("submitbtn");
 const validate = document.getElementById("Validate");
 const loginGoogle= document.getElementById("loginGoogle")
@@ -35,6 +38,14 @@ window.recaptchaVerifier = new RecaptchaVerifier(
 );
 
 const sendVerificationCode = () => {
+  if(!phoneNumber.value.match(/^\d{10}$/)){
+    submitError.innerHTML='Enter valied Phone number'
+    return false
+}
+  if(!phoneNumber.value== 10){
+    submitError.innerHTML= "Enter Valid Data 11"
+    return false
+  }
   const phone = `+91${phoneNumber.value}`;
   console.log("thisisthephone:", phone);
   const appVerifier = window.recaptchaVerifier;
@@ -66,35 +77,37 @@ const ValidateOTP = () => {
       // console.log(result);
       // console.log(result.user);
 
+      try{
+        location.href = `http://localhost:8001/user/otpverified/${numb}`;
 
-      location.href = `http://localhost:8001/user/otpverified/${numb}`;
+      }
+      catch(e){
+        // console.log(e);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: e,
+          
+        })
+      }
       // ...
     })
     .catch((error) => {
       // User couldn't sign in (bad verification code?)
       // ...
       console.log(error);
-      alert("some error occured");
+      // alert("some error occured");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'OTP you entered mismatched',
+        
+      })
     });
 };
 
-// const googlelogin= ()=>{
-//   signInWithPopup(auth, provider).then((result)=>{
-//      // This gives you a Google Access Token. You can use it to access the Google API.
-//      const credential = GoogleAuthProvider.credentialFromResult(result);
-//      const token = credential.accessToken;
-//      // The signed-in user info.
-//      const user = result.user;
-//   }).catch((error)=>{
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//         // The email of the user's account used.
-//         const email = error.customData.email;
-//   // The AuthCredential type that was used.
-//   const credential = GoogleAuthProvider.credentialFromError(error);
-//   })
-// }
+
 
 submit.addEventListener("click", sendVerificationCode);
 validate.addEventListener("click", ValidateOTP);
-// loginGoogle.addEventListener("click",googlelogin)
+
