@@ -1,13 +1,6 @@
-
-
-
-
 var db =require('../../dbconnections/dbConnection')
 var collection =require('../../dbconnections/Collections')
-const { resolve } = require("path")
 const { ObjectId } = require('mongodb')
-const { reject, promiseAllSettled, explainStdin } = require('firebase-tools/lib/utils')
-const { response } = require('../app')
 var bcrypt=require('bcrypt')
 const Collections = require('../../dbconnections/Collections')
 
@@ -80,6 +73,7 @@ module.exports={
     },
 
     addcategory:(datas)=>{
+        console.log(datas);
         const data=datas.toLowerCase();
         return new Promise(async(resolve,reject)=>{
             let category =await db.get().collection(collection.CATTEGORY_COLLECTION).findOne({categoryName:data})

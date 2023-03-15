@@ -79,3 +79,36 @@ function changeDeliveryStatus(orderid,status){
   console.log(orderid);
   console.log(status);
 }
+
+function addCategory (){
+  const category = document.getElementById("newCategory").value
+  $.ajax({
+    url:"http://localhost:8001/admin/addCategory",
+    method:'post',
+    data:{
+        category
+    },
+    success:(response)=>{
+
+      Swal.fire({
+          icon: 'success',
+          title: 'new Category added',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        setTimeout(()=>{
+           location.reload()
+      },1000)
+      },
+      error:(xhr, thrownError)=>{
+        console.log("isdda")
+        Swal.fire({
+            icon: 'error',
+            title: 'Category already exist',
+            // text: 'Something went wrong!',
+           
+          })
+    }
+
+  })
+}

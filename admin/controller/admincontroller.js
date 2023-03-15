@@ -82,8 +82,8 @@ module.exports={
 autherization: (req, res, next) => {
   console.log("entered auth");
 
-  const token = req.cookies.token;
-  console.log(token);
+  const token = req.cookies.admintoken;
+  console.log(token); 
   if (!token) {
     res.render("adminView/adminlogin");
   } else {
@@ -149,14 +149,15 @@ autherization: (req, res, next) => {
 
 
  addCategoryManager:(req,res)=>{
-  console.log(req.body);
+  console.log(req.body,";;;;;;;;;;;;;;");
 
-  adminHelper.addcategory(req.body.newCategory).then((response)=>{
+  adminHelper.addcategory(req.body.category).then((response)=>{
     console.log(response);
-res.redirect("/admin/categories")
+    res.json(response)
   }).catch((categories)=>{
     error = 'Category already exists';
-      res.redirect('/admin/categories');
+    res.status(404).json({error: error});
+      // res.render('adminView/categories',{error});
 
 // res.render("adminView/categories",{admin:true,error:"category already exists",categories})
   }).catch((err)=>{

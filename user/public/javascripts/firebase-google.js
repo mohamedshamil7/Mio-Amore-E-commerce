@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
 import {
     getAuth,
-    RecaptchaVerifier,
-    signInWithPhoneNumber,
     signInWithPopup,
     GoogleAuthProvider,
   } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
@@ -48,7 +46,7 @@ import {
        console.log(userData);
        var queryString = $.param(userData);
        if(newuser){
-        alert("new user")
+        // alert("new user")
 
 
         
@@ -63,7 +61,7 @@ import {
           alert("error occured")
          }
        }else{
-        alert('old user')
+        // alert('old user')
         if(userData){
           // var queryString = $.param(userData);
           location.href = `http://localhost:8001/user/googleLogin/${queryString}`;
