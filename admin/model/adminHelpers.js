@@ -280,6 +280,24 @@ module.exports={
                       { $inc: { Stock: fullOrder.cart[i].quantity } }
                     );
                 }
+                let creditData={
+                    transactionId:ObjectId(),
+                   orderId:fullOrder._id,
+                   amount:fullOrder.totalAmount,
+                    amountCreditedOn:new Date().toDateString()
+        
+        
+        
+                }
+                 await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                        $inc:{
+                            total:fullOrder.totalAmount
+                        },
+                    
+                    $push:{
+                        "transactions.credits":creditData
+                    }
+                })
               let order=  await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
                     $set:{
                         status:"Cancelled",
@@ -306,10 +324,13 @@ module.exports={
                 }
             })
         },
-        deliveryStatusChange:(orderId,status)=>{
+        deliveryStatusChange:(orderId,dstatus)=>{
+            console.log(dstatus);
+            // let status
             let returnOption
             let deliveryDate= null
-            if(status==="Delivered"){
+            if(dstatus==="Delivered"){
+                // status:"Delivered",
                 returnOption = true;
                 cancelOption = false;
                 deliveryDate = new Date().toDateString()
@@ -321,7 +342,8 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
            await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId), },{
                     $set:{
-                        deliveryStatus:status,
+                        // status:status,
+                        deliveryStatus:dstatus,
                         returnOption:returnOption,
                         btnStatus: cancelOption,
                         deliveredDate:deliveryDate

@@ -1,10 +1,10 @@
 let nameError = document.getElementById("name-error")
 let phoneError = document.getElementById("phone-error")
 let pinError   = document.getElementById("pin-error")
-let houseError   = document.getElementById("house-error")
 let landmarkError   = document.getElementById("landmark-error")
 let addressError   = document.getElementById("address-error")
 let townError   = document.getElementById("town-error")
+let houseError   = document.getElementById("house-error")
 
 
 function validateName(){
@@ -36,8 +36,8 @@ function validatePhone(){
 }
 
 function validatePin(){
-    var pin   = document.getElementById("pin").value
-    if(pin.length< 6){
+    var pin = document.getElementById("pin").value
+    if(pin.length < 6|| pin.length > 6){
         pinError.innerHTML='Enter valied pin '
         return false 
     }
@@ -47,24 +47,26 @@ function validatePin(){
 }
 function validateHouse(){
     let houseNo = document.getElementById("houseNo").value
-    if(houseNo.length<0){
-        houseError.innerHTML='Enter valied House / Flat Number'
+    if(houseNo.length<1){
+        houseError.innerHTML='Enter valied House / Flat Number';
+        return false
     }
     houseError.innerHTML=''
     return true
 }
 function validateLandmark(){
     let landmark = document.getElementById("landmarkad").value
-    if(landmark.length<0){
+    if(landmark.length<1){
         landmarkError.innerHTML='Enter valied landmark'
+        return false
     }
     landmarkError.innerHTML=''
     return true
 }
 
 function validateAddress(){
-    let address = document.getElementById("useradd").value
-    if(address.length==0){
+    let address = document.getElementById("address").value
+    if(address.length<1){
         addressError.innerHTML= "enter valid address"
         return false
     }
@@ -75,7 +77,7 @@ function validateAddress(){
 function validateTown(){
     let town = document.getElementById("town").value
     if(town.length<1){
-        town.innerHTML= "enter valid town Name"
+        townError.innerHTML= "enter valid town Name"
         return false
     }
     townError.innerHTML= ""

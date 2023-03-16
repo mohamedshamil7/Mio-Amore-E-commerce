@@ -44,6 +44,22 @@ module.exports={
           userData.password = await bcrypt.hash(userData.password, 10);
           const result = await db.get().collection(collection.USER_COLLECTION).insertOne(userData);
           console.log("this result>>>>>>>>>>>",result);
+          let walletData= {
+            userId:result.insertedId,
+            total:0,
+            transactions:{
+                credits:[],
+                debits:[]
+            }
+          }
+
+          let wallet =await  db.get().collection(collection.WALLET_COLLECTION).insertOne(walletData)
+          console.log(wallet,"//////////////////////////");
+          await db.get().collection(collection.USER_COLLECTION).updateOne({_id:result.insertedId},{
+            $set:{
+                walletId:wallet.insertedId
+            }
+          })
 
           if (result.insertedId) {
             var users={
@@ -53,7 +69,7 @@ module.exports={
             }
             console.log("resolveeddddd");
           resolve(users)
-        //   resolve(result)
+
         }
           else {
             console.log("second if working or ");
@@ -544,7 +560,7 @@ getTotalAmount:(userId)=>{
     
 },
 
-addAddress:(userId,Data)=>{
+ addAddress:(userId,Data)=>{
     Data.id=ObjectId()
     return new Promise(async(resolve,reject)=>{
         let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId),Address:{$exists:true}})
@@ -669,8 +685,8 @@ console.log(typeof userId);
         date: new Date().toDateString(),
         fullDate: new Date(),
         status:order_status,
-        deliveryStatus:Preparing,
         btnStatus: true,
+        deliveryStatus:"Preparing",
     }
     console.log(userId);
     db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
@@ -816,6 +832,16 @@ googleSignup:(userData)=>{
                 let newuser=  await db.get().collection(collection.USER_COLLECTION).insertOne(Data)
                 console.log(`newuser signup using Google : ${newuser}`)
                 console.log(newuser._id)
+                let walletData = {
+                    userId :newuser.insertedId,
+                    total:0
+                }
+                let wallet = await db.get().collection(collection.WALLET_COLLECTION).insertOne(walletData)
+                await db.get().collection(collection.USER_COLLECTION).updateOne({_id:newuser.insertedId},{
+                    $set:{
+                        walletId:wallet.insertedId
+                    }
+                })
                 if(newuser.insertedId){
                     var users={
                         username:Data.username,
@@ -917,6 +943,24 @@ cancelOrderSubmit:(orderId)=>{
 
      await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
         }
+        let creditData={
+            transactionId:ObjectId(),
+           orderId:fullOrder._id,
+           amount:fullOrder.totalAmount,
+            amountCreditedOn:new Date().toDateString()
+
+
+
+        }
+         await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                $inc:{
+                    total:fullOrder.totalAmount
+                },
+            
+            $push:{
+                "transactions.credits":creditData
+            }
+        })
 
        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
@@ -924,7 +968,7 @@ cancelOrderSubmit:(orderId)=>{
                 deliveryStatus: 'Cancelled',
                 btnStatus: false,
             },
-        },{multi:true})
+        })
         if(order){
             resolve(order)
         }else{
@@ -935,7 +979,7 @@ cancelOrderSubmit:(orderId)=>{
 },
 
 returnOrderSubmit:(orderId)=>{
-    let returnedDate= null
+
     return new Promise(async(resolve,reject)=>{
         // full Order details with all Product
         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
@@ -943,6 +987,24 @@ returnOrderSubmit:(orderId)=>{
             // stock incrimenting 
           await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
         }
+        let creditData={
+            transactionId:ObjectId(),
+           orderId:fullOrder._id,
+           amount:fullOrder.totalAmount,
+            amountCreditedOn:new Date().toDateString()
+
+        }
+
+
+        await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+            $inc:{
+                total:fullOrder.totalAmount
+            },
+        
+        $push:{
+            "transactions.credits":creditData
+        }
+        })
         // updating status of return
         let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
@@ -961,7 +1023,17 @@ returnOrderSubmit:(orderId)=>{
 
 
     })
-}
+},
 
+getWallet:(userId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let total  = await db.get().collection(collection.WALLET_COLLECTION).findOne({userId:ObjectId(userId)})
+        if(total){
+            resolve(total)
+        }else{
+            reject()
+        }
+    })
+}
 
 }

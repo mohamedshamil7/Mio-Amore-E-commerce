@@ -175,68 +175,32 @@
                                     </li>
                                     <li class="right-side">
                                         <a href="/user/wishlistPage" class="btn p-0 position-relative header-wishlist">
+                                          <button type="button" class="btn p-0 position-relative header-wishlist">  <i data-feather="dollar-sign"></i>
+                                                 {{#if walletTotal}}
+                                          {{walletTotal}}
+                                          {{else}}
+                                          0
+                                          {{/if}}
+                                          </button>  
+                                        </a>
+                                    </li>
+                                    <li class="right-side">
+                                        <a href="/user/wishlistPage" class="btn p-0 position-relative header-wishlist">
                                           <button type="button" class="btn p-0 position-relative header-wishlist"></button>   <i data-feather="heart"></i>
+                                     
                                         </a>
                                     </li>
                                     <li class="right-side">
                                         <div class="onhover-dropdown header-badge">
+                                            <a href="/user/usercart">
                                             <button type="button" class="btn p-0 position-relative header-wishlist">
                                                 <i data-feather="shopping-cart"></i>
                                                 <span class="position-absolute top-0 start-100 translate-middle badge" id="cartCount">{{count}} <span class="visually-hidden"></span>
                                                 </span>
                                             </button>
-                                               {{#if products}}
-
-
-                                            <div class="onhover-div">
-                                                    {{#each products}}
-
-                                                <ul class="cart-list">
-                                                    <li class="product-box-contain">
-                                                        <div class="drop-cart">
-                                                            <a href="/user/product/{{this.cart_product._id}}" class="drop-image">
-                                                                <img src="http://localhost:8001/admin/ImageSupply/{{this.cart_product.Image1}}"
-                                                                    class="blur-up lazyload" alt="">
-                                                            </a>
-
-                                                            <div class="drop-contain">
-                                                                <a href="http://localhost:8001/admin/ImageSupply/{{this.cart_product.Image1}}">
-                                                                    <h5>{{this.cart_product.ProductName}}</h5>
-                                                                </a>
-
-                                                                <h6><span>{{this.quantity}} X</span> 
-                                                                
-                                                                
-                                                               ₹ {{this.cart_product.Price}}</h6>
-                                                                {{!-- <button class="close-button close_button">
-                                                                    <i class="fa-solid fa-xmark"></i>
-                                                                </button> --}}
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-
-                                                     {{/each}}
-
-                                                <div class="price-box">
-                                                    <h5>Total :</h5>
-                                                    <h4 class="theme-color fw-bold"> ₹ {{total}}</h4>
-                                                </div>
-
-                                                <div class="button-group">
-
-                                                    <a href="/user/usercart" class="btn btn-sm cart-button">View Cart</a>
-                                                    {{#if outofStock}}
-                                                    <button onclick="stockpop()" class="btn btn-sm cart-button theme-bg-color
-                                                    text-white">Checkout</button>
-                                                   
-                                                    {{else}}
-                                                    <a href="/user/checkout" class="btn btn-sm cart-button theme-bg-color
-                                                    text-white">Checkout</a>
-                                                    {{/if}}
-                                                </div>
-                                            </div>
-                                                {{/if}}
+                                            </a>
+                                            
+                                              
                                         </div>
                                     </li>
                                     <li class="right-side onhover-dropdown">

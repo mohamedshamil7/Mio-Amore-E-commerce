@@ -1,4 +1,3 @@
-
 require("dotenv").config();
 const userHelpers = require("../models/userHelpers/userHelpers");
 const jwt = require("jsonwebtoken");
@@ -80,6 +79,13 @@ const TotalAmount= async (req)=>{
  })
 }
 
+const wallet= async(req)=>{
+  let decode = tokenVerify(req)
+  return userHelpers.getWallet(decode.value.insertedId).then((wallet)=>{
+    return wallet
+  })
+}
+
 
 
 
@@ -145,11 +151,13 @@ module.exports = {
     console.log("got in here");
     let decode = tokenVerify(req);
     console.log(decode);
+    let walletData= await wallet(req)
+    console.log(walletData.total,"//////////");
     let total= await TotalAmount(req)
     let cart =await cartProd(req)
       let products= cart.cartItems
     let outofStock= cart.outofStock
-    console.log(cart);
+    // console.log(cart);
 
     let count= await CartCount(req)
     console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -164,7 +172,8 @@ module.exports = {
           products,
            count,
            total,
-           outofStock
+           outofStock,
+           walletTotal: walletData.total
         });
       })
       .catch((err) => {
@@ -471,31 +480,33 @@ module.exports = {
 
 
   addAddress:(req,res)=>{
-    if(!req.body.fname ||
-      !req.body.mobile ||
-      !req.body.pin ||
-      !req.body.houseNo ||
-      !req.body.landMark ||
-      !req.body.useradd ||
-      !req.body.town){
-        // res.render("userView/checkout", { error: "please enter details" });
-       return  Swal.fire({
-          title: 'Do you want to save the changes?',
-          showDenyButton: true,
-          showCancelButton: true,
-          confirmButtonText: 'Save',
-          denyButtonText: `Don't save`,
-        })
-        // .then((result) => {
-        //   /* Read more about isConfirmed, isDenied below */
-        //   if (result.isConfirmed) {
-        //     Swal.fire('Saved!', '', 'success')
-        //   } else if (result.isDenied) {
-        //     Swal.fire('Changes are not saved', '', 'info')
-        //   }
-        // })
+    console.log("calhh  here");
+    // if(!req.body.fname ||
+    //   !req.body.mobile ||
+    //   !req.body.pin ||
+    //   !req.body.houseNo ||
+    //   !req.body.landMark ||
+    //   !req.body.useradd ||
+    //   !req.body.town){
+    //     // res.render("userView/checkout", { error: "please enter details" });
+    //    return  Swal.fire({
+    //       title: 'Do you want to save the changes?',
+    //       showDenyButton: true,
+    //       showCancelButton: true,
+    //       confirmButtonText: 'Save',
+    //       denyButtonText: `Don't save`,
+    //     })
+    //     // .then((result) => {
+    //     //   /* Read more about isConfirmed, isDenied below */
+    //     //   if (result.isConfirmed) {
+    //     //     Swal.fire('Saved!', '', 'success')
+    //     //   } else if (result.isDenied) {
+    //     //     Swal.fire('Changes are not saved', '', 'info')
+    //     //   }
+    //     // })
 
-      }
+    //   }
+
     let decode = tokenVerify(req);
     console.log(req.body);
     userHelpers.addAddress(decode.value.insertedId,req.body).then((response)=>{

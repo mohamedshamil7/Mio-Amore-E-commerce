@@ -96,15 +96,3 @@ function validateOtp(){
 
 }
 
-// function SubmitBtn(){
-//     if(phoneError){
-//         submitError.innerHTML= "enter valid Data"
-//         return false
-//     }else{
-//         submitError.innerHTML=''
-//         return true
-//     }
-// }
-
-
-
