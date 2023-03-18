@@ -296,6 +296,7 @@ module.exports = {
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let user= decode.value.insertedId
+    let walletData= await wallet(req)
     console.log(req.params.id);
     let prodId = req.params.id;
       userHelpers.viewProduct(prodId).then((response) => {
@@ -311,7 +312,8 @@ module.exports = {
             products,
             outofStock,
             count,
-            total
+            total,
+            walletTotal:walletData.total
           });
         }).catch(()=>{
           let wishlist=false
@@ -323,7 +325,8 @@ module.exports = {
             products,
             outofStock,
             count,
-            total
+            total,
+            walletTotal:walletData.total
           });
     
         })
@@ -349,6 +352,7 @@ module.exports = {
     let products= cart.cartItems
     let outofStock= cart.outofStock
     let count= await CartCount(req)
+    let walletData= await wallet(req)
     userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
       let data = response;
       res.render("userView/wishlist", {
@@ -357,7 +361,8 @@ module.exports = {
         userpar: true,
         products,
         outofStock,
-        count
+        count,
+        walletTotal:walletData.total
       });
     });
   },
@@ -428,6 +433,7 @@ module.exports = {
     let decode= tokenVerify(req)
     let total= await TotalAmount(req)
     let count= await CartCount(req)
+    let walletData= await wallet(req)
     console.log(total);
     userHelpers.getcart(decode.value.insertedId).then((obj)=>{
       console.log(obj.outofStock);
@@ -435,7 +441,7 @@ module.exports = {
       let outofStock= obj.outofStock
       // console.log(obj.cartItems);
       // console.log(products,"?????????///////////////////");
-       res.render("userView/cart",{products,userpar:true,total,outofStock,count})
+       res.render("userView/cart",{products,userpar:true,total,outofStock,count,walletTotal:walletData.total})
     })
   },
  
@@ -536,10 +542,11 @@ module.exports = {
     let outofStock= cart.outofStock
     let count= await CartCount(req)
     let total= await TotalAmount(req)
+    let walletData= await wallet(req)
     userHelpers.getAllProducts().then((data) => {
       
       console.log("the then data is :", data);
-      res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total})
+      res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
     })
     .catch((err) => {
       console.log(err);
@@ -554,6 +561,7 @@ module.exports = {
     let outofStock= cart.outofStock
     let total= await TotalAmount(req)
     let count= await CartCount(req)
+    let walletData= await wallet(req)
     let data
     let orderData
     // console.log(decode.value.insertedId);
@@ -567,7 +575,7 @@ module.exports = {
     })
     // for(let i= 0 ;i<orderData.length;i++)
     // console.log(";;;",orderData[0].cart[0]);
-  res.render("userView/profile",{userpar:true,user:decode.value.username,products,outofStock,count,total,data,orderData})
+  res.render("userView/profile",{userpar:true,user:decode.value.username,products,outofStock,count,total,data,orderData,walletTotal:walletData.total})
   },
 
 
@@ -578,7 +586,7 @@ module.exports = {
     let products= cart.cartItems
     let outofStock= cart.outofStock
     let total= await TotalAmount(req)
-
+    // let walletData= await wallet(req)
     let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
           let response = await currencyConverter.convert();
           console.log("response",response); 
