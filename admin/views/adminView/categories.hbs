@@ -10,7 +10,8 @@
                 <div class="row mb-3 ">
                   <label for="inputText" class="col-sm-2 col-form-label ">Add new Category :</label>
                   <div class="col-sm-4">
-                    <input type="text" name="newCategory" id="newCategory" class="form-control">
+                    <input type="text" name="newCategory" oninput="newCat()" id="newCategory" class="form-control" required>
+                    <span id="cat-error" style="color: red;"></span>
                   </div>
                 </div>
              <p class="error">{{error}}</p>
@@ -81,5 +82,14 @@
   {{!-- <script src="sweetalert2.all.min.js"></script> --}}
 
 <script>
-
+  const catErr = document.getElementById("cat-error")
+function newCat(){
+  let catog = document.getElementById("newCategory").value
+  if(catog==0){
+    catErr.innerHTML="enter category name"
+    return false
+  }
+  catErr.innerHTML=""
+  return true
+}
 </script>

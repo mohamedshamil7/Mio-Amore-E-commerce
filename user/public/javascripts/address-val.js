@@ -5,6 +5,7 @@ let landmarkError   = document.getElementById("landmark-error")
 let addressError   = document.getElementById("address-error")
 let townError   = document.getElementById("town-error")
 let houseError   = document.getElementById("house-error")
+let submitError = document.getElementById("submit-error")
 
 
 function validateName(){
@@ -84,6 +85,12 @@ function validateTown(){
     return true
 }
 
-// function validateSubmit(){
+function submitAdd(){
+    if(validateName ()!= true|| validatePhone() || validateAddress ()|| validateHouse () || validateLandmark () || validatePin() || validateTown ()){
+        submitError.innerHTML = "Please Enter Details"
+        return false
+    }
+    submitError.innerHTML = ""
 
-// }
+    return true
+}

@@ -93,6 +93,13 @@ const wallet= async(req)=>{
 
 
 module.exports = {
+  nocache:(req, res, next) =>{
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
+  },
+
   homeJwtCheck: (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);
@@ -487,14 +494,14 @@ module.exports = {
 
   addAddress:(req,res)=>{
     console.log("calhh  here");
-    // if(!req.body.fname ||
-    //   !req.body.mobile ||
-    //   !req.body.pin ||
-    //   !req.body.houseNo ||
-    //   !req.body.landMark ||
-    //   !req.body.useradd ||
-    //   !req.body.town){
-    //     // res.render("userView/checkout", { error: "please enter details" });
+    if(!req.body.fname ||
+      !req.body.mobile ||
+      !req.body.pin ||
+      !req.body.houseNo ||
+      !req.body.landMark ||
+      !req.body.useradd ||
+      !req.body.town){
+        // res.render("userView/checkout", { error: "please enter details" });
     //    return  Swal.fire({
     //       title: 'Do you want to save the changes?',
     //       showDenyButton: true,
@@ -511,7 +518,7 @@ module.exports = {
     //     //   }
     //     // })
 
-    //   }
+      }
 
     let decode = tokenVerify(req);
     console.log(req.body);

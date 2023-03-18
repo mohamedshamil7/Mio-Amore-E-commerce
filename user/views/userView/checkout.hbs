@@ -429,9 +429,10 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary btn-md"
                                     data-bs-dismiss="modal">Close</button>
-                                <button type="submit"  class="btn theme-bg-color btn-md text-white"
+                                <button type="submit"  onclick="submitAdd()" class="btn theme-bg-color btn-md text-white"
 
                                     data-bs-dismiss="modal">Add </button>
+                                    <span id="submit-error" style="color: red;" ></span>
                                     <span id="error" style="color: red;" >{{error}}</span>
                             </div>
                     </form>

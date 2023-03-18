@@ -36,6 +36,14 @@ const tokenVerify = (request) => {
 
 
 module.exports={
+
+  nocache:(req, res, next) =>{
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
+  },
+  
  renderadminLogin:(req,res)=>{
     res.render("adminView/adminlogin")
  },
@@ -338,7 +346,8 @@ viewOrderProduct:(req,res)=>{
     Orderid= products._id.toString()
     res.render('adminView/viewOrderProduct', { admin: true, products});
   }).catch(() => {
-
+    let e= "No orders"
+    res.render('adminView/viewOrderProduct', { admin: true,e });
   });
 },
 
