@@ -7,6 +7,7 @@ const { reset } = require("nodemon");
 const { userBlockCheck, inStockcheck, changePaymentStatus } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
+const Handlebars = require('handlebars');
 // const Swal = window.Swal;
 // import Swal from 'sweetalert2'
 
@@ -457,10 +458,17 @@ module.exports = {
     let cart =await cartProd(req)
     // let products= cart.cartItems
     // let outofStock= cart.outofStock
+    let walletData= await wallet(req)
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let Address= await userHelpers.getAddress(decode .value.insertedId)
     // let inStock= await checkinStock(req)
+    let isWallet
+    if(walletData.total >= total){
+      console.log("/////is");
+       isWallet = true
+    }
+
     let user=decode.value.username
     let userID = ObjectId(decode.value.insertedId) 
     console.log( "uer if", userID);
@@ -470,10 +478,7 @@ module.exports = {
       let products = obj.cartItems
       let outofStock= obj.outofStock
      
-
-
-
-   return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock})
+   return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock,walletTotal:walletData.total,isWallet})
 
     })
   },
@@ -580,7 +585,7 @@ module.exports = {
 
     
     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
-      console.log("/////////////////////////////////////////////////////////",orderId);
+      console.log("//////////////////////////////////////////////////////",orderId);
       function destruct(products) { 
         let data =[]
         for(let i=0;i<products.length;i++){
@@ -610,6 +615,17 @@ module.exports = {
         })
         
       }
+      else if(req.body.PaymentOption === 'wallet'){
+        userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
+          let ids  = destruct(products)
+          userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+            // console.log("this.response",response);
+            res.json({status:"wallet",response})
+
+          })
+        })
+      }
+
       else if(req.body.PaymentOption=='razorPay'){
         console.log("entered");
         userHelpers.generateRazorPay(orderId,total).then((response)=>{

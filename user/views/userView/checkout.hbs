@@ -121,7 +121,39 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                               
+                                            {{#if isWallet}}
+                                            <div class="accordion-item">
+                                                    <div class="accordion-header" id="flush-headingFour">
+                                                        <div class="accordion-button collapsed"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#flush-collapseFour">
+                                                            <div class="custom-form-check form-check mb-0">
+                                                                <label class="form-check-label" for="cash"><input
+                                                                        class="form-check-input mt-0" type="radio" 
+                                                                        name="PaymentOption" value="wallet" id="wallet" > Wallet  -- ₹({{walletTotal}})
+                                                                    </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{else}}
+                                                  <div class="accordion-item">
+                                                    <div class="accordion-header" id="flush-headingFour">
+                                                        <div class="accordion-button collapsed"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#flush-collapseFour">
+                                                            <div class="custom-form-check form-check mb-0">
+                                                                <label class="form-check-label" for="cash">
+                                                                    <input
+                                                                        class="form-check-input mt-0 " type="radio" 
+                                                                        name="PaymentOption" value="wallet false" id="wallet"  disabled> Wallet   -- ₹({{walletTotal}})  <span style="color: red;">Inssuficient Balance</span>
+                                                                    </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {{/if}}
                                                 <div class="accordion-item">
                                                     <div class="accordion-header" id="flush-headingOne">
                                                         <div class="accordion-button collapsed"
@@ -426,6 +458,9 @@
                 method:'post',
                 success:(response )=> {
                     if(response.status=="COD"){
+                        location.href="http://localhost:4000/orderSuccess"
+                    }   
+                    else   if(response.status=="wallet"){
                         location.href="http://localhost:4000/orderSuccess"
                     }
                     else if(response.status=="razorpay") {

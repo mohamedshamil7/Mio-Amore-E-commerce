@@ -633,7 +633,7 @@ let userId=  order.id
 console.log(typeof userId);
     console.log("/////////?///",userId);
     // if(order.PaymentOption==='COD'?)
-    let order_status= order.PaymentOption==='COD'?'placed':'pending'
+    let order_status= order.PaymentOption==='COD'|| order.PaymentOption === "wallet" ?'placed':'pending'
     console.log(order_status);
 
     let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
@@ -939,20 +939,24 @@ cancelOrderSubmit:(orderId)=>{
     return new Promise(async(resolve,reject)=>{
         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
 
-        for(let i =0;i<fullOrder.cart.length;i++){
-
-     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
+        for (let i = 0; i < fullOrder.cart.length; i++) {
+          await db
+            .get()
+            .collection(collection.PRODUCT_COLLECTIONS)
+            .updateOne(
+              { _id: ObjectId(fullOrder.cart[i].item) },
+              { $inc: { Stock: fullOrder.cart[i].quantity } }
+            );
         }
-        let creditData={
-            transactionId:ObjectId(),
-           orderId:fullOrder._id,
-           amount:fullOrder.totalAmount,
-            amountCreditedOn:new Date().toDateString()
 
-
-
-        }
-         await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+        if(fullOrder.paymentMethod !=="COD"){
+            let creditData={
+                transactionId:ObjectId(),
+               orderId:fullOrder._id,
+               amount:fullOrder.totalAmount,
+                amountCreditedOn:new Date().toDateString()
+            }
+            await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
                 $inc:{
                     total:fullOrder.totalAmount
                 },
@@ -961,6 +965,11 @@ cancelOrderSubmit:(orderId)=>{
                 "transactions.credits":creditData
             }
         })
+
+        }
+
+        
+        
 
        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
@@ -1030,6 +1039,30 @@ getWallet:(userId)=>{
         let total  = await db.get().collection(collection.WALLET_COLLECTION).findOne({userId:ObjectId(userId)})
         if(total){
             resolve(total)
+        }else{
+            reject()
+        }
+    })
+},
+debitFromWallet:(orderId,total,user)=>{
+    let debitData={
+        transactionId:ObjectId(),
+       orderId:orderId,
+       amount:total,
+        amountDebitedOn:new Date().toDateString()
+
+    }
+    return new Promise(async(resolve,reject)=>{
+       let wallet= await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(user)},{
+            $inc:{
+                total:-total
+            },
+             $push:{
+                "transactions.debits":debitData
+            }
+        })
+        if(wallet){
+            resolve(wallet)
         }else{
             reject()
         }

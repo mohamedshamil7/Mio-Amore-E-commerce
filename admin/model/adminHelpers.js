@@ -304,7 +304,7 @@ module.exports={
                         deliveryStatus: 'Cancelled',
                         btnStatus:false
                     }
-                },{multi:true})
+                })
                 if(order){
                     resolve(order)
                 }else{
