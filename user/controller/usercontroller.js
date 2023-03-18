@@ -280,6 +280,7 @@ module.exports = {
     res.clearCookie("token");
     res.redirect("/user/login");
   },
+  
   productPage: async(req, res) => {
     let decode = tokenVerify(req);
     let cart =await cartProd(req)

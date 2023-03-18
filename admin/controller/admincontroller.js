@@ -312,10 +312,10 @@ allorders:(req,res)=>{
 },
 
 adminLogout:(req,res)=>{
-  req.session.admin=null
-  req.session.loggedIn=false
-  console.log('admin logged Out');
-  res.render('adminView/adminLogin')
+
+    res.clearCookie("admintoken");
+    res.redirect("/admin/");
+  
 },
 
 

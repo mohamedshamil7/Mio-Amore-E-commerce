@@ -1,7 +1,3 @@
-
-
-
-
 var db=require("../../../dbconnections/dbConnection")
 var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")

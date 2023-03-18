@@ -35,6 +35,7 @@ const {
   cancelOrderAdmin,
   viewOrderProduct,
   deliveryStatus,
+  adminLogout,
 } = require("../controller/admincontroller");
 const{
   uploadMultiple
@@ -79,6 +80,7 @@ router.post('/cancelOrder',autherization, cancelOrderAdmin);
 router.get('/view-order-product/:id',autherization, viewOrderProduct);
 router.post("/delivery-status/:id",autherization, deliveryStatus)
 
+router.get("/logout",autherization,adminLogout)
 
 module.exports = router;
 
