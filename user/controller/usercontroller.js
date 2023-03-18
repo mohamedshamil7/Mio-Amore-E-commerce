@@ -280,7 +280,7 @@ module.exports = {
     res.clearCookie("token");
     res.redirect("/user/login");
   },
-  
+
   productPage: async(req, res) => {
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
@@ -843,6 +843,36 @@ console.log(data);
     userHelpers.returnOrderSubmit(req.body.orderId).then((response)=>{
       res.json(response)
     })
+  },
+
+  getWalletPage:async(req,res)=>{
+    let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+
+    let decode= tokenVerify(req);
+    let full
+    let allData
+    let walletTotal
+    let credits
+    let debits
+    // const 
+    await userHelpers.getWallet(decode.value.insertedId).then((data)=>{
+      full = data
+    })
+
+    walletTotal = full.total
+      allData=[...full.transactions.credits,...full.transactions.debits]
+      
+      credits=[...full.transactions.credits]
+      
+      debits=[...full.transactions.debits]
+      
+    console.log(credits);
+
+    res.render("userView/wallet",{userpar:true,user:decode.value.username,products,outofStock,count,total,allData,credits,debits,walletTotal})
   }
   
   
