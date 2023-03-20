@@ -112,3 +112,19 @@ function addCategory (){
 
   })
 }
+
+
+function sales(value){
+  alert(value)
+  $.ajax({
+    url:"/admin/sales",
+    data: {
+      data:value
+    },
+    method:'post',
+    success: () => {
+      // alert(";")
+      location.reload(); 
+    },
+  })
+}

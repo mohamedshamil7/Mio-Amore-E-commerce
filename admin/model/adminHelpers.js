@@ -3,6 +3,8 @@ var collection =require('../../dbconnections/Collections')
 const { ObjectId } = require('mongodb')
 var bcrypt=require('bcrypt')
 const Collections = require('../../dbconnections/Collections')
+const { resolve } = require('path')
+const { reject } = require('firebase-tools/lib/utils')
 
 module.exports={
     adminLogin:(adminData)=>{
@@ -26,6 +28,60 @@ module.exports={
             }
         })
     },
+
+    getDailyOrder:()=>{
+        // const currentDate = new Date().
+
+        return new Promise(async(resolve,reject)=>{
+            const order  = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                {
+                    $match:{date:new Date().toDateString()}
+                }
+            ]).toArray()
+            console.log("order daily",order);
+            resolve(order)
+        })
+    },
+
+
+    getWeeklyorder:()=>{
+        return new Promise(async(resolve,reject)=>{
+            const order = await db.get().collection(collection.ORDER_COLLECTION).find({
+                $and:[
+                    {fullDate:{$lte:new Date ()}},
+                    {fullDate:{$gte:new Date(new Date().getDate()-7)}}
+                ]
+            }).toArray()
+            resolve(order)
+        })
+    },
+    getMonthlyorder:()=>{
+        return new Promise(async(resolve,reject)=>{
+            const order = await db.get().collection(collection.ORDER_COLLECTION).find({
+                $and:[
+                    {fullDate:{$lte:new Date ()}},
+                    {fullDate:{$gte: new Date(new Date().getDate()-30)}}
+                ]
+            })
+            console.log(order,"mothly");
+            // resolve(order)
+        })
+    },
+    getyearlyorder:()=>{
+        return new Promise(async(resolve,reject)=>{
+            const order = await db.get().collection(collection.ORDER_COLLECTION).find({
+                $and:[
+                    {fullDate:{$lte:new Date()}},
+                    {fullDate:{$gte:new Date(new Date().getFullYear()-1)}}
+                ]
+            })
+            resolve(order)
+        })
+    },
+
+
+
+
     getAllUsers:()=>{
         return new Promise(async(resolve,reject)=>{
             let users= await db.get().collection(collection.USER_COLLECTION).find().toArray()

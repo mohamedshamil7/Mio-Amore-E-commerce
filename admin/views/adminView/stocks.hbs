@@ -26,9 +26,9 @@
                   </tr>
                 </thead>
                 <tbody>
-                    {{#each stock}}
+                    {{#each Details}}
                   <tr>
-                    <th scope="row"><img style="width: 50px;" src="./images/product-images/{{this.Image1}}" alt="no"></th>
+                    <th scope="row"><img style="width: 50px;" src="{{this.urlImage1}}" alt="no"></th>
                     <td>{{this.ProductName}}</td>
                     <td>{{this.Company}}</td>
                     <td>{{this.Price}}</td>

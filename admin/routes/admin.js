@@ -37,13 +37,16 @@ const {
   deliveryStatus,
   adminLogout,
   nocache,
+  salesReport,
 } = require("../controller/admincontroller");
 const{
-  uploadMultiple
+  // uploadMultiple
+  upload
 }=require("../public/javascripts/multer")
 /* GET home page. */
 router.get('/',renderadminLogin);
 
+router.post('/sales',adminLoginRoute,salesReport)
 router.post('/login-submit',nocache,adminLoginRoute,redirectAdminDash)
 
 router.get("/adminDash",nocache,autherization,renderadminDash)
@@ -64,13 +67,13 @@ router.post("/deleteCategory/:id",autherization,deleteCategory)
 
 router.get("/add-product",nocache,autherization,addProductForm)
 
-router.post("/addProduct-submit",autherization,uploadMultiple,addNewProduct)
+router.post("/addProduct-submit",autherization,upload,addNewProduct)
 
 // router.post("/delete-Product",deleteProduct)
 
 router.post("/edit-Product",nocache,autherization,editProduct)
 
-router.post("/editProduct-submit",autherization,uploadMultiple,EditProductData)
+router.post("/editProduct-submit",autherization,upload,EditProductData)
 
 router.get("/ImageSupply/:Image",ImageSupplier )
 
