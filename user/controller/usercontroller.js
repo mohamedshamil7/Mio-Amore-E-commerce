@@ -7,12 +7,16 @@ const { reset } = require("nodemon");
 const { userBlockCheck, inStockcheck, changePaymentStatus } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
+
 // const Swal = window.Swal;
 // import Swal from 'sweetalert2'
 
 const cc= require("currency-converter-lt")
 
 var paypal= require('paypal-rest-sdk')
+const { S3Client, PutObjectCommand,GetObjectCommand  } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
 
 
 const PAYPAL_CLIENT_ID=process.env.PAYPAL_CLIENT_ID
@@ -28,12 +32,13 @@ paypal.configure({
 const { stringify } = require("querystring");
 
 
+const bucketname = process.env.BUCKET_NAME
 
+const bucketregion = process.env.BUCKET_REGION
 
+const accesskey = process.env.ACCESS_KEY  
 
-
-
-
+const accessSecret = process.env.ACCES_KEY_SECRET
 
 const MY_SECRET =process.env.MY_SECRET;
 
@@ -86,6 +91,30 @@ const wallet= async(req)=>{
   })
 }
 
+const s3= new S3Client({
+  // region: `${bucketregion}`,
+  region:'ap-south-1',
+  endpoint: 'https://s3.ap-south-1.amazonaws.com',
+  // endpoint: `s3.${bucketregion}.amazonaws.com`,
+  credentials:{
+    accessKeyId: accesskey,
+    secretAccessKey:accessSecret,
+    
+  },
+})
+
+const getImgUrl= async(imgName)=>{
+  const getObjectParams={
+    Bucket:bucketname,
+    Key:imgName
+  }
+
+  const command = new GetObjectCommand(getObjectParams);
+  const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+  // console.log(url);
+  return url
+
+}
 
 
 
@@ -164,14 +193,37 @@ module.exports = {
     let cart =await cartProd(req)
       let products= cart.cartItems
     let outofStock= cart.outofStock
+    let datas = null
     // console.log(cart);
 
     let count= await CartCount(req)
     console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
-    userHelpers.getAllProducts().then((data) => {
-      
-        console.log("the then data is :", data);
+     await userHelpers.getAllProducts().then((prodData) => {
+       datas = prodData
+      }).catch((err) => {
+        console.log(err);
+        console.log("didtn get my all Products");
+      });
+
+        // console.log("the then data is :", datas.all);
+
+        async function processImages(data) {
+          for (let i = 0; i < data.all.length; i++) {
+            if (data.all[i].Image1) {
+              // console.log(";;;;;fjf");
+              // console.log("image 1 :", data[i].Image1);
+              data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+              // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
+            }
+    
+          }
+          console.log("Data:", data);
+          return data;
+        }
+        let data = await processImages(datas);
+        console.log("came data:::::>>>>",data);
+
         res.render("userView/home", {
           data,
           user: decode.value.username,
@@ -182,11 +234,8 @@ module.exports = {
            outofStock,
            walletTotal: walletData.total
         });
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("didtn get my all Products");
-      });
+     
+      
   },
   redirectHome: (req, res) => {
     console.log("entereddd");
@@ -298,45 +347,55 @@ module.exports = {
     let walletData= await wallet(req)
     console.log(req.params.id);
     let prodId = req.params.id;
-      userHelpers.viewProduct(prodId).then((response) => {
-        let data = response;
+
+let datas = null
+let wishlist
+    await userHelpers.viewProduct(prodId).then((response) => {
+      datas= response;
         console.log(`data:?????????//// ${data.inStock}`);
-        userHelpers.inWishlist(user,prodId).then((response)=>{
-          let wishlist=response
-          res.render("userView/productPage", {
-            wishlist,
-            data,
-            user: decode.value.username,
-            userpar: true,
-            products,
-            outofStock,
-            count,
-            total,
-            walletTotal:walletData.total
-          });
-        }).catch(()=>{
-          let wishlist=false
-          res.render("userView/productPage", {
-            wishlist,
-            data,
-            user: decode.value.username,
-            userpar: true,
-            products,
-            outofStock,
-            count,
-            total,
-            walletTotal:walletData.total
-          });
-    
-        })
-       
-        
       })
       .catch((err) => {
         console.log(err);
       });
+       await  userHelpers.inWishlist(user,prodId).then((response)=>{
+        wishlist=response
+      }).catch(()=>{
+        wishlist=false
+        })
 
+        async function processImages(Data) {
+          console.log(Data);
+          if (Data.Image1) {
+            Data.urlImage1 = await getImgUrl(Data.Image1);
+            // console.log("Data[i].urlImage1:", Data.urlImage1);
+          }
+          if (Data.Image2) {
+            Data.urlImage2 = await getImgUrl(Data.Image2);
+          }
+          if (Data.Image3) {
+            Data.urlImage3 = await getImgUrl(Data.Image3);
+          }
+          if (Data.Image4) {
+            Data.urlImage4 = await getImgUrl(Data.Image4);
+          }
     
+          console.log("Data:", Data);
+          return Data;
+        }
+        let data = await processImages(datas);
+
+          res.render("userView/productPage", {
+            wishlist,
+            data,
+            user: decode.value.username,
+            userpar: true,
+            products,
+            outofStock,
+            count,
+            total,
+            walletTotal:walletData.total
+          });
+
   },
   imageRoute: (req, res) => {
     let decode = tokenVerify(req);
@@ -352,8 +411,26 @@ module.exports = {
     let outofStock= cart.outofStock
     let count= await CartCount(req)
     let walletData= await wallet(req)
-    userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
-      let data = response;
+    let datas
+   await  userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
+      datas = response;
+    });
+    console.log("dataaas",datas);
+    async function processImages(Data) {
+      for (let i = 0; i < Data.length; i++) {
+        if (Data[i].Product.Image1) {
+          console.log("image 1 :", Data[i].Product.Image1);
+          Data[i].Product.urlImage1 = await getImgUrl(Data[i].Product.Image1);
+          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+        }
+
+      }
+      console.log("Data:", Data);
+      return Data;
+    }
+
+    let data = await processImages(datas);
+
       res.render("userView/wishlist", {
         data,
         user: decode.value.username,
@@ -363,7 +440,7 @@ module.exports = {
         count,
         walletTotal:walletData.total
       });
-    });
+
   },
   addToWishlist: (req, res) => {
     console.log(req.params.id);
@@ -434,14 +511,30 @@ module.exports = {
     let count= await CartCount(req)
     let walletData= await wallet(req)
     console.log(total);
-    userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+    let product
+    let outofStock 
+    await userHelpers.getcart(decode.value.insertedId).then((obj)=>{
       console.log(obj.outofStock);
-      let products = obj.cartItems
-      let outofStock= obj.outofStock
-      // console.log(obj.cartItems);
-      // console.log(products,"?????????///////////////////");
-       res.render("userView/cart",{products,userpar:true,total,outofStock,count,walletTotal:walletData.total})
+     product = obj.cartItems
+      outofStock= obj.outofStock
     })
+    // console.log(products);
+    async function processImages(Data) {
+      for (let i = 0; i < Data.length; i++) {
+        if (Data[i].cart_product.Image1) {
+          console.log("image 1 :", Data[i].cart_product.Image1);
+          Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
+          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+        }
+
+      }
+      console.log("Data:", Data);
+      return Data;
+    }
+    let products = await processImages(product);
+
+       res.render("userView/cart",{products,userpar:true,total,outofStock,count,walletTotal:walletData.total})
+  
   },
  
   removeCart:(req,res)=>{
@@ -474,6 +567,8 @@ module.exports = {
     let walletData= await wallet(req)
     let count= await CartCount(req)
     let total= await TotalAmount(req)
+    let product
+    let outofStock
     let Address= await userHelpers.getAddress(decode .value.insertedId)
     // let inStock= await checkinStock(req)
     let isWallet
@@ -487,14 +582,28 @@ module.exports = {
     console.log( "uer if", userID);
     console.log("@#############@@@@@@@###",user);
     console.log("???????",Address,">>>>>");
-    userHelpers.getcart(decode.value.insertedId).then((obj)=>{
-      let products = obj.cartItems
-      let outofStock= obj.outofStock
-     
-   return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock,walletTotal:walletData.total,isWallet})
+   await  userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+      product = obj.cartItems
+    outofStock= obj.outofStock
+  })
+  async function processImages(Data) {
+    for (let i = 0; i < Data.length; i++) {
+      if (Data[i].cart_product.Image1) {
+        // console.log("image 1 :", Data[i].Image1);
+        Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
+        // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+      }
 
-    })
+    }
+    console.log("Data:", Data);
+    return Data;
+  }
+
+  let products = await processImages(product);
+
+  return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock,walletTotal:walletData.total,isWallet})
   },
+  
 
 
   addAddress:(req,res)=>{

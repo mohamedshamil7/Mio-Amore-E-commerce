@@ -121,8 +121,6 @@ module.exports={
                     let data={
                         all:all
                     }
-                    console.log(data);
-
                     resolve(data)
                 }
                 else{

@@ -13,17 +13,9 @@ const MY_SECRET = process.env.MY_SECRET;
 
 const bucketname = process.env.BUCKET_NAME
 
-console.log(process.env.BUCKET_NAME);
-console.log(process.env.BUCKET_REGION);
-console.log(process.env.ACCESS_KEY );
-
-
 const bucketregion = process.env.BUCKET_REGION
 
-
-
 const accesskey = process.env.ACCESS_KEY  
-
 
 const accessSecret = process.env.ACCES_KEY_SECRET
 
@@ -208,15 +200,7 @@ module.exports = {
           Data[i].urlImage1 = await getImgUrl(Data[i].Image1);
           console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
-        if (Data[i].Image2) {
-          Data[i].urlImage2 = await getImgUrl(Data[i].Image2);
-        }
-        if (Data[i].Image3) {
-          Data[i].urlImage3 = await getImgUrl(Data[i].Image3);
-        }
-        if (Data[i].Image4) {
-          Data[i].urlImage4 = await getImgUrl(Data[i].Image4);
-        }
+
       }
       console.log("Data:", Data);
       return Data;

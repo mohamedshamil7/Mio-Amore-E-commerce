@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.294.0",
     "@aws-sdk/s3-request-presigner": "^3.294.0",
     "@handlebars/allow-prototype-access": "^1.0.5",
     "@paypal/checkout-server-sdk": "^1.0.3",
