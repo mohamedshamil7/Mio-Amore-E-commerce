@@ -1,0 +1,95 @@
+{{!-- <h2 class="mb-5 mt-0">Add New Product</h2> --}}
+
+<section class="page-align mt-5 " id="footer">
+    <div class="container" id="mydata">
+        <div class="row">
+  <h2 class="mb-5 mt-0">Brands</h2>
+
+
+ <form action="/admin/addCategory" method="post">
+                <div class="row mb-3 ">
+                  <label for="inputText" class="col-sm-2 col-form-label ">Add new Brand :</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="newBrand" oninput="newCat()" id="newBrand" class="form-control" required>
+                    <span id="cat-error" style="color: red;"></span>
+                  </div>
+                </div>
+             <p class="error">{{error}}</p>
+                            <div class=" mt-3 mb-5">
+                <button type="button" onclick="addBrand()" class="btn btn-primary" > Submit </button> 
+                  </div>
+
+</form>
+
+ {{!-- <div class="row mb-3 ">
+                  <label for="inputText" class="col-sm-2 col-form-label ">Add new Category :</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="newCategory" class="form-control" >
+                  </div>
+                </div>
+                <span>{{error}}</span>
+                   <div class=" mt-3 mb-5">
+                 <a class="btn btn-success" onclick="addCategory()">Add Category</a>
+                    </div> --}}
+
+
+
+
+<!-- Table with stripped rows -->
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+
+                    <th scope="col">Name</th>
+                    <th scope="col">Action</th>
+                    {{!-- <th scope="col">Position</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Start Date</th> --}}
+                  </tr>
+                </thead>
+                <tbody>
+                     {{#each brands}}
+                  <tr>
+
+                    <td>{{this.brandName}}</td>
+                    <td>
+
+                      <a class="btn btn-danger" onclick="deleteBrand('{{this._id}}')">Remove</a>
+                                         {{!-- <button type="button" class="btn btn-danger" onclick="deleteCategor({{this._id}})">Remove</button> --}}
+
+                      {{!-- <form action="/admin/deleteCategory" method="post">
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-danger" onclick="deleteCategory({{this._id}})">Remove</button>
+                            </form> --}}
+                    </td>
+                  </tr>
+                </tbody>
+                  {{/each}}
+              </table>
+              <!-- End Table with stripped rows -->
+
+        </div>
+    </div>
+    
+
+
+
+</section>
+
+
+ {{!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>  
+  --}}
+  {{!-- <script src="sweetalert2.all.min.js"></script> --}}
+
+<script>
+  const catErr = document.getElementById("cat-error")
+function newCat(){
+  let catog = document.getElementById("newCategory").value
+  if(catog==0){
+    catErr.innerHTML="enter category name"
+    return false
+  }
+  catErr.innerHTML=""
+  return true
+}
+</script>

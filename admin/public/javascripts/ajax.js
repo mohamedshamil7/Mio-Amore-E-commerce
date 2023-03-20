@@ -36,6 +36,43 @@ console.log(id);
   
 }
 
+function deleteBrand(id){
+  console.log("<<<<<<<<<<<<<",id);
+      Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+          $.ajax({
+              url:' http://localhost:8001/admin/deleteBrand/'+id,
+              method:'post',
+              success:(response)=>{
+                  if(response.status){
+  
+                      
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Deleted',
+                          showConfirmButton: false,
+                          timer: 1000
+                        })
+                        setTimeout(()=>{
+                          location.reload()
+                      },1000)
+                      }
+              }
+          })
+        
+      }
+    })
+    
+  }
+
 
 function cancelOrder(orderId){
   Swal.fire({
@@ -114,6 +151,43 @@ function addCategory (){
 }
 
 
+function addBrand (){
+  // const error = document.getElementById("")
+  const brand = document.getElementById("newBrand").value
+  if(brand.length==0){
+    return error
+  }
+  $.ajax({
+    url:"http://localhost:8001/admin/addBrand",
+    method:'post',
+    data:{
+        brand
+    },
+    success:(response)=>{
+
+      Swal.fire({
+          icon: 'success',
+          title: 'new Brand added',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        setTimeout(()=>{
+           location.reload()
+      },1000)
+      },
+      error:(xhr, thrownError)=>{
+        console.log("isdda")
+        Swal.fire({
+            icon: 'error',
+            title: 'Brand already exist',
+            // text: 'Something went wrong!',
+           
+          })
+    }
+
+  })
+}
+
 function sales(value){
   alert(value)
   $.ajax({
@@ -127,4 +201,19 @@ function sales(value){
       location.reload(); 
     },
   })
+}
+
+function Delete(name){
+  console.log(name);
+  // $.ajax({
+  //   url:"/admin/deleteImage",
+  //   data: {
+  //     name
+  //   },
+  //   method:'post',
+  //   // success: () => {
+  //   //   // alert(";")
+  //   //   location.reload(); 
+  //   // },
+  // })
 }

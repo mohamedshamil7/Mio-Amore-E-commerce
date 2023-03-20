@@ -38,6 +38,10 @@ const {
   adminLogout,
   nocache,
   salesReport,
+  deleteImage,
+  brandsPage,
+  addBrand,
+  deleteBrand
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -58,12 +62,16 @@ router.post("/blockManager",autherization,userBlock)
 router.get("/stocks",nocache,autherization,stockPage)
 
 router.get("/categories",nocache,autherization,categories_Page)
+router.get("/brands",nocache,autherization,brandsPage)
 
+
+router.post("/addBrand",nocache,autherization,addBrand)
 router.post("/addCategory",nocache,autherization,addCategoryManager)
 
 router.post("/prodAvailability/:id",autherization,availabilityCheck)
 
 router.post("/deleteCategory/:id",autherization,deleteCategory)
+router.post("/deleteBrand/:id",autherization,deleteBrand)
 
 router.get("/add-product",nocache,autherization,addProductForm)
 
@@ -85,6 +93,7 @@ router.get('/view-order-product/:id',nocache,autherization, viewOrderProduct);
 router.post("/delivery-status/:id",autherization, deliveryStatus)
 
 router.get("/logout",nocache,autherization,adminLogout)
+router.delete("/deleteImage",nocache,autherization,deleteImage)
 
 module.exports = router;
 

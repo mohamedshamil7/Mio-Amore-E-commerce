@@ -27,15 +27,18 @@
         </div>
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
-          <img style="width: 50px;" src="./images/product-images/{{product.Image1}}" alt="no">
+          <img style="width: 50px;" src="{{product.urlImage1}}" alt="no">
+          <input type="text" name="imagename1" value="{{product.Image1}}" hidden>
           <div class="col-sm-4 mb-3">
             <input class="form-control" type="file" name="Image1" id="formFile">
           </div>
         </div>
 
           <div class="row mb-3">
+
           <label class="col-sm-2 col-form-label">File Upload</label>
-          <img style="width: 50px;" src="./images/product-images/{{product.Image2}}" alt="no">
+          <img style="width: 50px;" src="{{product.urlImage2}}" alt="no">
+          <input type="text" name="imagename2" value="{{product.Image2}}" hidden>
           <div class="col-sm-4 mb-3">
             <input class="form-control" type="file" name="Image2" id="formFile">
           </div>
@@ -43,17 +46,20 @@
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
-          <img style="width: 50px;" src="./images/product-images/{{product.Image3}}" alt="no">
+          <img style="width: 50px;" src="{{product.urlImage3}}" alt="no">
+          <input type="text" name="imagename3" value="{{product.Image3}}" hidden>
           <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image3" id="formFile">
+            <input class="form-control" type="file" name="Image3" value="{{product.Image3}}" id="formFile">
           </div>
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
-          <img style="width: 50px;" src="./images/product-images/{{product.Image4}}" alt="no">
+          <img style="width: 50px;" src="{{product.urlImage4}}" alt="no">
+            {{!-- <button style="float: right; width: 100px;" class="btn btn-danger" >Delete</button> --}}
+            <input type="text" name="imagename4" value="{{product.Image4}}" hidden>
           <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image4" id="formFile">
+            <input class="form-control" type="file" name="Image4" id="formFile" value="{{product.Image4}}">
           </div>
         </div>
 

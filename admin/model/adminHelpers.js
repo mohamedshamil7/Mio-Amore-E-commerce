@@ -150,6 +150,41 @@ module.exports={
             }
         })
     },
+    addBrand:(brand)=>{
+        return new Promise(async(resolve,reject)=>{
+            let brands= await db.get().collection(collection.BRAND_COLLECTION).findOne({brandName:brand})
+            if(brands){
+                reject(brands)
+            }else{
+                let newbrand= await db.get().collection(collection.BRAND_COLLECTION).insertOne({brandName:brand})
+                if(newbrand.insertedId){
+                    resolve(newbrand)
+                }else{
+                    reject()
+                }
+            }
+        })
+    },
+    deleteBrand:(id)=>{
+        return new Promise(async(resolve,reject)=>{
+            db.get().collection(collection.BRAND_COLLECTION).findOneAndDelete({_id:ObjectId(id)}).then((response)=>{
+                resolve(response);
+            }).catch(()=>{
+                reject()
+            })
+        })
+    },
+
+    getAllBrands:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let brands= await db.get().collection(collection.BRAND_COLLECTION).find().toArray()
+            if(brands){
+                resolve(brands)
+            }else{
+                reject()
+            }
+        })
+    },
     getAllCategories:()=>{
         return new Promise(async(resolve,reject)=>{
             let categories= db.get().collection(collection.CATTEGORY_COLLECTION).find().toArray()
@@ -251,10 +286,10 @@ module.exports={
                     COD:id.COD,
                     Stock :id.Stock,
                     inStock :id?.inStock,
-                    Image1:id.Image1,
-                    Image2:id.Image2,
-                    Image3:id.Image3,
-                    Image4:id.Image4,
+                    Image1:id?.Image1,
+                    Image2:id?.Image2,
+                    Image3:id?.Image3,
+                    Image4:id?.Image4,
 
 
                 }

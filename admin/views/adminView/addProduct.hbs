@@ -11,18 +11,24 @@
                     <input type="text" name="ProductName" class="form-control">
                   </div>
                 </div>
-                <div class="row mb-3">
+                {{!-- <div class="row mb-3">
                   <label for="inputEmail" class="col-sm-2 col-form-label">Company</label>
                   <div class="col-sm-4">
                     <input type="text" name="Company" class="form-control">
                   </div>
-                </div>
-                {{!-- <div class="row mb-3">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                </div> --}}
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Brand</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control">
-                  </div> --}}
-                {{!-- </div> --}}
+                    <select class="form-select"name="Company" aria-label="Default select example">
+                      <option selected>select Brand</option>
+                      {{#each brands}}
+                      <option value="{{this.brandName}}">{{this.brandName}}</option> 
+                    {{/each}}
+                    </select>
+                  </div>
+                </div>
+
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Price</label>
                   <div class="col-sm-4">
@@ -66,7 +72,7 @@
                     <input type="date" name="ManufacturingDate" class="form-control">
                   </div>
                 </div>
-                                <div class="row mb-3">
+               <div class="row mb-3">
                   <label class="col-sm-2 col-form-label">Category</label>
                   <div class="col-sm-4">
                     <select class="form-select"name="category" aria-label="Default select example">
