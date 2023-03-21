@@ -4,8 +4,9 @@ const bcrypt=require("bcrypt")
 const { resolve } = require("path")
 const jwt=require("jsonwebtoken");
 const { reject, promiseAllSettled } = require("firebase-tools/lib/utils");
-const { ObjectId, OrderedBulkOperation } = require("mongodb");
+const { ObjectId } = require("mongodb");
 const { response } = require("../../app");
+const mongoClient=require('mongodb').MongoClient
 
 const crypto = require('crypto');
 
@@ -620,14 +621,14 @@ getAddress:(userId)=>{
 
 
 placeOrder:(order,cart,total)=>{
-    console.log("dfjhdjndkjf this i s place order cart ::::",cart);
+
 return new Promise(async(resolve,reject)=>{
-    // console.log(order.userId);
+
 let userId=  order.id
 console.log(typeof userId);
-    console.log("/////////?///",userId);
-    // if(order.PaymentOption==='COD'?)
+
     let order_status= order.PaymentOption==='COD'|| order.PaymentOption === "wallet" ?'placed':'pending'
+
     console.log(order_status);
 
     let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
@@ -1069,6 +1070,165 @@ debitFromWallet:(orderId,total,user)=>{
             reject()
         }
     })
+},
+
+placeOrderTrans:async(order,cart,total)=>{
+    let userId=  order.id
+    let order_status= order.PaymentOption==='COD'|| order.PaymentOption === "wallet" ?'placed':'pending'
+
+    const url='mongodb+srv://mohamedshamil0507:qwerty123@mioamore.dwam0rq.mongodb.net/?retryWrites=true&w=majority'
+
+    mongoClient.connect(url, async function(err, client) {
+      if (err) throw err;
+      
+      console.log("Connected to MongoDB database!");
+    
+      const session = client.startSession();
+      const transactionOptions={
+        readPreference:'primary',
+        readConcern:{level:'local'},
+        writeConcern:{w:'majority'}
+    }
+    try{
+        console.log("here");
+        const transactionResults= await session.withTransaction(async()=>{
+       const address= await db.get().collection(collection.USER_COLLECTION).aggregate([
+                {
+                    $unwind:'$Address'
+                },
+                {
+                    $match:{
+                       'Address.id':ObjectId(order.Address)
+                    },
+                    
+                },
+                {
+                    $project:{
+                        _id:0,
+                        Address:1
+                    }
+                },
+                {
+                    $project:{
+                        deleviryDetails:{
+                            fullName:'$Address.fullName',
+                            mobile:'$Address.mobile',
+                            houseNo:'$Address.houseNo',
+                            pin:'$Address.pin',
+                            landmark:'$Address.landMark',
+                            useradd:'$Address.useradd',
+                            town:'$Address.town',
+                        }
+                        
+                    }
+                }
+            ]).toArray()
+            console.log(`found${address} from user collection`);
+            let orderObj={
+                deleviryDetails:address[0].deleviryDetails ,
+                userId:userId,
+            
+                totalAmount:total,
+                paymentMethod:order.PaymentOption,
+                // cart:cart,
+                cart,
+                date: new Date().toDateString(),
+                fullDate: new Date(),
+                status:order_status,
+                btnStatus: true,
+                deliveryStatus:"Preparing",
+            }
+            const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj,{session})
+            console.log(`new order inserted with Id${orderUpdation.insertedId}`);
+        },transactionOptions)
+
+
+        if(transactionResults){
+            console.log(`transaction suceeded`);
+        }else{
+            console.log(`transaction failed`)
+        }
+    }
+    catch(e){
+console.log(`${e}    error`);
+    }
+    finally{
+        session.endSession()
+        client.close()
+        console.log(`session closed`);
+    }
+    })
+
+
+    // const transactionOptions={
+    //     readPreference:'primary',
+    //     readConcern:{level:'local'},
+    //     writeConcern:{w:'majority'}
+    // }
+    // try{
+    //     console.log("here");
+    //     const transactionResults= await session.withTransaction(async()=>{
+    //    const address= await db.get().collection(collection.USER_COLLECTION).aggregate([
+    //             {
+    //                 $unwind:'$Address'
+    //             },
+    //             {
+    //                 $match:{
+    //                    'Address.id':ObjectId(order.Address)
+    //                 },
+                    
+    //             },
+    //             {
+    //                 $project:{
+    //                     _id:0,
+    //                     Address:1
+    //                 }
+    //             },
+    //             {
+    //                 $project:{
+    //                     deleviryDetails:{
+    //                         fullName:'$Address.fullName',
+    //                         mobile:'$Address.mobile',
+    //                         houseNo:'$Address.houseNo',
+    //                         pin:'$Address.pin',
+    //                         landmark:'$Address.landMark',
+    //                         useradd:'$Address.useradd',
+    //                         town:'$Address.town',
+    //                     }
+                        
+    //                 }
+    //             }
+    //         ]).toArray()
+    //         console.log(`found${address} from user collection`);
+    //         let orderObj={
+    //             deleviryDetails:address[0].deleviryDetails ,
+    //             userId:userId,
+            
+    //             totalAmount:total,
+    //             paymentMethod:order.PaymentOption,
+    //             // cart:cart,
+    //             cart,
+    //             date: new Date().toDateString(),
+    //             fullDate: new Date(),
+    //             status:order_status,
+    //             btnStatus: true,
+    //             deliveryStatus:"Preparing",
+    //         }
+    //         const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj,{session})
+    //         console.log(`new order inserted with Id${orderUpdation.insertedId}`);
+    //     },transactionOptions)
+    //     if(transactionResults){
+    //         console.log(`transaction suceeded`);
+    //     }else{
+    //         console.log(`transaction failed`)
+    //     }
+    // }
+    // catch(e){
+
+    // }
+    // finally{
+
+    // }
 }
 
 }

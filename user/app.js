@@ -21,9 +21,7 @@ var db=require('../dbconnections/dbConnection')
 // }
 
 
-Handlebars.registerHelper('lt', function(a, b) {
-  return a < b;
-});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

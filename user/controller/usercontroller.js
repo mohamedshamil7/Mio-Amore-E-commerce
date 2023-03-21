@@ -706,25 +706,38 @@ let wishlist
 
   placeOrder:async(req,res)=>{
     console.log(req.body,"msa");
+if(!req.body.Address){
+  res.status(404).json({error: 'Ha Ocurrido un error'});
+  return
+}
     let decode= tokenVerify(req);
+
     let cart= await cartProd(req)
+
     let products= cart.cartItems
+
     let outofStock= cart.outofStock
+
     let total= await TotalAmount(req)
-    // let walletData= await wallet(req)
+
     let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
           let response = await currencyConverter.convert();
           console.log("response",response); 
-          var usdtotal=Math.round(response)
-    // console.log(total);
-    console.log(typeof req.body.userId,"::::::");
+
+    var usdtotal=Math.round(response)
+
     let user= stringify(req.body.userId)
-    console.log(user);
+
     let id= ObjectId(req.body.userId)
+
     console.log(id);
+
     req.body.id= id
 
+    console.log("this is the req body ",req.body,"/////././././");
     
+    await userHelpers.placeOrderTrans(req.body,products,total)
+   /* 
     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
       console.log("//////////////////////////////////////////////////////",orderId);
       function destruct(products) { 
@@ -827,7 +840,7 @@ let wishlist
         res.send("nothind")
       }
     })
-    
+  */ 
    
     
   },

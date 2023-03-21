@@ -472,7 +472,16 @@
 
 
                     }
-                }
+                },
+                 error:(xhr, thrownError)=>{
+                    console.log("isdda")
+                    Swal.fire({
+                icon: 'error',
+                title: 'Address Not Selected',
+                text: 'Please Select one address',
+               
+              })
+        }
             })
         })
 
