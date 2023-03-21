@@ -922,10 +922,18 @@ getUserData:(userId)=>{
     })
 },
 getOrderDetails:(userid)=>{
-    console.log("///////",userid);
+    // console.log("///////",userid);
     return new Promise(async(resolve,reject)=>{
-        let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).toArray()
-        if(Data) resolve(Data)
+        // let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).toArray()
+        // if(Data) resolve(Data)
+        let Data= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+                $match:{
+                    userId:ObjectId(userid)
+                }
+            },
+        ]).toArray()
+        console.log("///////////////",Data);
         })
 },
 cancelOrderSubmit:(orderId)=>{

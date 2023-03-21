@@ -671,7 +671,7 @@ let wishlist
     let count= await CartCount(req)
     let walletData= await wallet(req)
     let data
-    let orderData
+    let orderDatas
     // console.log(decode.value.insertedId);
      await userHelpers.getUserData(decode.value.insertedId).then((response)=>{
       console.log("/////?",response);
@@ -679,10 +679,27 @@ let wishlist
     })
      await userHelpers.getOrderDetails(decode.value.insertedId).then((response)=>{
       // console.log(response);
-      orderData = response
+      orderDatas = response
     })
-    // for(let i= 0 ;i<orderData.length;i++)
-    // console.log(";;;",orderData[0].cart[0]);
+    console.log("orderDatas",orderDatas[0].cart);
+    async function processImages(Data) {
+      for (let i = 0; i < Data.length; i++) {
+        for(let j = 0;j<Data[i].cart.length;j++){
+          if (Data[i].cart[j].cart_product.Image1) {
+            Data[i].cart[j].cart_product.urlImage1 = await getImgUrl(Data[i].cart[j].cart_product.Image1);
+
+        }
+          // console.log("image 1 :", Data[i].Image1);
+          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+        }
+  
+      }
+      console.log("Data:", Data);
+      return Data;
+    }
+  
+    let orderData = await processImages(orderDatas);
+    
   res.render("userView/profile",{userpar:true,user:decode.value.username,products,outofStock,count,total,data,orderData,walletTotal:walletData.total})
   },
 
