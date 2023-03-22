@@ -3,8 +3,6 @@ const userHelpers = require("../models/userHelpers/userHelpers");
 const jwt = require("jsonwebtoken");
 const { read } = require("fs");
 const { send } = require("process");
-const { reset } = require("nodemon");
-const { userBlockCheck, inStockcheck, changePaymentStatus } = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
 
@@ -520,7 +518,7 @@ let wishlist
     })
     // console.log(products);
     async function processImages(Data) {
-      for (let i = 0; i < Data.length; i++) {
+      for (let i = 0; i < Data?.length; i++) {
         if (Data[i].cart_product.Image1) {
           console.log("image 1 :", Data[i].cart_product.Image1);
           Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
@@ -587,7 +585,7 @@ let wishlist
     outofStock= obj.outofStock
   })
   async function processImages(Data) {
-    for (let i = 0; i < Data.length; i++) {
+    for (let i = 0; i < Data?.length; i++) {
       if (Data[i].cart_product.Image1) {
         // console.log("image 1 :", Data[i].Image1);
         Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
@@ -705,142 +703,326 @@ let wishlist
 
 
   placeOrder:async(req,res)=>{
-    console.log(req.body,"msa");
-if(!req.body.Address){
-  res.status(404).json({error: 'Ha Ocurrido un error'});
-  return
-}
     let decode= tokenVerify(req);
 
     let cart= await cartProd(req)
 
     let products= cart.cartItems
+let prodIds = []
+for( let i=0;i<products.length;i++){
+    prodIds.push(products[i].item)
+  }
+  console.log(">>>>>>>>>>>>>>>>>>>",prodIds);
 
     let outofStock= cart.outofStock
 
+
     let total= await TotalAmount(req)
 
-    let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
-          let response = await currencyConverter.convert();
-          console.log("response",response); 
+    console.log(req.body,"msa");
+    let PaymentStatus = "false"
 
-    var usdtotal=Math.round(response)
+    let razorpaycomplete = false
 
-    let user= stringify(req.body.userId)
+    let paypalcomplete = false
 
-    let id= ObjectId(req.body.userId)
+    let transactionId= null
 
-    console.log(id);
+    let payment_method = req.body.PaymentOption
 
-    req.body.id= id
+    console.log(`payment_method is ${payment_method}`);
 
-    console.log("this is the req body ",req.body,"/////././././");
-    
-    await userHelpers.placeOrderTrans(req.body,products,total)
-   /* 
-    userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
-      console.log("//////////////////////////////////////////////////////",orderId);
-      function destruct(products) { 
-        let data =[]
-        for(let i=0;i<products.length;i++){
-          let obj ={}  
-          obj.prod= products[i].item
-          obj.quantity= products[i].quantity
-          data.push(obj)
+    let globalorderId = null
+
+    function getOrderid(){
+      return globalorderId
+  }
+
+    try{
+        if(req.body.order){
+        if(!req.body.Address){
+          res.status(404).json({error: 'Ha Ocurrido un error'});
+          return
         }
-        return data
-      }
+        let user= stringify(req.body.userId)
 
-      if(req.body.PaymentOption==='COD'){
-
-        console.log(cart);
-       
-        let ids = destruct(products)
-        console.log(ids,"ids");
+      let id= ObjectId(req.body.userId)
+  
+      console.log(id);
+  
+      req.body.id= id
   
 
-        console.log(`this is the idss :: ${ids}`);
-        userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-        .then(()=>{
-          res.json({status:"COD"})
 
-        }).catch(()=>{
-          console.log("error occured while removing from cart after order");
-        })
-        
-      }
-      else if(req.body.PaymentOption === 'wallet'){
-        userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
-          let ids  = destruct(products)
-          userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-            // console.log("this.response",response);
-            res.json({status:"wallet",response})
+      let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
 
-          })
-        })
-      }
+      let response = await currencyConverter.convert();
 
-      else if(req.body.PaymentOption=='razorPay'){
-        console.log("entered");
-        userHelpers.generateRazorPay(orderId,total).then((response)=>{
-          let ids  = destruct(products)
-          userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-            // console.log("this.response",response);
-            res.json({status:"razorpay",response})
-
-          })
-
-        })
-
-      }
-      else if(req.body.PaymentOption=='paypal'){
-        console.log("?????????????????/");
-
-        console.log(usdtotal);
-            var create_payment_json = {
-      "id":`${orderId}`,
-      "intent": "AUTHORIZE",
-      "payer": {
-          "payment_method": "paypal"
-      },
-      "redirect_urls": {
-          "return_url": "http://localhost:8001/user/orderSuccess",
-          // "return_url": "http://localhost:8001/user/o",
-          "cancel_url": "http://cancel.url"
-      },
-      "transactions": [{
-          "amount": {
-              "currency": "USD",
-              "total": usdtotal
-          },
-          "description": "This is the payment description."
-      }]
-  };
-  paypal.payment.create(create_payment_json, function (error, payment) {
-    if (error) {
-        console.log(error.response);
-        throw error;
-    } else {
-        for (var i = 0; i < payment.links.length; i++) {
-        //Redirect user to this endpoint for redirect url
-            if (payment.links[i].rel ==='approval_url') {
-              // console.log(payment.links[i].href);
-              // res.redirect(`${payment.links[i].href}`)
-              let ids = destruct(products)
-              res.json({status:"paypal",forwardLink: payment.links[i].href});
-              userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-            }
-        }
-        changePaymentStatus(orderId)
-    }
-}); 
+      console.log("response",response); 
   
+      var usdtotal=Math.round(response)
+
+
+    req.body.PaymentStatus = PaymentStatus
+    console.log(req.body.PaymentOption);
+
+     const orderId= await userHelpers.placeOrder(req.body,products,total)
+        globalorderId = orderId
+  
+        if (req.body.PaymentOption === "COD") {
+          /// true ? false
+          PaymentStatus = "pending COD"
+          console.log(`payment option selected is COD and req.body.status is now${PaymentStatus}`);
+        }
+        else if (req.body.PaymentOption === "wallet") {
+          await userHelpers
+            .debitFromWallet(orderId, total, decode.value.insertedId)
+            .then((transactionIds) => {
+              transactionId = transactionIds;
+              console.log(`${transactionId} is the transaction id wallet`);
+              PaymentStatus = "true";
+            
+            });
+             console.log(`payment option selected is wallet and req.body.status is now`);
+        }else if (req.body.PaymentOption === "razorPay") {
+          await userHelpers.generateRazorPay(orderId, total).then((response) => {
+              res.json({status:"razorpay",response});
+          });
+          
+        }
+        else if(req.body.PaymentOption==="paypal"){
+  
+          var create_payment_json = {
+                  "id":`${orderId}`,
+                  "intent": "AUTHORIZE",
+                  "payer": {
+                      "payment_method": "paypal"
+                  },
+                  "redirect_urls": {
+                      "return_url": `http://localhost:8001/user/placeOrder/paypal`,
+                      // "return_url": "http://localhost:8001/user/o",
+                      "cancel_url": "http://cancel.url"
+                      
+                  },
+                  "transactions": [{
+                      "amount": {
+                          "currency": "USD",
+                          "total": usdtotal
+                      },
+                      "description": "This is the payment description."
+                  }]
+              };
+              paypal.payment.create(create_payment_json, function (error, payment) {
+                    if (error) {
+                        console.log(error.response);
+                        throw error;
+                    } else {
+                        for (var i = 0; i < payment.links.length; i++) {
+                        //Redirect user to this endpoint for redirect url
+                            if (payment.links[i].rel ==='approval_url') {
+                              res.json({status:"paypal",forwardLink: payment.links[i].href});
+                           break;
+                          
+                            }
+                        }
+                    }
+                }); 
+          
+          console.log(`payment option selected is paypal`);
+        }
+  
+      } else if(req.params.data){
+        // let data=  JSON.parse('{"' + decodeURI(req.params.data.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
+        // console.log(data);
+        payment_method = "paypal"
+        paypalcomplete = true
+        const payerId = req.query.PayerID;
+        const paymentId = req.query.paymentId;
+        transactionId = paymentId
+        console.log(`payrer id  :${payerId}`);
+        console.log(`payrermet  id  :${paymentId}`);
+        console.log(`data is coming${req.params.data}`);
+        // console.log(data);
       }
       else{
-        res.send("nothind")
+  
+        payment_method = "razorPay"
+        console.log(`payment meth here i s sinsncsdijcdc${payment_method}`);
+          console.log(req.body);
+         await  userHelpers.verifyPayment(req.body).then(()=>{
+          PaymentStatus= "true"
+          razorpaycomplete = true
+          transactionId = req.body['order[receipt]']
+          console.log(`order recuewso for razorpay is ${req.body['order[receipt]']}`);
+            // res.json({status:true})
+          }).catch((err)=>{
+            PaymentStatus= "false"
+            razorpaycomplete = true
+            console.log(err);
+            // res.json({status:'Payment Failed'})
+            
+          })
+        
       }
-    })
-  */ 
+        
+      }
+      catch(e){
+        console.log(e, "this is theerroro ");
+      }
+      finally{
+        const orderId =getOrderid()
+        // console.log(`${transactionId} is the transaction id wallet`);
+        console.log(`payment_method is ${payment_method} 333`);
+        if((payment_method==="razorPay" && razorpaycomplete == false )|| (payment_method=== "paypal" && paypalcomplete == false)){
+          // console.log(`razorypay status completeion === ${razorpaycomplete}`);
+          console.log(`waiting for  confirmation...`);
+        }else{
+          console.log("entered else");
+          function destruct(products){
+            let data =[]
+                    for(let i=0;i<products.length;i++){
+                      let obj ={}  
+                      obj.prod= products[i].item
+                      obj.quantity= products[i].quantity
+                      data.push(obj)
+                    }
+                    return data
+          }
+          let ids = destruct(products)
+           await userHelpers.placeOrderTrans(orderId,transactionId,PaymentStatus,payment_method,ids,decode.value.insertedId).then((resp)=>{
+           console.log(resp);
+          //  res.json({status:true})
+          //  location.href="http://localhost:8001/user/orderSuccess"
+          // res.redirect("/user/orderSuccess")
+          res.render("userView/orderSuccess")
+  }).catch((e)=>{
+    console.log(e);
+  })
+
+
+
+        }
+      }
+
+      
+      
+
+      
+
+
+
+
+
+ 
+
+
+   
+    
+//     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
+//       /* 
+//       console.log("//////////////////////////////////////////////////////",orderId);
+//       function destruct(products) { 
+//         let data =[]
+//         for(let i=0;i<products.length;i++){
+//           let obj ={}  
+//           obj.prod= products[i].item
+//           obj.quantity= products[i].quantity
+//           data.push(obj)
+//         }
+//         return data
+//       }
+//       */
+
+//       if(req.body.PaymentOption==='COD'){
+
+//         console.log(cart);
+       
+//         let ids = destruct(products)
+//         console.log(ids,"ids");
+  
+
+//         console.log(`this is the idss :: ${ids}`);
+//         userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
+//         .then(()=>{
+//           res.json({status:"COD"})
+
+//         }).catch(()=>{
+//           console.log("error occured while removing from cart after order");
+//         })
+        
+//       }
+//       else if(req.body.PaymentOption === 'wallet'){
+//         userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
+//           let ids  = destruct(products)
+//           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+//             // console.log("this.response",response);
+//             res.json({status:"wallet",response})
+
+//           })
+//         })
+//       }
+
+//       else if(req.body.PaymentOption=='razorPay'){
+//         console.log("entered");
+//         userHelpers.generateRazorPay(orderId,total).then((response)=>{
+//           let ids  = destruct(products)
+//           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+//             // console.log("this.response",response);
+//             res.json({status:"razorpay",response})
+
+//           })
+
+//         })
+
+//       }
+//       else if(req.body.PaymentOption=='paypal'){
+//         console.log("?????????????????/");
+
+//         console.log(usdtotal);
+//             var create_payment_json = {
+//       "id":`${orderId}`,
+//       "intent": "AUTHORIZE",
+//       "payer": {
+//           "payment_method": "paypal"
+//       },
+//       "redirect_urls": {
+//           "return_url": "http://localhost:8001/user/orderSuccess",
+//           // "return_url": "http://localhost:8001/user/o",
+//           "cancel_url": "http://cancel.url"
+//       },
+//       "transactions": [{
+//           "amount": {
+//               "currency": "USD",
+//               "total": usdtotal
+//           },
+//           "description": "This is the payment description."
+//       }]
+//   };
+//   paypal.payment.create(create_payment_json, function (error, payment) {
+//     if (error) {
+//         console.log(error.response);
+//         throw error;
+//     } else {
+//         for (var i = 0; i < payment.links.length; i++) {
+//         //Redirect user to this endpoint for redirect url
+//             if (payment.links[i].rel ==='approval_url') {
+//               // console.log(payment.links[i].href);
+//               // res.redirect(`${payment.links[i].href}`)
+//               let ids = destruct(products)
+//               res.json({status:"paypal",forwardLink: payment.links[i].href});
+//               userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
+//             }
+//         }
+//         changePaymentStatus(orderId)
+//     }
+// }); 
+  
+//       }
+//       else{
+//         res.send("nothind")
+//       }
+//     })
+  
    
     
   },
@@ -885,10 +1067,8 @@ if(!req.body.Address){
       console.log("herer");
 console.log(typeof req.body);
 console.log( req.body);
-      userHelpers.changePaymentStatus(req.body['order[receipt]']).then(()=>{
-        console.log("succes pay");
-        res.json({status:true})
-      })
+//sucess pay
+      res.json({status:true})
     }).catch((err)=>{
       
       console.log(err);
@@ -898,8 +1078,8 @@ console.log( req.body);
   },
   
   orderSuccess:(req,res)=>{
-    const payer=req.body.PayerID;
-    const paymentId=req.body.paymentId
+   console.log("call i shere");
+
     res.render("userView/orderSuccess")
   },
 
@@ -1017,11 +1197,11 @@ console.log(data);
     })
 
     walletTotal = full.total
-      allData=[...full.transactions.credits,...full.transactions.debits]
+      allData=[...full.transactions?.credits,...full.transactions?.debits]
       
-      credits=[...full.transactions.credits]
+      credits=[...full.transactions?.credits]
       
-      debits=[...full.transactions.debits]
+      debits=[...full.transactions?.debits]
       
     console.log(credits);
 

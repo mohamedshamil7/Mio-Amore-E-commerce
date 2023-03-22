@@ -216,7 +216,7 @@ module.exports={
     addNewProduct:(Data)=>{
         Data.Stock= Number(Data.Stock)
         Data.inStock= true
-        Data.Availability= true
+        Data.Availability=true
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){

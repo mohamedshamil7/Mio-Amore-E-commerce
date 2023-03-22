@@ -2,6 +2,7 @@
     <section class="checkout-section-2 section-b-space">
         <div class="container-fluid-lg">
                 <form action="" id="placeorder_form">
+                    <input type="text " name="order" value="true" hidden>
             <div class="row g-sm-4 g-3">
                 <div class="col-lg-8">
                     <div class="left-sidebar-checkout">
@@ -448,7 +449,8 @@
     <!-- Checkout section End -->
 <script src="http://localhost:4000/javascripts/address-val.js"></script>
 
-    <script>
+  
+<script>
          
         $("#placeorder_form").submit((e)=>{
             e.preventDefault()
@@ -458,27 +460,24 @@
                 data:$('#placeorder_form').serialize(),
                 method:'post',
                 success:(response )=> {
-                    if(response.status=="COD"){
-                        location.href="http://localhost:4000/orderSuccess"
-                    }   
-                    else   if(response.status=="wallet"){
-                        location.href="http://localhost:4000/orderSuccess"
-                    }
-                    else if(response.status=="razorpay") {
+                    console.log("sucesss")
+           
+                     if(response.status=="razorpay") {
                         console.log(response)
                         razorpayPayment(response.response)
-                    }else if(response.status=='paypal'){
+                    }
+                    else if(response.status=='paypal'){
                         window.location = response.forwardLink
-
-
+                    } else if(response.status ==true){
+                         location.href="http://localhost:8001/user/orderSuccess"
                     }
                 },
                  error:(xhr, thrownError)=>{
                     console.log("isdda")
                     Swal.fire({
-                icon: 'error',
-                title: 'Address Not Selected',
-                text: 'Please Select one address',
+                    icon: 'error',
+                    title: 'Address Not Selected',
+                    text: 'Please Select one address',
                
               })
         }
@@ -529,19 +528,11 @@
             console.log(payment)
             console.log(order.receipt)
             $.ajax({
-                url:'http://localhost:8001/user/verifyPayment',
+                url:'http://localhost:8001/user/placeOrder',
                 data:{
                     payment,order
                 },
                 method:"post",
-       success:(response =>{
-
-         if(response.status){
-          location.href="http://localhost:8001/user/orderSuccess"
-                    }
-
-       })
-
             })
         }
         

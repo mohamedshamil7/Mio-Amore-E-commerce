@@ -1,4 +1,6 @@
 const mongoClient=require('mongodb').MongoClient
+require("dotenv").config();
+const MONGODB=process.env.MONGODB
 const state ={
     db:null
 }
@@ -15,7 +17,7 @@ module.exports.connect=async function(done){
 }
 
 module.exports.connectSession=async function(done){
-    const url='mongodb+srv://mohamedshamil0507:qwerty123@mioamore.dwam0rq.mongodb.net/?retryWrites=true&w=majority'
+    const url=MONGODB
     const dbname='project-MioAmore'
 
      mongoClient.connect(url,(err,client)=>{

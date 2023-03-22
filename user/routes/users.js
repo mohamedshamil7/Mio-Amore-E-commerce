@@ -90,6 +90,7 @@ router.post('/addAddress',nocache,addAddress)
 router.get('/shop',nocache,autherization,shopProducts)
 
 router.post('/placeOrder',nocache,placeOrder)
+router.get('/placeOrder/:data',nocache,placeOrder)
 
 router.post('/verifyPayment',verifyPayment)
 
