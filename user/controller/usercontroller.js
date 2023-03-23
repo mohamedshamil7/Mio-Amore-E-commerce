@@ -651,6 +651,10 @@ let wishlist
     let total= await TotalAmount(req)
     let walletData= await wallet(req)
     let dataCount  = null
+    let categories = null
+    await userHelpers.getAllCategories().then((cat)=>{
+      categories = cat
+    })
    await  userHelpers.getAllProducts().then((datas) => {
 
       dataCount= datas 
@@ -676,7 +680,7 @@ let wishlist
     console.log(dataCount);
     let data = await processImages(dataCount);
     console.log("came data:::::>>>>",data);
-     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
    
   },
   renderProfilePage:async(req,res)=>{
@@ -1231,21 +1235,48 @@ console.log(data);
   },
 
 sortShop:async(req,res)=>{
-  
-await userHelpers.getSortedData(req.body.fil).then((data)=>{
-  console.log("cmon data",data);
-    req.session.data = data
-    console.log(req.session.data,"sesion");
-  res.redirect('/user/renderShop')
+  let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+    let walletData= await wallet(req)
+    let  dataCount
+    let categories
+    await userHelpers.getAllCategories().then((cat)=>{
+      categories = cat
+    })
 
+  console.log(req.body);
+await userHelpers.getSortedData(req.body.opt).then((data)=>{
+  dataCount =data
   }).catch(()=>{
     console.log(`error occured during sorting`);
   })
+  async function processImages(data) {
+    for (let i = 0; i < data.all.length; i++) {
+      if (data.all[i].Image1) {
+        data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+      }
+
+    }
+    console.log("Data:", data);
+    return data;
+  }
+  console.log(dataCount,"sjjsjsj");
+  let data = await processImages(dataCount);
+  console.log("came data::>",data);
+
+
+  console.log("it is hre right?");
+   res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
   
   //  res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
   },
 
   renderShop:async(req,res)=>{
+    console.log("reacehed render Shop");
     let decode = tokenVerify(req);
     let cart =await cartProd(req)
     let products= cart.cartItems
@@ -1253,11 +1284,36 @@ await userHelpers.getSortedData(req.body.fil).then((data)=>{
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let walletData= await wallet(req)
+    let  dataCount
+    let categories
 
-    let dataCount =  req.session.data
-    // req.session.data = null  
+    
+        await userHelpers.getAllCategories().then((cat)=>{
+      categories = cat
+    })
+    console.log(req.session);
 
-    console.log(dataCount);
+    // if(!req.session.isCategory && !req.session.isData){
+    //   console.log("entered no ");
+    //   res.redirect("/user/shop")
+    // }
+
+    if(req.session.isData){
+      console.log("enterd data");
+      dataCount =  req.session.data
+      req.session.isData =false
+
+    }
+    console.log(dataCount,"llll");
+    req.session.data = {}
+    
+    if(req.session.isCategory){
+      console.log("entererds acater");
+      dataCount =req.session.categoryData
+        req.session.isCategory = false
+      
+    }
+    console.log("now dat is ", dataCount);
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
@@ -1271,7 +1327,47 @@ await userHelpers.getSortedData(req.body.fil).then((data)=>{
     console.log(dataCount,"sjjsjsj");
     let data = await processImages(dataCount);
     console.log("came data::>",data);
-    res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+    req.session={}
+    console.log(req.session);
+    console.log("it is hre right?");
+     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
+
+  },
+  filterCategory:async(req,res)=>{
+    let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+    let walletData= await wallet(req)
+    let  dataCount
+    let categories
+
+    await userHelpers.getAllCategories().then((cat)=>{
+      categories = cat
+    })
+    await userHelpers.getfilteredCategory(req.body.name).then((data)=>{
+     dataCount = data
+
+    })
+    async function processImages(data) {
+      for (let i = 0; i < data.all.length; i++) {
+        if (data.all[i].Image1) {
+          data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+        }
+  
+      }
+      console.log("Data:", data);
+      return data;
+    }
+    console.log(dataCount,"sjjsjsj");
+    let data = await processImages(dataCount);
+    console.log("came data::>",data);
+  
+  
+    console.log("it is hre right?");
+     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
 
   }
   

@@ -1253,6 +1253,33 @@ getSortedData:(option)=>{
             }
         })
 }
+},
+getAllCategories:()=>{
+    return new Promise(async(resolve,reject)=>{
+        let categories= await  db.get().collection(collection.CATTEGORY_COLLECTION).find().toArray()
+
+        if(categories){
+            resolve(categories)
+        }
+        else{
+            reject(err)
+        }
+    })
+},
+getfilteredCategory:(catname)=>{
+    return new Promise(async(resolve,reject)=>{
+        let categories= await db.get().collection(collection.PRODUCT_COLLECTIONS).find({category:catname}).toArray()
+
+        if(categories){
+            let datas={
+                all:categories
+            }
+            resolve(datas)
+        }
+        else{
+            reject(err)
+        }
+    })
 }
 
 

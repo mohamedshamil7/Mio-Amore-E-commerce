@@ -43,7 +43,8 @@ const {
   getWalletPage,
   nocache,
   sortShop,
-  renderShop
+  renderShop,
+  filterCategory
 
 } = require("../controller/usercontroller");
 
@@ -112,6 +113,7 @@ router.get("/wallet",nocache,getWalletPage)
 router.get("/renderShop",nocache,renderShop)
 
 router.post("/sort",nocache,sortShop)
+router.post("/changeCategory",nocache,filterCategory)
 
 module.exports = router;
 

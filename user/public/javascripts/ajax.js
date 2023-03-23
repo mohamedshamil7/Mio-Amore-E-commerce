@@ -190,21 +190,3 @@ function returnOrder(orderId){
         }
       })
 }
-
-
-
-function changeSort(fil){
-    alert(fil)
-    $.ajax({
-        url:"http://localhost:8001/user/sort",
-        method:'post',
-        data:{
-            fil
-        },success:(data)=>{
-            location.href="http://localhost:8001/user/renderShop"
-
-        }
-
-    })
-
-}
