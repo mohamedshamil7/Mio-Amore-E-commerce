@@ -8,6 +8,7 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var cors= require('cors')
 const Handlebars = require('handlebars')
+const session = require('express-session')
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
 
@@ -33,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',handlebars: allowInsecurePrototypeAccess(Handlebars),layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views'}))
-
+app.use(session({secret:"value",cookie:{maxAge:6000000}}));
 db.connect((err)=>{
   if(err) console.log(' Connection error '+err);
   else console.log('database connected');

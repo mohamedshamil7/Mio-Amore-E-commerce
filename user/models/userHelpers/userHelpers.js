@@ -931,16 +931,16 @@ getUserData:(userId)=>{
 getOrderDetails:(userid)=>{
     // console.log("///////",userid);
     return new Promise(async(resolve,reject)=>{
-        // let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).toArray()
-        // if(Data) resolve(Data)
-        let Data= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-            {
-                $match:{
-                    userId:ObjectId(userid)
-                }
-            },
-        ]).toArray()
-        console.log("///////////////",Data);
+        let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).sort( { "fullDate": -1} ).toArray()
+        if(Data) resolve(Data)
+        // let Data= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+        //     {
+        //         $match:{
+        //             userId:ObjectId(userid)
+        //         }
+        //     },
+        // ]).toArray()
+        // console.log("///////////////",Data);
         })
 },
 cancelOrderSubmit:(orderId)=>{
@@ -1097,39 +1097,39 @@ placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userI
                 writeConcern:{w:'majority'}
             }
             try{
-                let status 
+                let statuss 
                 console.log("here");
                 const transactionResults= await session.withTransaction(async()=>{
                
                     if(payment_method==="COD"){
-                        status= "placed"
+                        statuss= "placed"
                     }else if(payment_method ==="wallet"){
                         if(transactionId!==null){
-                            status= "placed"
+                            statuss= "placed"
                         }
                     } else if(payment_method ==="razorPay"){
                         console.log(`razor pay trans ${transactionId}`);
                         if(transactionId!==null){
-                            status= "placed"
+                            statuss= "placed"
                         }
                     }
                     else if(payment_method ==="paypal"){
                         if(transactionId!==null){
-                            status= "placed"
+                            statuss= "placed"
                         }
                     }
         
                     const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(order)},{
                         $set:{
-                            status:status,
+                            status:statuss,
                             PaymentStatus:PaymentStatus,
                             transactionId:transactionId,
                         }
                     },{session})
         
         
-        console.log(`status i s ${status}`);
-                    if(status ==="placed"){
+        console.log(`status i s ${statuss}`);
+                    if(statuss ==="placed"){
                         for(let i = 0;i<ids.length;i++){
                             await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prod)},{
                                     $inc: {Stock:-ids[i].quantity}, 
@@ -1161,11 +1161,11 @@ placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userI
                 },transactionOptions)
         
         
-                if(transactionResults && status=="placed" ){
+                if(transactionResults && statuss=="placed" ){
                     // console.log(transactionResults);
                     console.log(`transaction suceeded`);
                     return success = true
-                }else if(transactionResults && status!="placed"){
+                }else if(transactionResults && statuss!="placed"){
                     console.log(`transaction not completed payment failed or other issue `);
                     error = `transaction not completed payment failed or other issue `
                     return error
@@ -1195,78 +1195,65 @@ placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userI
             })
         })
     
+},
+
+getSortedData:(option)=>{
+    console.log("call is heere");
+    console.log(option);
+    if(option ==="low"){
+        return new Promise(async(resolve,reject)=>{
+            let data  = await db.get().collection(collection.PRODUCT_COLLECTIONS).find().sort({ Price: 1 }).toArray()
+            if(data){
+                let datas={
+                    all:data
+                }
+                resolve(datas)
+            }else{
+                console.log("entererd this reject");
+                reject()
+            }
+        })
+    }else if(option==='high'){
+        return new Promise(async(resolve,reject)=>{
+            let data  = await db.get().collection(collection.PRODUCT_COLLECTIONS).find().sort({ Price: -1 }).toArray()
+            if(data){
+                let datas={
+                    all:data
+                }
+                resolve(datas)
+            }else{
+                console.log("entererd this reject");
+                reject()
+            }
+        })
+    } else if(option==='aToz'){
+        return new Promise(async(resolve,reject)=>{
+            let data  = await db.get().collection(collection.PRODUCT_COLLECTIONS).find().sort({ ProductName: 1 }).toArray()
+            if(data){
+                let datas={
+                    all:data
+                }
+                resolve(datas)
+            }else{
+                console.log("entererd this reject");
+                reject()
+            }
+        })
+    } else if(option==='zToa'){
+        return new Promise(async(resolve,reject)=>{
+            let data  = await db.get().collection(collection.PRODUCT_COLLECTIONS).find().sort({ ProductName: -1 }).toArray()
+            if(data){
+                let datas={
+                    all:data
+                }
+                resolve(datas)
+            }else{
+                console.log("entererd this reject");
+                reject()
+            }
+        })
 }
-
-
-    // const transactionOptions={
-    //     readPreference:'primary',
-    //     readConcern:{level:'local'},
-    //     writeConcern:{w:'majority'}
-    // }
-    // try{
-    //     console.log("here");
-    //     const transactionResults= await session.withTransaction(async()=>{
-    //    const address= await db.get().collection(collection.USER_COLLECTION).aggregate([
-    //             {
-    //                 $unwind:'$Address'
-    //             },
-    //             {
-    //                 $match:{
-    //                    'Address.id':ObjectId(order.Address)
-    //                 },
-                    
-    //             },
-    //             {
-    //                 $project:{
-    //                     _id:0,
-    //                     Address:1
-    //                 }
-    //             },
-    //             {
-    //                 $project:{
-    //                     deleviryDetails:{
-    //                         fullName:'$Address.fullName',
-    //                         mobile:'$Address.mobile',
-    //                         houseNo:'$Address.houseNo',
-    //                         pin:'$Address.pin',
-    //                         landmark:'$Address.landMark',
-    //                         useradd:'$Address.useradd',
-    //                         town:'$Address.town',
-    //                     }
-                        
-    //                 }
-    //             }
-    //         ]).toArray()
-    //         console.log(`found${address} from user collection`);
-    //         let orderObj={
-    //             deleviryDetails:address[0].deleviryDetails ,
-    //             userId:userId,
-            
-    //             totalAmount:total,
-    //             paymentMethod:order.PaymentOption,
-    //             // cart:cart,
-    //             cart,
-    //             date: new Date().toDateString(),
-    //             fullDate: new Date(),
-    //             status:order_status,
-    //             btnStatus: true,
-    //             deliveryStatus:"Preparing",
-    //         }
-    //         const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj,{session})
-    //         console.log(`new order inserted with Id${orderUpdation.insertedId}`);
-    //     },transactionOptions)
-    //     if(transactionResults){
-    //         console.log(`transaction suceeded`);
-    //     }else{
-    //         console.log(`transaction failed`)
-    //     }
-    // }
-    // catch(e){
-
-    // }
-    // finally{
-
-    // }
+}
 
 
 }

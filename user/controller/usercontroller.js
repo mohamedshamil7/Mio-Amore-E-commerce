@@ -6,6 +6,7 @@ const { send } = require("process");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
 
+
 // const Swal = window.Swal;
 // import Swal from 'sweetalert2'
 
@@ -649,15 +650,33 @@ let wishlist
     let count= await CartCount(req)
     let total= await TotalAmount(req)
     let walletData= await wallet(req)
-    userHelpers.getAllProducts().then((data) => {
-      
-      console.log("the then data is :", data);
-      res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+    let dataCount  = null
+   await  userHelpers.getAllProducts().then((datas) => {
+
+      dataCount= datas 
     })
     .catch((err) => {
       console.log(err);
       console.log("didtn get my all Products");
     });
+    console.log(dataCount);
+    async function processImages(data) {
+      for (let i = 0; i < data.all.length; i++) {
+        if (data.all[i].Image1) {
+          // console.log(";;;;;fjf");
+          // console.log("image 1 :", data[i].Image1);
+          data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+          // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
+        }
+
+      }
+      console.log("Data:", data);
+      return data;
+    }
+    console.log(dataCount);
+    let data = await processImages(dataCount);
+    console.log("came data:::::>>>>",data);
+     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
    
   },
   renderProfilePage:async(req,res)=>{
@@ -891,10 +910,13 @@ for( let i=0;i<products.length;i++){
           let ids = destruct(products)
            await userHelpers.placeOrderTrans(orderId,transactionId,PaymentStatus,payment_method,ids,decode.value.insertedId).then((resp)=>{
            console.log(resp);
-          //  res.json({status:true})
-          //  location.href="http://localhost:8001/user/orderSuccess"
-          // res.redirect("/user/orderSuccess")
-          res.render("userView/orderSuccess")
+           //  location.href="http://localhost:8001/user/orderSuccess"
+           if(payment_method==="COD"){
+
+           }
+           res.render("userView/orderSuccess")
+           res.redirect("/user/orderSuccess")
+            res.json({status:true})
   }).catch((e)=>{
     console.log(e);
   })
@@ -1206,6 +1228,51 @@ console.log(data);
     console.log(credits);
 
     res.render("userView/wallet",{userpar:true,user:decode.value.username,products,outofStock,count,total,allData,credits,debits,walletTotal})
+  },
+
+sortShop:async(req,res)=>{
+  
+await userHelpers.getSortedData(req.body.fil).then((data)=>{
+  console.log("cmon data",data);
+    req.session.data = data
+    console.log(req.session.data,"sesion");
+  res.redirect('/user/renderShop')
+
+  }).catch(()=>{
+    console.log(`error occured during sorting`);
+  })
+  
+  //  res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+  },
+
+  renderShop:async(req,res)=>{
+    let decode = tokenVerify(req);
+    let cart =await cartProd(req)
+    let products= cart.cartItems
+    let outofStock= cart.outofStock
+    let count= await CartCount(req)
+    let total= await TotalAmount(req)
+    let walletData= await wallet(req)
+
+    let dataCount =  req.session.data
+    // req.session.data = null  
+
+    console.log(dataCount);
+    async function processImages(data) {
+      for (let i = 0; i < data.all.length; i++) {
+        if (data.all[i].Image1) {
+          data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+        }
+  
+      }
+      console.log("Data:", data);
+      return data;
+    }
+    console.log(dataCount,"sjjsjsj");
+    let data = await processImages(dataCount);
+    console.log("came data::>",data);
+    res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+
   }
   
   

@@ -42,6 +42,8 @@ const {
   returnOrderSubmit,
   getWalletPage,
   nocache,
+  sortShop,
+  renderShop
 
 } = require("../controller/usercontroller");
 
@@ -107,6 +109,9 @@ router.get("/otpverified/:num",nocache,otpverified,redirectHome)
 router.post("/cancelOrder",nocache,cancelOrderSubmit)
 router.post("/returnOrder",nocache,returnOrderSubmit)
 router.get("/wallet",nocache,getWalletPage)
+router.get("/renderShop",nocache,renderShop)
+
+router.post("/sort",nocache,sortShop)
 
 module.exports = router;
 

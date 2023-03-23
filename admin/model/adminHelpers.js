@@ -217,6 +217,7 @@ module.exports={
         Data.Stock= Number(Data.Stock)
         Data.inStock= true
         Data.Availability=true
+        Data.Price = Number(Data.Price)
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){
@@ -265,6 +266,7 @@ module.exports={
 
     editProduct:(id)=>{
         console.log(">>>>");
+        id.Price = Number(id.Price)
         id.Stock=Number(id.Stock)
         if(id.Stock<1){
             console.log(id.Stock);

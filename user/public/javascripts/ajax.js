@@ -193,104 +193,18 @@ function returnOrder(orderId){
 
 
 
+function changeSort(fil){
+    alert(fil)
+    $.ajax({
+        url:"http://localhost:8001/user/sort",
+        method:'post',
+        data:{
+            fil
+        },success:(data)=>{
+            location.href="http://localhost:8001/user/renderShop"
 
-// $(document.getElementById("placeorder_form")).submit((e)=>{
-//     console.log(`payementMethod is clicked as ${payementMethod}`);
-    
-//     e.preventDefault()
-//     console.log("called")
-//              $.ajax({
-//                  url:'http://localhost:8001/user/placeOrder',
-//                  data:$('#placeorder_form').serialize(),
-//                  method:'post',
-//                  success:(response)=>{
-//                     console.log("sucess");
-//                  },
-//                 //  success:(response )=> {
-//                 //      if(response.status=="COD"){
-//                 //          location.href="http://localhost:4000/orderSuccess"
-//                 //      }   
-//                 //      else   if(response.status=="wallet"){
-//                 //          location.href="http://localhost:4000/orderSuccess"
-//                 //      }
-//                 //      else if(response.status=="razorpay") {
-//                 //          console.log(response)
-//                 //          razorpayPayment(response.response)
-//                 //      }else if(response.status=='paypal'){
-//                 //          window.location = response.forwardLink
- 
- 
-//                 //      }
-//                 //  },
-//                   error:(xhr, thrownError)=>{
-//                      console.log("isdda")
-//                      Swal.fire({
-//                  icon: 'error',
-//                  title: 'Address Not Selected',
-//                  text: 'Please Select one address',
-                
-//                })
-//          }
-//              })
-//          })
- 
-        //  function razorpayPayment(order) {
-            
-        //      var options = {
-        //          "key": "rzp_test_Sy2vxgrKq0I75D", // Enter the Key ID generated from the Dashboard
-        //          "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-        //          "currency": "INR",
-        //          "name": "MIo Amore",
-        //          "description": "Enjoy Fashion",
-        //          "image": "http://localhost:4000/images/logopng.png",
-        //          "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        //          "handler": function (response) {
-        //              verifyPayment(response, order)
-        //          },
-        //          "prefill": {
-        //              "name": "Mio Amore",
-        //              "email": "Mioammore@gmail.com",
-        //              "contact": "1234567890"
-        //          },
-        //          "notes": {
-        //              "address": "Razorpay Corporate Office"
-        //          },
-        //          "theme": {
-        //              "color": "#3399cc"
-        //          },
-        //          "modal": {
-        //              "ondismiss": function () {
-        //                  razorpayClose()
-        //              }
-        //          }
-        //      };
-             
-        //      var rzp1 = new Razorpay(options);
-        //      rzp1.on('payment.failed', function (response) {
-        //          paymentFailed(response.error.description)
-        //      });
-        //      rzp1.open();
-        //  }
- 
- 
-        //  function verifyPayment(payment,order){
-        //      console.log("entered verify")
-        //      console.log(payment)
-        //      console.log(order.receipt)
-        //      $.ajax({
-        //          url:'http://localhost:8001/user/verifyPayment',
-        //          data:{
-        //              payment,order
-        //          },
-        //          method:"post",
-        // success:(response =>{
- 
-        //   if(response.status){
-        //    location.href="http://localhost:8001/user/orderSuccess"
-        //              }
- 
-        // })
- 
-        //      })
-        //  }
-         
+        }
+
+    })
+
+}
