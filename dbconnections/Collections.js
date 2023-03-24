@@ -9,6 +9,7 @@ module.exports={
     CART_COLLECTION:'cart',
     ORDER_COLLECTION:'order',
     WALLET_COLLECTION:'wallet',
-    BRAND_COLLECTION:'brands'
+    BRAND_COLLECTION:'brands',
+    COUPEN_COLLECTION:'coupen',
 
 }

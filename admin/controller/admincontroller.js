@@ -1,6 +1,6 @@
 var path = require("path");
 const adminHelper = require("../model/adminHelpers");
-
+const voucher_codes = require('voucher-code-generator');
 const { resolve } = require("path");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -631,4 +631,29 @@ if(data.length!==0){
         console.log("error in updating deliveryStatus");
       });
   },
+
+  getAddCoupenPage:async(req,res)=>{
+    let categories = null
+    let products = null
+    await adminHelper.getAllCategories().then((cat)=>{
+      categories = cat
+    })
+    await adminHelper.getAllStocks().then((result)=>{
+      products = result
+    })
+    console.log(products);
+    res.render('adminView/addCoupen',{admin:true,categories,products})
+  },
+  addCoupenSubmit:(req,res)=>{
+    console.log(req.body);
+  },
+  codeGenerator:(req,res)=>{
+    const code = voucher_codes.generate({
+      length: 8,
+      count: 1,
+      charset:  voucher_codes.charset("alphanumeric")
+    });
+    res.json(code[0]);
+  },
+
 };

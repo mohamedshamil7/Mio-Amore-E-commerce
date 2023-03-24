@@ -1,0 +1,314 @@
+<section class="page-align" id="footer">
+    <div class="container-fluid " id="mydata">
+         <div class="row">
+    <h2>Add new Coupon</h2>
+                <form action="/admin/addcouponsubmit" id="form" method="post">
+        <div class="row mb-3">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Offer Type</label>
+            <div class="col-sm-4">
+                <select class="form-select" name="type" id="select" onchange="return selector()"
+                    aria-label="Default select example">
+                    <option value="normal" selected>Normal</option>
+                    <option value="product">Product</option>
+                    <option value="category">Category</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3" id="category" style="display: none;">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Category</label>
+            <div class="col-sm-4">
+                <select class="form-select" name="category" id="category"
+                    aria-label="Default select example">
+                    <option selected>Select Category</option>
+                    {{#each categories}}
+                    <option value="{{this.categoryName}}">{{this.categoryName}}</option>
+                    {{/each}}
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3 mt-5" id="normal-1">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Coupon Name</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="inputText" name="name">
+            </div>
+        </div>
+        <div class="row mb-3" id="normal-2">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Coupon Code/ID</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="code" id="id">
+                <p onclick="codeGenerator()" class="btn btn-primary" style="margin-top: 5px;">generate Code</p>
+            </div>
+        </div>
+
+
+        <div class="row mb-3" id="start">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Start Date</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" name="startDate">
+            </div>
+        </div>
+
+        <div class="row mb-3" id="end">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">End Date</label>
+            <div class="col-sm-4">
+                <input type="date" class="form-control" name="endDate">
+            </div>
+        </div>
+
+{{!--
+
+                        select cat by percentage or amount
+
+--}}
+   <div class="row mb-3"> 
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Type Of Redeem</label>
+            <div class="col-sm-4" >
+                    <select class="form-select" name="redeemType" id="redeemType" onchange="return typeSelector()"
+                        aria-label="Default select example">
+                        <option value="amount" selected>Amount</option>
+                        <option value="percentage">%</option>
+                    </select>
+                </div>
+      </div>
+
+
+                
+
+   
+        <div class="row mb-3 mt-5" id="catPerc" style="display: none;">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Percentage</label>
+            <div class="col-sm-4">
+                <input type="number" onKeyPress="if(this.value.length==2) return false;" class="form-control" name="percentage">
+            </div>
+        </div>
+
+         <div class="row mb-3 mt-5" id="catAmount" >
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Amount</label>
+            <div class="col-sm-4">
+                <input type="number"    class="form-control" name="amount">
+            </div>
+        </div>
+
+         <div class="row mb-3 mt-5" id="Total">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Total Coupens</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="total_coupens">
+            </div>
+        
+        </div>
+
+         <div class="row mb-3 mt-5" id="minimum">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Minimum  Purchase Amount</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="minimum">
+            </div>
+        </div>
+
+
+        <div class="row mb-3 mt-5" id="limit">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Maximum Purchase Limit </label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" name="limit">
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+
+
+    </form>
+    <div id="product" style="display: none;">
+        <table class="table table-bordered " id="pro">
+                <thead>
+                  <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">MF Date</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {{#each products}}
+                  <tr >
+                    <td class="book-image"><img src="/book-image/{{this._id}}.jpg" alt="no"></td>
+                    <td>{{this.ProductName}}</td>
+                    <td>{{this.Company}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.ManufacturingDate}}</td>
+                    <td>₹{{this.Price}}</td>
+                    <td class="button-set">
+                        <button class="btn btn-success"  onclick="return IdPass('{{this._id}}')" data-toggle="modal" data-target="#modalLoginForm">
+                            Create Offer
+                          </button>
+                    </td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+    </div>
+    <div class="modal fade " id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Create offer</h4>
+        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/admin/addcouponsubmit"  method="post">
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+            <input type="text" name="type" value="product" hidden>
+            <input type="text" name="id" id="proId" hidden>
+          
+        </div >
+
+        <div class="md-form mb-5">
+            <input type="text" name="name" id="defaultForm-email" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email">Coupen name</label>
+        </div>
+
+        <div class="md-form mb-5">
+            <input type="text" name="code" id="ids" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email">Coupon Code/ID</label>
+          <p onclick="codeGenerators()" class="btn btn-primary" style="margin-top: 5px;">generate Code</p>
+        </div>
+         {{!-- <div class="md-form mb-5">
+            <select class="form-select" name="redeemType" id="redeemType" onchange="return typeSelectors()"
+                        aria-label="Default select example">
+                        <option value="amount" selected>Amount</option>
+                        <option value="percentage">%</option>
+                    </select>
+          <label data-error="wrong" data-success="right" for="defaultForm-email">Redeem type</label>
+        </div> --}}
+ <div class="md-form mb-5" id="catPercs">
+
+        <input type="number"  onKeyPress="if(this.value.length==2) return false;"  name="percentage" id="" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email">Percentage</label>
+ </div>
+ {{!-- <div class="md-form mb-5" id="catAmounts"   >
+
+        <input type="number" name="amount" id="" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email">Amount</label>
+ </div> --}}
+  <div class="md-form mb-5">
+            <input type="number" name="Total" id="defaultForm-email" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email"> Total Coupen</label>
+        </div>
+
+        <div class="md-form mb-5">
+            <input type="number" name="limit" id="defaultForm-email" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email"> Maximum Purchase Limit</label>
+        </div>
+
+         <div class="md-form mb-4">
+          <input type="date" name="startDate" id="defaultForm-pass" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-pass">Begins On</label>
+        </div>
+
+        <div class="md-form mb-4">
+          <input type="date" name="endDate" id="defaultForm-pass" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-pass">Expires</label>
+        </div>
+
+
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-default" type="submit">Create</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+         </div>
+
+    </div>
+    
+
+</section>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script>
+    function codeGenerator() {
+        $.ajax({
+            url: '/admin/generatecode',
+            method: 'get',
+            success: (response => {
+                document.getElementById('id').value = response
+                document.getElementById('ids').value = response
+            })
+        })
+    }
+    function codeGenerators() {
+        $.ajax({
+            url: '/admin/generatecode',
+            method: 'get',
+            success: (response => {
+                document.getElementById('ids').value = response
+            })
+        })
+    }
+
+    function typeSelector(){
+        const type = document.getElementById('redeemType').value
+        if(type ==='percentage'){
+            document.getElementById('catAmount').style.display = 'none'
+            document.getElementById('catPerc').style.display = 'flex'
+            
+        }else if(type ==='amount'){
+            document.getElementById('catPrec').style.display = 'none'
+
+        }
+    }
+
+        function typeSelectors(){
+        const type = document.getElementById('redeemType').value
+        if(type ==='percentage'){
+            document.getElementById('catPercs').style.display = 'flex'
+            document.getElementById('catAmounts').style.display = 'none'
+            
+        }else if(type ==='amount'){
+            document.getElementById('catPercs').style.display = 'none'
+             {{!-- document.getElementById('catAmounts').style.display = 'flex' --}}
+
+        }
+    }
+    
+
+    function selector() {
+        const selection = document.getElementById('select').value
+        console.log(selection)
+        if (selection == 'category') {
+            {{!-- document.getElementById('normal-1').style.display = 'none' --}}
+            {{!-- document.getElementById('normal-2').style.display = 'none' --}}
+
+            document.getElementById('category').style.display = 'flex'
+        } else if (selection == 'product') {
+            document.getElementById('form').style.display = 'none'
+            document.getElementById('product').style.display = 'block'
+        } else if (selection == 'normal') {
+            document.getElementById('normal-1').style.display = 'flex'
+            document.getElementById('normal-2').style.display = 'flex'
+            document.getElementById('category').style.display = 'none'
+        }
+    }
+    function IdPass(id){
+        console.log(id,">>>>>")
+        document.getElementById('proId').value = id
+    }
+    
+      $(document).ready(function () {
+        $('#pro').DataTable({
+          dom: 'Pfrtip'
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>

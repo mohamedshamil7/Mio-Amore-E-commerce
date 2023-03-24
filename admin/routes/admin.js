@@ -1,9 +1,9 @@
 
 
 
-
 var express = require('express');
 var router = express.Router();
+
 // import { initializeApp } from "firebase/app";
 // const app = initializeApp(firebaseConfig);
 // var firebase= require("firebase")
@@ -41,7 +41,10 @@ const {
   deleteImage,
   brandsPage,
   addBrand,
-  deleteBrand
+  deleteBrand,
+  getAddCoupenPage,
+  addCoupenSubmit,
+  codeGenerator
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -94,6 +97,11 @@ router.post("/delivery-status/:id",autherization, deliveryStatus)
 
 router.get("/logout",nocache,autherization,adminLogout)
 router.delete("/deleteImage",nocache,autherization,deleteImage)
+
+router.get("/addCoupen",nocache,autherization,getAddCoupenPage)
+router.post('/addcouponsubmit',nocache,autherization,addCoupenSubmit)
+router.get('/generatecode', autherization, codeGenerator);
+
 
 module.exports = router;
 
