@@ -81,11 +81,19 @@
 
                         <div class="col-xl-6 wow fadeInUp">
                             <div class="right-box-contain">
-                                <h6 class="offer-top">30% Off</h6>
+                                {{#if data.offerPercent}}
+                                <h6 class="offer-top">{{data.offerPercent}}% Off</h6>
+                                {{/if}}
                                 <h2 class="name">{{data.ProductName}}</h2>
                                 <div class="price-rating">
-                                    <h3 class="theme-color price">{{data.Price}} <del class="text-content">$58.46</del> <span
-                                            class="offer theme-color">(8% off)</span></h3>
+                                    {{#if data.offer}}
+                                    <h3 class="theme-color price">₹{{data.offer}} <del class="text-content">₹{{data.Price}}</del><span
+                                            class="offer theme-color">({{data.offerPercent}}% off)</span> </h3>
+                                    {{else }}
+                                    <h3 class="theme-color price">₹{{data.Price}} <del class="text-content">₹{{data.MRP}}</del><span
+                                            class="offer theme-color">(Lowest price)</span> </h3>
+                                    {{/if}}
+                                            {{!-- class="offer theme-color">(8% off)</span></h3> --}}
                                     {{!-- <div class="product-rating custom-rate">
                                         <ul class="rating">
                                             <li>

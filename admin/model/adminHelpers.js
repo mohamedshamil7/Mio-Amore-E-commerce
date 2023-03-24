@@ -4,7 +4,48 @@ const { ObjectId } = require('mongodb')
 var bcrypt=require('bcrypt')
 const Collections = require('../../dbconnections/Collections')
 const { resolve } = require('path')
-const { reject } = require('firebase-tools/lib/utils')
+const { reject, promiseProps } = require('firebase-tools/lib/utils')
+const {S3Client, GetObjectCommand  } = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+
+
+
+const MY_SECRET = process.env.MY_SECRET;
+
+const bucketname = process.env.BUCKET_NAME
+
+const bucketregion = process.env.BUCKET_REGION
+
+const accesskey = process.env.ACCESS_KEY  
+
+const accessSecret = process.env.ACCES_KEY_SECRET
+
+
+const s3= new S3Client({
+    // region: `${bucketregion}`,
+    region:'ap-south-1',
+    endpoint: 'https://s3.ap-south-1.amazonaws.com',
+    // endpoint: `s3.${bucketregion}.amazonaws.com`,
+    credentials:{
+      accessKeyId: accesskey,
+      secretAccessKey:accessSecret,
+      
+    },
+  })
+
+
+const getImgUrl= async(imgName)=>{
+    const getObjectParams={
+      Bucket:bucketname,
+      Key:imgName
+    }
+  
+    const command = new GetObjectCommand(getObjectParams);
+    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    // console.log(url);
+    return url
+  
+  }
 
 module.exports={
     adminLogin:(adminData)=>{
@@ -267,6 +308,7 @@ module.exports={
     editProduct:(id)=>{
         console.log(">>>>");
         id.Price = Number(id.Price)
+        id.MRP= Number(id.MRP)
         id.Stock=Number(id.Stock)
         if(id.Stock<1){
             console.log(id.Stock);
@@ -282,6 +324,7 @@ module.exports={
                 $set:{
                     ProductName:id.ProductName,
                     Company:id.Company,
+                    MRP:id.MRP,
                     Price:id.Price,
                     Description:id.Description,
                     category:id.category,
@@ -449,6 +492,141 @@ module.exports={
                 }).catch(()=>{
                     reject()
                 })
+            })
+        },
+        createCoupen:async(coupen)=>{
+
+
+            isoDateStart = new Date(coupen?.startDate);
+            isoDateEnd = new Date(coupen.endDate);
+            coupen.limit = parseInt(coupen?.limit);
+            coupen.minimum = Number(coupen.minimum);
+            coupen.total_coupens = Number(coupen.total_coupens);
+            if (coupen.redeemType === "amount") {
+              coupen.amount = Number(coupen?.amount);
+            } else {
+              coupen.percentage = Number(parseInt(coupen?.percentage));
+            }
+
+            console.log("copen",coupen);
+
+            return new Promise(async(resolve,reject)=>{
+                if(coupen.type ==="product"){
+                    let data ={
+                        type:coupen.type,
+                        productId:coupen.id,
+                        name:coupen.name,
+                        code:coupen.code,
+                        percentage:coupen.percentage,
+                        totalCoupen:coupen.total_coupens,
+                        maxLimit:coupen.limit,
+                        startDate:coupen.startDate,
+                        endDate:coupen.endDate
+
+                    }
+                 let prodectCoupen=   await db.get().collection(collection.COUPEN_COLLECTION).insertOne(data)
+                 if(prodectCoupen){
+                    let samp = await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
+                        {
+                            $match:{
+                                _id:ObjectId(data.productId)
+                            }
+                        },
+                        {
+                            $project: { Price: 1 },
+                          },
+                          {
+                            $addFields: {
+                              offer: { $subtract: ['$Price', { $divide: [{ $multiply: ['$Price', data.percentage] }, 100] }] },
+                  
+                            },
+                          },
+                  
+                    ]).toArray()
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:(ObjectId(data.productId))},{
+                        $set: {
+                            offer:Math.floor( samp[0].offer),
+                            offerPercent:data.percentage,
+                            coupenId:prodectCoupen.insertedId
+                          },
+                     })
+                 }
+ 
+                 }else if(coupen.type ==="category"){
+                    coupen.categoryOption = true;
+                    let data ={
+                        type:coupen.type,
+                        category:coupen.category,
+                        categoryOption:coupen.categoryOption,
+                        name:coupen.name,
+                        code:coupen.code,
+                        redeemType:coupen.redeemType,
+                        percentage:coupen?.percentage,
+                        amount:coupen?.amount,
+                        totalCoupen:coupen.total_coupens,
+                        maxLimit:coupen.limit,
+                        minLimit:coupen.minimum,
+                        startDate:coupen.startDate,
+                        endDate:coupen.endDate,
+                    }
+                    let catCoupen=   await db.get().collection(collection.COUPEN_COLLECTION).insertOne(data)
+                    if(catCoupen){
+                        let simp = await db.get().collection(collection.CATTEGORY_COLLECTION).updateOne({categoryName:data.category},{
+                            $set:{
+                                coupenId:catCoupen.insertedId
+                            }
+                        })
+                    }
+
+                }else{
+                    let data={
+                        type:coupen.type,
+                        name:coupen.name,
+                        code:coupen.code,
+                        redeemType:coupen.redeemType,
+                        percentage:coupen?.percentage,
+                        amount:coupen?.amount,
+                        totalCoupen:coupen.total_coupens,
+                        maxLimit:coupen.limit,
+                        minLimit:coupen.minimum,
+                        startDate:coupen.startDate,
+                        endDate:coupen.endDate,
+                    }
+
+                    let normalCoupen = await db.get().collection(collection.COUPEN_COLLECTION).insertOne(data)
+                    if(normalCoupen){
+                        console.log('normal');
+                    }
+                }
+
+                resolve()
+
+            })
+            
+        },
+        getAllCoupen:()=>{
+            let coupens
+            return new Promise(async(resolve,reject)=>{
+                const normalCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({ type: 'normal' }).toArray();
+                const categoryCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({ type: 'category' }).toArray();
+                let productCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({type:'product'}).toArray()
+                for(let i = 0;i<productCoupens.length;i++){
+                    let data =await  db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(productCoupens[i].productId)})
+                    productCoupens[i].prodName = data.ProductName
+                    async function processImages(Image1) {
+                        let  urlImage1
+                             urlImage1 = await getImgUrl(Image1);
+                          
+                        return urlImage1;
+                      }
+                    productCoupens[i].urlImage1= await processImages(data.Image1)
+                }
+                console.log(productCoupens);
+                if (normalCoupens.length != 0 || categoryCoupens.length != 0) {
+                    resolve({ categoryCoupens, normalCoupens, productCoupens });
+                  } else {
+                    reject();
+                  }
             })
         }
         

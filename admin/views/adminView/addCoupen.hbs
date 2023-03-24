@@ -19,7 +19,7 @@
             <div class="col-sm-4">
                 <select class="form-select" name="category" id="category"
                     aria-label="Default select example">
-                    <option selected>Select Category</option>
+                    <option selected value="">Select Category</option>
                     {{#each categories}}
                     <option value="{{this.categoryName}}">{{this.categoryName}}</option>
                     {{/each}}
@@ -196,7 +196,7 @@
           <label data-error="wrong" data-success="right" for="defaultForm-email">Amount</label>
  </div> --}}
   <div class="md-form mb-5">
-            <input type="number" name="Total" id="defaultForm-email" class="form-control validate">
+            <input type="number" name="total_coupens" id="defaultForm-email" class="form-control validate">
           <label data-error="wrong" data-success="right" for="defaultForm-email"> Total Coupen</label>
         </div>
 

@@ -644,8 +644,11 @@ if(data.length!==0){
     console.log(products);
     res.render('adminView/addCoupen',{admin:true,categories,products})
   },
-  addCoupenSubmit:(req,res)=>{
+  addCoupenSubmit:async(req,res)=>{
     console.log(req.body);
+
+    await adminHelper.createCoupen(req.body)
+
   },
   codeGenerator:(req,res)=>{
     const code = voucher_codes.generate({
@@ -656,4 +659,27 @@ if(data.length!==0){
     res.json(code[0]);
   },
 
+
+  getCoupenpage:async(req,res)=>{
+    let coupens 
+    await adminHelper.getAllCoupen().then((coupen)=>{
+      coupens =coupen
+    })
+    coupens.normalCoupens.forEach(element => {
+        if(element.redeemType ==="amount"){
+          element.isAmount = true
+        }
+    });
+
+    coupens.categoryCoupens.forEach(element => {
+      if(element.redeemType ==="amount"){
+        element.isAmount = true
+      }
+  });
+
+
+
+    console.log(coupens,"///");
+    res.render('adminView/coupen',{admin: true, coupens})
+  }
 };
