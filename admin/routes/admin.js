@@ -45,7 +45,8 @@ const {
   getAddCoupenPage,
   addCoupenSubmit,
   codeGenerator,
-  getCoupenpage
+  getCoupenpage,
+  deletecoupon
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -103,6 +104,7 @@ router.get("/addCoupen",nocache,autherization,getAddCoupenPage)
 router.get("/coupen",nocache,autherization,getCoupenpage)
 router.post('/addcouponsubmit',nocache,autherization,addCoupenSubmit)
 router.get('/generatecode', autherization, codeGenerator);
+router.post('/deletecoupon', autherization, deletecoupon);
 
 
 module.exports = router;

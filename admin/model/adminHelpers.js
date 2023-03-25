@@ -495,8 +495,6 @@ module.exports={
             })
         },
         createCoupen:async(coupen)=>{
-
-
             coupen.startDate = new Date(coupen?.startDate);
             coupen.endDate = new Date(coupen.endDate);
             coupen.limit = parseInt(coupen?.limit);
@@ -628,8 +626,18 @@ module.exports={
                     reject();
                   }
             })
-        }
-        
+        },
+        deleteCoupen:(id)=>{
+            return new Promise(async(resolve,reject)=>{
+                const coupen =await  db.get().collection(collection.COUPEN_COLLECTION).findOneAndDelete({_id:ObjectId(id)})
+                if(coupen.value.type =='product'){
+                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({coupenId:ObjectId(coupen.value._id)},{
+                        $unset:{offer:1,coupenId:1,offerPercent:1}
+                    })
+                }
+                resolve()
+            })
+        }        
     }
     
     

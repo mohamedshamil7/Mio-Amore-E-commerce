@@ -647,7 +647,9 @@ if(data.length!==0){
   addCoupenSubmit:async(req,res)=>{
     console.log(req.body);
 
-    await adminHelper.createCoupen(req.body)
+    await adminHelper.createCoupen(req.body).then(()=>{
+      res.redirect('/admin/coupen')
+    })
 
   },
   codeGenerator:(req,res)=>{
@@ -681,5 +683,10 @@ if(data.length!==0){
 
     console.log(coupens,"///");
     res.render('adminView/coupen',{admin: true, coupens})
+  },
+  deletecoupon:(req,res)=>{
+    adminHelper.deleteCoupen(req.body.id).then(()=>{
+      res.json({ status: true });
+    })
   }
 };

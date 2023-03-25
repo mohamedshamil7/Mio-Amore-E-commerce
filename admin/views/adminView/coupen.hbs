@@ -52,8 +52,8 @@
                             <td>₹{{this.minLimit}}</td>
                             <td>₹{{this.maxLimit}}</td>
                             <td>
-                                <a href="/admin/editcoupon/{{this._id}}" class="btn btn-secondary">Edit</a>
-                                <p  onclick="return couponDelete('{{this._id}}')" class="btn tbn-danger">Delete</p>
+                                {{!-- <a href="/admin/editcoupon/{{this._id}}" class="btn btn-secondary">Edit</a> --}}
+                                <p  onclick="return couponDelete('{{this._id}}')" class="btn btn-danger">Delete</p>
                             </td>
                         </tr>
                         {{/each}}
@@ -83,8 +83,8 @@
                             <td>{{this.percentage}}%</td>
                             {{/if}}
                             <td>
-                                <a href="/admin/editcoupon/{{this._id}}" class="badge badge-secondary">Edit</a>
-                                <p onclick="return couponDelete('{{this._id}}')" class="badge badge-danger">Delete</p>
+                                {{!-- <a href="/admin/editcoupon/{{this._id}}" class="badge badge-secondary">Edit</a> --}}
+                                <p onclick="return couponDelete('{{this._id}}')" class="btn btn-danger">Delete</p>
                             </td>
                         </tr>
                         {{/each}}
@@ -124,8 +124,8 @@
                             <td>{{this.startDate}}</td>
                             <td>{{this.endDate}}</td>
                             <td>
-                                <a href="/admin/editcoupon/{{this._id}}" class="badge badge-secondary">Edit</a>
-                                <p onclick="return couponDelete('{{this._id}}')" class="badge badge-danger">Delete</p>
+                                {{!-- <a href="/admin/editcoupon/{{this._id}}" class="badge badge-secondary">Edit</a> --}}
+                                <p onclick="return couponDelete('{{this._id}}')" class="btn btn-danger">Delete</p>
                             </td>
                         </tr>
                         {{/each}}
