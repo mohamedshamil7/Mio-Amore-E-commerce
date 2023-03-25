@@ -497,8 +497,8 @@ module.exports={
         createCoupen:async(coupen)=>{
 
 
-            isoDateStart = new Date(coupen?.startDate);
-            isoDateEnd = new Date(coupen.endDate);
+            coupen.startDate = new Date(coupen?.startDate);
+            coupen.endDate = new Date(coupen.endDate);
             coupen.limit = parseInt(coupen?.limit);
             coupen.minimum = Number(coupen.minimum);
             coupen.total_coupens = Number(coupen.total_coupens);

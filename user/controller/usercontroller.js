@@ -29,6 +29,7 @@ paypal.configure({
 
 
 const { stringify } = require("querystring");
+const e = require("express");
 
 
 const bucketname = process.env.BUCKET_NAME
@@ -120,10 +121,10 @@ const getImgUrl= async(imgName)=>{
 
 
 module.exports = {
-  nocache:(req, res, next) =>{
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
+  nocache: (req, res, next) => {
+    res.header("Cache-Control", "private, no-cache, no-store, must-revalidate");
+    res.header("Expires", "-1");
+    res.header("Pragma", "no-cache");
     next();
   },
 
@@ -186,55 +187,58 @@ module.exports = {
     console.log("got in here");
     let decode = tokenVerify(req);
     console.log(decode);
-    let walletData= await wallet(req)
-    console.log(walletData.total,"//////////");
-    let total= await TotalAmount(req)
-    let cart =await cartProd(req)
-      let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let datas = null
+    let walletData = await wallet(req);
+    console.log(walletData.total, "//////////");
+    let total = await TotalAmount(req);
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let datas = null;
     // console.log(cart);
 
-    let count= await CartCount(req)
-    console.log(cart," this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    let count = await CartCount(req);
+    console.log(
+      cart,
+      " this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    );
     // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
-     await userHelpers.getAllProducts().then((prodData) => {
-       datas = prodData
-      }).catch((err) => {
+    await userHelpers
+      .getAllProducts()
+      .then((prodData) => {
+        datas = prodData;
+      })
+      .catch((err) => {
         console.log(err);
         console.log("didtn get my all Products");
       });
 
-        // console.log("the then data is :", datas.all);
+    // console.log("the then data is :", datas.all);
 
-        async function processImages(data) {
-          for (let i = 0; i < data.all.length; i++) {
-            if (data.all[i].Image1) {
-              // console.log(";;;;;fjf");
-              // console.log("image 1 :", data[i].Image1);
-              data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
-              // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
-            }
-    
-          }
-          console.log("Data:", data);
-          return data;
+    async function processImages(data) {
+      for (let i = 0; i < data.all.length; i++) {
+        if (data.all[i].Image1) {
+          // console.log(";;;;;fjf");
+          // console.log("image 1 :", data[i].Image1);
+          data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+          // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
-        let data = await processImages(datas);
-        console.log("came data:::::>>>>",data);
+      }
+      console.log("Data:", data);
+      return data;
+    }
+    let data = await processImages(datas);
+    console.log("came data:::::>>>>", data);
 
-        res.render("userView/home", {
-          data,
-          user: decode.value.username,
-          userpar: true,
-          products,
-           count,
-           total,
-           outofStock,
-           walletTotal: walletData.total
-        });
-     
-      
+    res.render("userView/home", {
+      data,
+      user: decode.value.username,
+      userpar: true,
+      products,
+      count,
+      total,
+      outofStock,
+      walletTotal: walletData.total,
+    });
   },
   redirectHome: (req, res) => {
     console.log("entereddd");
@@ -260,161 +264,156 @@ module.exports = {
       console.log(req.body);
       let userData = req.body;
 
-        userHelpers.doSignup(userData).then(async(response) => {
-            let user = response;
+      userHelpers
+        .doSignup(userData)
+        .then(async (response) => {
+          let user = response;
 
-          
-          next()
-            // console.log( user.isBlocked);
-//             const token =createToken(user);
-// console.log(token);
-      
-//               res.cookie("tokehn",token)
-//             res.status(201);
-//             console.log(token);
-//             next();
-          }).catch((user) => {
-            console.log(user + "/");
-  
-            res.render("userView/signup", {
-              error: " Username or  email already exsits!!!",
-            });
-          })
-          .catch(() => {
-            console.log("error ducring Signup");
-            console.log(err);
+          next();
+          // console.log( user.isBlocked);
+          //             const token =createToken(user);
+          // console.log(token);
+
+          //               res.cookie("tokehn",token)
+          //             res.status(201);
+          //             console.log(token);
+          //             next();
+        })
+        .catch((user) => {
+          console.log(user + "/");
+
+          res.render("userView/signup", {
+            error: " Username or  email already exsits!!!",
           });
-
-
-      
-      
-        
+        })
+        .catch(() => {
+          console.log("error ducring Signup");
+          console.log(err);
+        });
     }
   },
   userLoginroute: (req, res, next) => {
     let userData = req.body;
     console.log("?????????");
-        userHelpers .doLogin(userData).then((response) => {
-            console.log(response);
-            let user = response;
-            const token = createToken(user);
-            console.log(token);
-            res.cookie("token", token, {
-              httpOnly: true,
-            });
-            res.status(201);
-            console.log(token);
-    
-            next();
-          }).catch((err) => {
-            res.render("userView/login", {
-              errorMessage: "Incorrect emailId or Password",
-            });
-            console.log("error ducring login");
-            console.log(err);
-          })
+    userHelpers
+      .doLogin(userData)
+      .then((response) => {
+        console.log(response);
+        let user = response;
+        const token = createToken(user);
+        console.log(token);
+        res.cookie("token", token, {
+          httpOnly: true,
+        });
+        res.status(201);
+        console.log(token);
 
-
-    
-
-
-   
-     
+        next();
+      })
+      .catch((err) => {
+        res.render("userView/login", {
+          errorMessage: "Incorrect emailId or Password",
+        });
+        console.log("error ducring login");
+        console.log(err);
+      });
   },
 
-  otppage:((req,res)=> {
-    res.render("userView/otppage")
-  }),
-
-  
-
-
+  otppage: (req, res) => {
+    res.render("userView/otppage");
+  },
 
   userLogout: (req, res) => {
     res.clearCookie("token");
     res.redirect("/user/login");
   },
 
-  productPage: async(req, res) => {
+  productPage: async (req, res) => {
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let user= decode.value.insertedId
-    let walletData= await wallet(req)
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let user = decode.value.insertedId;
+    let walletData = await wallet(req);
     console.log(req.params.id);
     let prodId = req.params.id;
 
-let datas = null
-let wishlist
-    await userHelpers.viewProduct(prodId).then((response) => {
-      datas= response;
+    let datas = null;
+    let wishlist;
+    await userHelpers
+      .viewProduct(prodId)
+      .then((response) => {
+        datas = response;
         console.log(`data:?????????//// ${data.inStock}`);
       })
       .catch((err) => {
         console.log(err);
       });
-       await  userHelpers.inWishlist(user,prodId).then((response)=>{
-        wishlist=response
-      }).catch(()=>{
-        wishlist=false
-        })
+    await userHelpers
+      .inWishlist(user, prodId)
+      .then((response) => {
+        wishlist = response;
+      })
+      .catch(() => {
+        wishlist = false;
+      });
 
-        async function processImages(Data) {
-          console.log(Data);
-          if (Data.Image1) {
-            Data.urlImage1 = await getImgUrl(Data.Image1);
-            // console.log("Data[i].urlImage1:", Data.urlImage1);
-          }
-          if (Data.Image2) {
-            Data.urlImage2 = await getImgUrl(Data.Image2);
-          }
-          if (Data.Image3) {
-            Data.urlImage3 = await getImgUrl(Data.Image3);
-          }
-          if (Data.Image4) {
-            Data.urlImage4 = await getImgUrl(Data.Image4);
-          }
-    
-          console.log("Data:", Data);
-          return Data;
-        }
-        let data = await processImages(datas);
+    async function processImages(Data) {
+      console.log(Data);
+      if (Data.Image1) {
+        Data.urlImage1 = await getImgUrl(Data.Image1);
+        // console.log("Data[i].urlImage1:", Data.urlImage1);
+      }
+      if (Data.Image2) {
+        Data.urlImage2 = await getImgUrl(Data.Image2);
+      }
+      if (Data.Image3) {
+        Data.urlImage3 = await getImgUrl(Data.Image3);
+      }
+      if (Data.Image4) {
+        Data.urlImage4 = await getImgUrl(Data.Image4);
+      }
 
-          res.render("userView/productPage", {
-            wishlist,
-            data,
-            user: decode.value.username,
-            userpar: true,
-            products,
-            outofStock,
-            count,
-            total,
-            walletTotal:walletData.total
-          });
+      console.log("Data:", Data);
+      return Data;
+    }
+    let data = await processImages(datas);
 
+    res.render("userView/productPage", {
+      wishlist,
+      data,
+      user: decode.value.username,
+      userpar: true,
+      products,
+      outofStock,
+      count,
+      total,
+      walletTotal: walletData.total,
+    });
   },
   imageRoute: (req, res) => {
     let decode = tokenVerify(req);
     let id = req.params.id;
-    
+
     console.log(id);
   },
 
-  wishlistPage:async (req, res) => {
+  wishlistPage: async (req, res) => {
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let walletData= await wallet(req)
-    let datas
-   await  userHelpers.wishlistProducts(decode.value.insertedId).then((response) => {
-      datas = response;
-    });
-    console.log("dataaas",datas);
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let walletData = await wallet(req);
+    let datas;
+    await userHelpers
+      .wishlistProducts(decode.value.insertedId)
+      .then((response) => {
+        datas = response;
+      });
+    console.log("dataaas", datas);
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
         if (Data[i].Product.Image1) {
@@ -422,7 +421,6 @@ let wishlist
           Data[i].Product.urlImage1 = await getImgUrl(Data[i].Product.Image1);
           // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
-
       }
       console.log("Data:", Data);
       return Data;
@@ -430,16 +428,15 @@ let wishlist
 
     let data = await processImages(datas);
 
-      res.render("userView/wishlist", {
-        data,
-        user: decode.value.username,
-        userpar: true,
-        products,
-        outofStock,
-        count,
-        walletTotal:walletData.total
-      });
-
+    res.render("userView/wishlist", {
+      data,
+      user: decode.value.username,
+      userpar: true,
+      products,
+      outofStock,
+      count,
+      walletTotal: walletData.total,
+    });
   },
   addToWishlist: (req, res) => {
     console.log(req.params.id);
@@ -457,212 +454,244 @@ let wishlist
       });
   },
 
-
-  findbynumber:(req,res)=>{
+  findbynumber: (req, res) => {
     console.log(req.body);
-    global.window.recaptchaVerifier= new RecaptchaVerifier('recaptcha-container',
-     {size: "invisible",
-     'callback': (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        onSignInSubmit();
-      }
-    }, auth);
-        // recaptchaVerifier.render();
+    global.window.recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          onSignInSubmit();
+        },
+      },
+      auth
+    );
+    // recaptchaVerifier.render();
     const appVerifier = window.recaptchaVerifier;
-    userHelpers.findbynumber(req.body.phone).then((response)=>{
+    userHelpers
+      .findbynumber(req.body.phone)
+      .then((response) => {
         console.log(response);
         signInWithPhoneNumber(auth, req.body.phone, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      res.render("userView/verifyOtp",{response})
-      window.confirmationResult = confirmationResult;
-      // ...
-    }).catch((error) => {
-        console.log(error);
-      // Error; SMS not sent
-      // ...
-    });
-
-
-
-    }).catch((error)=>{
-        res.render('userView/verifyOtp',{error:"user not found"})
-    })
+          .then((confirmationResult) => {
+            // SMS sent. Prompt user to type the code from the message, then sign the
+            // user in with confirmationResult.confirm(code).
+            res.render("userView/verifyOtp", { response });
+            window.confirmationResult = confirmationResult;
+            // ...
+          })
+          .catch((error) => {
+            console.log(error);
+            // Error; SMS not sent
+            // ...
+          });
+      })
+      .catch((error) => {
+        res.render("userView/verifyOtp", { error: "user not found" });
+      });
   },
 
-  addToCart:(req,res)=>{
+  addToCart: (req, res) => {
     console.log("api called");
     console.log(req.params.id);
     let decode = tokenVerify(req);
     userHelpers
-    .addToCart( decode.value.insertedId,req.params.id).then(()=>{
-      res.json({status:true})
-    }).catch((error)=>{
-      console.log(error);
-    })
-
+      .addToCart(decode.value.insertedId, req.params.id)
+      .then(() => {
+        res.json({ status: true });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
-  
-  getCart:async (req,res)=>{
-    let decode= tokenVerify(req)
-    let total= await TotalAmount(req)
-    let count= await CartCount(req)
-    let walletData= await wallet(req)
+
+  getCart: async (req, res) => {
+    let decode = tokenVerify(req);
+    let total = await TotalAmount(req);
+    let count = await CartCount(req);
+    let walletData = await wallet(req);
     console.log(total);
-    let product
-    let outofStock 
-    await userHelpers.getcart(decode.value.insertedId).then((obj)=>{
+    let product;
+    let outofStock;
+    await userHelpers.getcart(decode.value.insertedId).then((obj) => {
       console.log(obj.outofStock);
-     product = obj.cartItems
-      outofStock= obj.outofStock
-    })
+      product = obj.cartItems;
+      outofStock = obj.outofStock;
+    });
     // console.log(products);
     async function processImages(Data) {
       for (let i = 0; i < Data?.length; i++) {
         if (Data[i].cart_product.Image1) {
           console.log("image 1 :", Data[i].cart_product.Image1);
-          Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
+          Data[i].cart_product.urlImage1 = await getImgUrl(
+            Data[i].cart_product.Image1
+          );
           // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
-
       }
       console.log("Data:", Data);
       return Data;
     }
     let products = await processImages(product);
 
-       res.render("userView/cart",{products,userpar:true,total,outofStock,count,walletTotal:walletData.total})
-  
-  },
- 
-  removeCart:(req,res)=>{
-    let decode= tokenVerify(req)
-    console.log(req.body.prodId,"this is te iddddd");
-    userHelpers.removeCart(decode.value.insertedId,req.body.prodId).then((response)=>{
-      console.log("this is the response",response);
-      // res.redirect(req.get("referer")); 
-      res.json(response)
-    }).catch((error)=>{
-      console.log("failed to dlete from cart");
-    })
+    res.render("userView/cart", {
+      products,
+      userpar: true,
+      total,
+      outofStock,
+      count,
+      walletTotal: walletData.total,
+    });
   },
 
-  changeProductQuantity:(req,res,next)=>{
-    userHelpers.changeProductQuantity(req.body).then((response)=>{
-      res.json(response)
-    }).catch(()=>{
-      console.log("here");
-      let error = "Stock limit Exceeded"
-
-    res.status(404).json({error: 'Ha Ocurrido un error'});
-    })
-  },
-  checkoutPage:async(req,res)=>{
+  removeCart: (req, res) => {
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
+    console.log(req.body.prodId, "this is te iddddd");
+    userHelpers
+      .removeCart(decode.value.insertedId, req.body.prodId)
+      .then((response) => {
+        console.log("this is the response", response);
+        // res.redirect(req.get("referer"));
+        res.json(response);
+      })
+      .catch((error) => {
+        console.log("failed to dlete from cart");
+      });
+  },
+
+  changeProductQuantity: (req, res, next) => {
+    userHelpers
+      .changeProductQuantity(req.body)
+      .then((response) => {
+        res.json(response);
+      })
+      .catch(() => {
+        console.log("here");
+        let error = "Stock limit Exceeded";
+
+        res.status(404).json({ error: "Ha Ocurrido un error" });
+      });
+  },
+  checkoutPage: async (req, res) => {
+    let decode = tokenVerify(req);
+    let cart = await cartProd(req);
     // let products= cart.cartItems
     // let outofStock= cart.outofStock
-    let walletData= await wallet(req)
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let product
-    let outofStock
-    let Address= await userHelpers.getAddress(decode .value.insertedId)
+    let walletData = await wallet(req);
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let product;
+    let outofStock;
+    let Address = await userHelpers.getAddress(decode.value.insertedId);
     // let inStock= await checkinStock(req)
-    let isWallet
-    if(walletData.total >= total){
+    let isWallet;
+    if (walletData.total >= total) {
       console.log("/////is");
-       isWallet = true
+      isWallet = true;
     }
 
-    let user=decode.value.username
-    let userID = ObjectId(decode.value.insertedId) 
-    console.log( "uer if", userID);
-    console.log("@#############@@@@@@@###",user);
-    console.log("???????",Address,">>>>>");
-   await  userHelpers.getcart(decode.value.insertedId).then((obj)=>{
-      product = obj.cartItems
-    outofStock= obj.outofStock
-  })
-  async function processImages(Data) {
-    for (let i = 0; i < Data?.length; i++) {
-      if (Data[i].cart_product.Image1) {
-        // console.log("image 1 :", Data[i].Image1);
-        Data[i].cart_product.urlImage1 = await getImgUrl(Data[i].cart_product.Image1);
-        // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+    let user = decode.value.username;
+    let userID = ObjectId(decode.value.insertedId);
+    console.log("uer if", userID);
+    console.log("@#############@@@@@@@###", user);
+    console.log("???????", Address, ">>>>>");
+    await userHelpers.getcart(decode.value.insertedId).then((obj) => {
+      product = obj.cartItems;
+      outofStock = obj.outofStock;
+    });
+    async function processImages(Data) {
+      for (let i = 0; i < Data?.length; i++) {
+        if (Data[i].cart_product.Image1) {
+          // console.log("image 1 :", Data[i].Image1);
+          Data[i].cart_product.urlImage1 = await getImgUrl(
+            Data[i].cart_product.Image1
+          );
+          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
+        }
       }
-
+      console.log("Data:", Data);
+      return Data;
     }
-    console.log("Data:", Data);
-    return Data;
-  }
 
-  let products = await processImages(product);
+    let products = await processImages(product);
 
-  return res.render("userView/checkout",{Address,products,user,userID,userpar:true,cart,count,total,outofStock,walletTotal:walletData.total,isWallet})
+    return res.render("userView/checkout", {
+      Address,
+      products,
+      user,
+      userID,
+      userpar: true,
+      cart,
+      count,
+      total,
+      outofStock,
+      walletTotal: walletData.total,
+      isWallet,
+    });
   },
-  
 
-
-  addAddress:(req,res)=>{
+  addAddress: (req, res) => {
     console.log("calhh  here");
-    if(!req.body.fname ||
+    if (
+      !req.body.fname ||
       !req.body.mobile ||
       !req.body.pin ||
       !req.body.houseNo ||
       !req.body.landMark ||
       !req.body.useradd ||
-      !req.body.town){
-        // res.render("userView/checkout", { error: "please enter details" });
-    //    return  Swal.fire({
-    //       title: 'Do you want to save the changes?',
-    //       showDenyButton: true,
-    //       showCancelButton: true,
-    //       confirmButtonText: 'Save',
-    //       denyButtonText: `Don't save`,
-    //     })
-    //     // .then((result) => {
-    //     //   /* Read more about isConfirmed, isDenied below */
-    //     //   if (result.isConfirmed) {
-    //     //     Swal.fire('Saved!', '', 'success')
-    //     //   } else if (result.isDenied) {
-    //     //     Swal.fire('Changes are not saved', '', 'info')
-    //     //   }
-    //     // })
-
-      }
+      !req.body.town
+    ) {
+      // res.render("userView/checkout", { error: "please enter details" });
+      //    return  Swal.fire({
+      //       title: 'Do you want to save the changes?',
+      //       showDenyButton: true,
+      //       showCancelButton: true,
+      //       confirmButtonText: 'Save',
+      //       denyButtonText: `Don't save`,
+      //     })
+      //     // .then((result) => {
+      //     //   /* Read more about isConfirmed, isDenied below */
+      //     //   if (result.isConfirmed) {
+      //     //     Swal.fire('Saved!', '', 'success')
+      //     //   } else if (result.isDenied) {
+      //     //     Swal.fire('Changes are not saved', '', 'info')
+      //     //   }
+      //     // })
+    }
 
     let decode = tokenVerify(req);
     console.log(req.body);
-    userHelpers.addAddress(decode.value.insertedId,req.body).then((response)=>{
-      console.log(response);
-      res.redirect(req.get("referer"));
-
-    })
+    userHelpers
+      .addAddress(decode.value.insertedId, req.body)
+      .then((response) => {
+        console.log(response);
+        res.redirect(req.get("referer"));
+      });
   },
 
-  shopProducts:async(req,res)=>{
+  shopProducts: async (req, res) => {
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let walletData= await wallet(req)
-    let dataCount  = null
-    let categories = null
-    await userHelpers.getAllCategories().then((cat)=>{
-      categories = cat
-    })
-   await  userHelpers.getAllProducts().then((datas) => {
-
-      dataCount= datas 
-    })
-    .catch((err) => {
-      console.log(err);
-      console.log("didtn get my all Products");
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let walletData = await wallet(req);
+    let dataCount = null;
+    let categories = null;
+    await userHelpers.getAllCategories().then((cat) => {
+      categories = cat;
     });
+    await userHelpers
+      .getAllProducts()
+      .then((datas) => {
+        dataCount = datas;
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("didtn get my all Products");
+      });
     console.log(dataCount);
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
@@ -672,385 +701,405 @@ let wishlist
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
           // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
-
       }
       console.log("Data:", data);
       return data;
     }
     console.log(dataCount);
     let data = await processImages(dataCount);
-    console.log("came data:::::>>>>",data);
-     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
-   
+    console.log("came data:::::>>>>", data);
+    res.render("userView/shop", {
+      userpar: true,
+      data,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      walletTotal: walletData.total,
+      categories,
+    });
   },
-  renderProfilePage:async(req,res)=>{
-    let decode= tokenVerify(req);
-    let cart= await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let total= await TotalAmount(req)
-    let count= await CartCount(req)
-    let walletData= await wallet(req)
-    let data
-    let orderDatas
+  renderProfilePage: async (req, res) => {
+    let decode = tokenVerify(req);
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let total = await TotalAmount(req);
+    let count = await CartCount(req);
+    let walletData = await wallet(req);
+    let data;
+    let orderDatas;
     // console.log(decode.value.insertedId);
-     await userHelpers.getUserData(decode.value.insertedId).then((response)=>{
-      console.log("/////?",response);
-    data= response
-    })
-     await userHelpers.getOrderDetails(decode.value.insertedId).then((response)=>{
-      // console.log(response);
-      orderDatas = response
-    })
-    console.log("orderDatas",orderDatas[0].cart);
+    await userHelpers.getUserData(decode.value.insertedId).then((response) => {
+      console.log("/////?", response);
+      data = response;
+    });
+    await userHelpers
+      .getOrderDetails(decode.value.insertedId)
+      .then((response) => {
+        // console.log(response);
+        orderDatas = response;
+      });
+    console.log("orderDatas", orderDatas[0].cart);
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
-        for(let j = 0;j<Data[i].cart.length;j++){
+        for (let j = 0; j < Data[i].cart.length; j++) {
           if (Data[i].cart[j].cart_product.Image1) {
-            Data[i].cart[j].cart_product.urlImage1 = await getImgUrl(Data[i].cart[j].cart_product.Image1);
-
-        }
+            Data[i].cart[j].cart_product.urlImage1 = await getImgUrl(
+              Data[i].cart[j].cart_product.Image1
+            );
+          }
           // console.log("image 1 :", Data[i].Image1);
           // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
-  
       }
       console.log("Data:", Data);
       return Data;
     }
-  
+
     let orderData = await processImages(orderDatas);
-    
-  res.render("userView/profile",{userpar:true,user:decode.value.username,products,outofStock,count,total,data,orderData,walletTotal:walletData.total})
+
+    res.render("userView/profile", {
+      userpar: true,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      data,
+      orderData,
+      walletTotal: walletData.total,
+    });
   },
 
+  placeOrder: async (req, res) => {
+    let decode = tokenVerify(req);
 
-  placeOrder:async(req,res)=>{
-    let decode= tokenVerify(req);
+    let cart = await cartProd(req);
 
-    let cart= await cartProd(req)
+    let products = cart.cartItems;
+    let prodIds = [];
+    for (let i = 0; i < products.length; i++) {
+      prodIds.push(products[i].item);
+    }
+    console.log(">>>>>>>>>>>>>>>>>>>", prodIds);
 
-    let products= cart.cartItems
-let prodIds = []
-for( let i=0;i<products.length;i++){
-    prodIds.push(products[i].item)
-  }
-  console.log(">>>>>>>>>>>>>>>>>>>",prodIds);
-
-    let outofStock= cart.outofStock
+    let outofStock = cart.outofStock;
 
 
-    let total= await TotalAmount(req)
 
-    console.log(req.body,"msa");
-    let PaymentStatus = "false"
+    let total = await TotalAmount(req);
+    if(req.body?.offerPrice){
+      total = Number(req.body.offerPrice)
+    }
+    
 
-    let razorpaycomplete = false
+    console.log(req.body, "msa");
+    let PaymentStatus = "false";
 
-    let paypalcomplete = false
+    let razorpaycomplete = false;
 
-    let transactionId= null
+    let paypalcomplete = false;
 
-    let payment_method = req.body.PaymentOption
+    let transactionId = null;
+
+    let payment_method = req.body.PaymentOption;
 
     console.log(`payment_method is ${payment_method}`);
 
-    let globalorderId = null
+    let globalorderId = null;
 
-    function getOrderid(){
-      return globalorderId
-  }
+    function getOrderid() {
+      return globalorderId;
+    }
 
-    try{
-        if(req.body.order){
-        if(!req.body.Address){
-          res.status(404).json({error: 'Ha Ocurrido un error'});
-          return
+    try {
+      if (req.body.order) {
+        if (!req.body.Address) {
+          res.status(404).json({ error: "Ha Ocurrido un error" });
+          return;
         }
-        let user= stringify(req.body.userId)
+        let user = stringify(req.body.userId);
 
-      let id= ObjectId(req.body.userId)
-  
-      console.log(id);
-  
-      req.body.id= id
-  
+        let id = ObjectId(req.body.userId);
 
+        console.log(id);
 
-      let currencyConverter = new cc({from:"INR", to:"USD", amount:total});
+        req.body.id = id;
 
-      let response = await currencyConverter.convert();
+        let currencyConverter = new cc({
+          from: "INR",
+          to: "USD",
+          amount: total,
+        });
 
-      console.log("response",response); 
-  
-      var usdtotal=Math.round(response)
+        let response = await currencyConverter.convert();
 
+        console.log("response", response);
 
-    req.body.PaymentStatus = PaymentStatus
-    console.log(req.body.PaymentOption);
+        var usdtotal = Math.round(response);
 
-     const orderId= await userHelpers.placeOrder(req.body,products,total)
-        globalorderId = orderId
-  
+        req.body.PaymentStatus = PaymentStatus;
+        console.log(req.body.PaymentOption);
+
+        const orderId = await userHelpers.placeOrder(req.body, products, total);
+        globalorderId = orderId;
+
         if (req.body.PaymentOption === "COD") {
           /// true ? false
-          PaymentStatus = "pending COD"
-          console.log(`payment option selected is COD and req.body.status is now${PaymentStatus}`);
-        }
-        else if (req.body.PaymentOption === "wallet") {
+          PaymentStatus = "pending COD";
+          console.log(
+            `payment option selected is COD and req.body.status is now${PaymentStatus}`
+          );
+        } else if (req.body.PaymentOption === "wallet") {
           await userHelpers
             .debitFromWallet(orderId, total, decode.value.insertedId)
             .then((transactionIds) => {
               transactionId = transactionIds;
               console.log(`${transactionId} is the transaction id wallet`);
               PaymentStatus = "true";
-            
             });
-             console.log(`payment option selected is wallet and req.body.status is now`);
-        }else if (req.body.PaymentOption === "razorPay") {
-          await userHelpers.generateRazorPay(orderId, total).then((response) => {
-              res.json({status:"razorpay",response});
-          });
-          
-        }
-        else if(req.body.PaymentOption==="paypal"){
-  
+          console.log(
+            `payment option selected is wallet and req.body.status is now`
+          );
+        } else if (req.body.PaymentOption === "razorPay") {
+          await userHelpers
+            .generateRazorPay(orderId, total)
+            .then((response) => {
+              res.json({ status: "razorpay", response });
+            });
+        } else if (req.body.PaymentOption === "paypal") {
           var create_payment_json = {
-                  "id":`${orderId}`,
-                  "intent": "AUTHORIZE",
-                  "payer": {
-                      "payment_method": "paypal"
-                  },
-                  "redirect_urls": {
-                      "return_url": `http://localhost:8001/user/placeOrder/paypal`,
-                      // "return_url": "http://localhost:8001/user/o",
-                      "cancel_url": "http://cancel.url"
-                      
-                  },
-                  "transactions": [{
-                      "amount": {
-                          "currency": "USD",
-                          "total": usdtotal
-                      },
-                      "description": "This is the payment description."
-                  }]
-              };
-              paypal.payment.create(create_payment_json, function (error, payment) {
-                    if (error) {
-                        console.log(error.response);
-                        throw error;
-                    } else {
-                        for (var i = 0; i < payment.links.length; i++) {
-                        //Redirect user to this endpoint for redirect url
-                            if (payment.links[i].rel ==='approval_url') {
-                              res.json({status:"paypal",forwardLink: payment.links[i].href});
-                           break;
-                          
-                            }
-                        }
-                    }
-                }); 
-          
+            id: `${orderId}`,
+            intent: "AUTHORIZE",
+            payer: {
+              payment_method: "paypal",
+            },
+            redirect_urls: {
+              return_url: `http://localhost:8001/user/placeOrder/paypal`,
+              // "return_url": "http://localhost:8001/user/o",
+              cancel_url: "http://cancel.url",
+            },
+            transactions: [
+              {
+                amount: {
+                  currency: "USD",
+                  total: usdtotal,
+                },
+                description: "This is the payment description.",
+              },
+            ],
+          };
+          paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+              console.log(error.response);
+              throw error;
+            } else {
+              for (var i = 0; i < payment.links.length; i++) {
+                //Redirect user to this endpoint for redirect url
+                if (payment.links[i].rel === "approval_url") {
+                  res.json({
+                    status: "paypal",
+                    forwardLink: payment.links[i].href,
+                  });
+                  break;
+                }
+              }
+            }
+          });
+
           console.log(`payment option selected is paypal`);
         }
-  
-      } else if(req.params.data){
+      } else if (req.params.data) {
         // let data=  JSON.parse('{"' + decodeURI(req.params.data.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
         // console.log(data);
-        payment_method = "paypal"
-        paypalcomplete = true
+        payment_method = "paypal";
+        paypalcomplete = true;
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
-        transactionId = paymentId
+        transactionId = paymentId;
         console.log(`payrer id  :${payerId}`);
         console.log(`payrermet  id  :${paymentId}`);
         console.log(`data is coming${req.params.data}`);
         // console.log(data);
-      }
-      else{
-  
-        payment_method = "razorPay"
+      } else {
+        payment_method = "razorPay";
         console.log(`payment meth here i s sinsncsdijcdc${payment_method}`);
-          console.log(req.body);
-         await  userHelpers.verifyPayment(req.body).then(()=>{
-          PaymentStatus= "true"
-          razorpaycomplete = true
-          transactionId = req.body['order[receipt]']
-          console.log(`order recuewso for razorpay is ${req.body['order[receipt]']}`);
+        console.log(req.body);
+        await userHelpers
+          .verifyPayment(req.body)
+          .then(() => {
+            PaymentStatus = "true";
+            razorpaycomplete = true;
+            transactionId = req.body["order[receipt]"];
+            console.log(
+              `order recuewso for razorpay is ${req.body["order[receipt]"]}`
+            );
             // res.json({status:true})
-          }).catch((err)=>{
-            PaymentStatus= "false"
-            razorpaycomplete = true
+          })
+          .catch((err) => {
+            PaymentStatus = "false";
+            razorpaycomplete = true;
             console.log(err);
             // res.json({status:'Payment Failed'})
-            
-          })
-        
+          });
       }
-        
-      }
-      catch(e){
-        console.log(e, "this is theerroro ");
-      }
-      finally{
-        const orderId =getOrderid()
-        // console.log(`${transactionId} is the transaction id wallet`);
-        console.log(`payment_method is ${payment_method} 333`);
-        if((payment_method==="razorPay" && razorpaycomplete == false )|| (payment_method=== "paypal" && paypalcomplete == false)){
-          // console.log(`razorypay status completeion === ${razorpaycomplete}`);
-          console.log(`waiting for  confirmation...`);
-        }else{
-          console.log("entered else");
-          function destruct(products){
-            let data =[]
-                    for(let i=0;i<products.length;i++){
-                      let obj ={}  
-                      obj.prod= products[i].item
-                      obj.quantity= products[i].quantity
-                      data.push(obj)
-                    }
-                    return data
+    } catch (e) {
+      console.log(e, "this is theerroro ");
+    } finally {
+      const orderId = getOrderid();
+      // console.log(`${transactionId} is the transaction id wallet`);
+      console.log(`payment_method is ${payment_method} 333`);
+      if (
+        (payment_method === "razorPay" && razorpaycomplete == false) ||
+        (payment_method === "paypal" && paypalcomplete == false)
+      ) {
+        // console.log(`razorypay status completeion === ${razorpaycomplete}`);
+        console.log(`waiting for  confirmation...`);
+      } else {
+        console.log("entered else");
+        function destruct(products) {
+          let data = [];
+          for (let i = 0; i < products.length; i++) {
+            let obj = {};
+            obj.prod = products[i].item;
+            obj.quantity = products[i].quantity;
+            data.push(obj);
           }
-          let ids = destruct(products)
-           await userHelpers.placeOrderTrans(orderId,transactionId,PaymentStatus,payment_method,ids,decode.value.insertedId).then((resp)=>{
-           console.log(resp);
-           //  location.href="http://localhost:8001/user/orderSuccess"
-           if(payment_method==="COD"){
-
-           }
-           res.render("userView/orderSuccess")
-           res.redirect("/user/orderSuccess")
-            res.json({status:true})
-  }).catch((e)=>{
-    console.log(e);
-  })
-
-
-
+          return data;
         }
+        let ids = destruct(products);
+        await userHelpers.placeOrderTrans(
+            orderId,
+            transactionId,
+            PaymentStatus,
+            payment_method,
+            ids,
+            decode.value.insertedId
+          )
+          .then((resp) => {
+            console.log(resp);
+            //  location.href="http://localhost:8001/user/orderSuccess"
+            if (payment_method === "COD" || payment_method=="razorPay" || payment_method==="wallet") {
+              res.json({ status: true });
+              
+            }else if(payment_method ==="paypal"){
+              console.log("codedededeeeee");
+              res.render("userView/orderSuccess");
+              
+              res.redirect("/user/orderSuccess");
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
+    }
 
-      
-      
+    //     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
+    //       /*
+    //       console.log("//////////////////////////////////////////////////////",orderId);
+    //       function destruct(products) {
+    //         let data =[]
+    //         for(let i=0;i<products.length;i++){
+    //           let obj ={}
+    //           obj.prod= products[i].item
+    //           obj.quantity= products[i].quantity
+    //           data.push(obj)
+    //         }
+    //         return data
+    //       }
+    //       */
 
-      
+    //       if(req.body.PaymentOption==='COD'){
 
+    //         console.log(cart);
 
+    //         let ids = destruct(products)
+    //         console.log(ids,"ids");
 
+    //         console.log(`this is the idss :: ${ids}`);
+    //         userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
+    //         .then(()=>{
+    //           res.json({status:"COD"})
 
+    //         }).catch(()=>{
+    //           console.log("error occured while removing from cart after order");
+    //         })
 
- 
+    //       }
+    //       else if(req.body.PaymentOption === 'wallet'){
+    //         userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
+    //           let ids  = destruct(products)
+    //           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+    //             // console.log("this.response",response);
+    //             res.json({status:"wallet",response})
 
+    //           })
+    //         })
+    //       }
 
-   
-    
-//     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
-//       /* 
-//       console.log("//////////////////////////////////////////////////////",orderId);
-//       function destruct(products) { 
-//         let data =[]
-//         for(let i=0;i<products.length;i++){
-//           let obj ={}  
-//           obj.prod= products[i].item
-//           obj.quantity= products[i].quantity
-//           data.push(obj)
-//         }
-//         return data
-//       }
-//       */
+    //       else if(req.body.PaymentOption=='razorPay'){
+    //         console.log("entered");
+    //         userHelpers.generateRazorPay(orderId,total).then((response)=>{
+    //           let ids  = destruct(products)
+    //           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
+    //             // console.log("this.response",response);
+    //             res.json({status:"razorpay",response})
 
-//       if(req.body.PaymentOption==='COD'){
+    //           })
 
-//         console.log(cart);
-       
-//         let ids = destruct(products)
-//         console.log(ids,"ids");
-  
+    //         })
 
-//         console.log(`this is the idss :: ${ids}`);
-//         userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-//         .then(()=>{
-//           res.json({status:"COD"})
+    //       }
+    //       else if(req.body.PaymentOption=='paypal'){
+    //         console.log("?????????????????/");
 
-//         }).catch(()=>{
-//           console.log("error occured while removing from cart after order");
-//         })
-        
-//       }
-//       else if(req.body.PaymentOption === 'wallet'){
-//         userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
-//           let ids  = destruct(products)
-//           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-//             // console.log("this.response",response);
-//             res.json({status:"wallet",response})
+    //         console.log(usdtotal);
+    //             var create_payment_json = {
+    //       "id":`${orderId}`,
+    //       "intent": "AUTHORIZE",
+    //       "payer": {
+    //           "payment_method": "paypal"
+    //       },
+    //       "redirect_urls": {
+    //           "return_url": "http://localhost:8001/user/orderSuccess",
+    //           // "return_url": "http://localhost:8001/user/o",
+    //           "cancel_url": "http://cancel.url"
+    //       },
+    //       "transactions": [{
+    //           "amount": {
+    //               "currency": "USD",
+    //               "total": usdtotal
+    //           },
+    //           "description": "This is the payment description."
+    //       }]
+    //   };
+    //   paypal.payment.create(create_payment_json, function (error, payment) {
+    //     if (error) {
+    //         console.log(error.response);
+    //         throw error;
+    //     } else {
+    //         for (var i = 0; i < payment.links.length; i++) {
+    //         //Redirect user to this endpoint for redirect url
+    //             if (payment.links[i].rel ==='approval_url') {
+    //               // console.log(payment.links[i].href);
+    //               // res.redirect(`${payment.links[i].href}`)
+    //               let ids = destruct(products)
+    //               res.json({status:"paypal",forwardLink: payment.links[i].href});
+    //               userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
+    //             }
+    //         }
+    //         changePaymentStatus(orderId)
+    //     }
+    // });
 
-//           })
-//         })
-//       }
-
-//       else if(req.body.PaymentOption=='razorPay'){
-//         console.log("entered");
-//         userHelpers.generateRazorPay(orderId,total).then((response)=>{
-//           let ids  = destruct(products)
-//           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-//             // console.log("this.response",response);
-//             res.json({status:"razorpay",response})
-
-//           })
-
-//         })
-
-//       }
-//       else if(req.body.PaymentOption=='paypal'){
-//         console.log("?????????????????/");
-
-//         console.log(usdtotal);
-//             var create_payment_json = {
-//       "id":`${orderId}`,
-//       "intent": "AUTHORIZE",
-//       "payer": {
-//           "payment_method": "paypal"
-//       },
-//       "redirect_urls": {
-//           "return_url": "http://localhost:8001/user/orderSuccess",
-//           // "return_url": "http://localhost:8001/user/o",
-//           "cancel_url": "http://cancel.url"
-//       },
-//       "transactions": [{
-//           "amount": {
-//               "currency": "USD",
-//               "total": usdtotal
-//           },
-//           "description": "This is the payment description."
-//       }]
-//   };
-//   paypal.payment.create(create_payment_json, function (error, payment) {
-//     if (error) {
-//         console.log(error.response);
-//         throw error;
-//     } else {
-//         for (var i = 0; i < payment.links.length; i++) {
-//         //Redirect user to this endpoint for redirect url
-//             if (payment.links[i].rel ==='approval_url') {
-//               // console.log(payment.links[i].href);
-//               // res.redirect(`${payment.links[i].href}`)
-//               let ids = destruct(products)
-//               res.json({status:"paypal",forwardLink: payment.links[i].href});
-//               userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-//             }
-//         }
-//         changePaymentStatus(orderId)
-//     }
-// }); 
-  
-//       }
-//       else{
-//         res.send("nothind")
-//       }
-//     })
-  
-   
-    
+    //       }
+    //       else{
+    //         res.send("nothind")
+    //       }
+    //     })
   },
 
   // paypalSucces: (req, res) => {
@@ -1080,217 +1129,251 @@ for( let i=0;i<products.length;i++){
   //     }
   //   })
   // },
-    
-  
 
-  
-    
-    
-  verifyPayment:(req,res)=>{
-
+  verifyPayment: (req, res) => {
     console.log(req.body);
-    userHelpers.verifyPayment(req.body).then(()=>{
-      console.log("herer");
-console.log(typeof req.body);
-console.log( req.body);
-//sucess pay
-      res.json({status:true})
-    }).catch((err)=>{
-      
-      console.log(err);
-      res.json({status:'Payment Failed'})
-      
-    })
-  },
-  
-  orderSuccess:(req,res)=>{
-   console.log("call i shere");
-
-    res.render("userView/orderSuccess")
+    userHelpers
+      .verifyPayment(req.body)
+      .then(() => {
+        console.log("herer");
+        console.log(typeof req.body);
+        console.log(req.body);
+        //sucess pay
+        res.json({ status: true });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.json({ status: "Payment Failed" });
+      });
   },
 
-  loginWtihOtpPage:(req,res)=>{
+  orderSuccess: (req, res) => {
+    console.log("call i shere");
 
-     res.render("userView/loginWithOtp")
+    res.render("userView/orderSuccess");
   },
-  otpVerification:(req,res)=>{
 
+  loginWtihOtpPage: (req, res) => {
+    res.render("userView/loginWithOtp");
+  },
+  otpVerification: (req, res) => {
     console.log(req.body.number);
-    userHelpers.checkNumber(req.body.number).then((user)=>{
-      res.json({status:"found"})
-    }).catch((error)=>{
-      res.json({status:error})
-    })
-
+    userHelpers
+      .checkNumber(req.body.number)
+      .then((user) => {
+        res.json({ status: "found" });
+      })
+      .catch((error) => {
+        res.json({ status: error });
+      });
   },
-  otpverified:(req,res,next)=>{
+  otpverified: (req, res, next) => {
+    console.log(
+      "?///////////////////..................>>>>>>>>>>>>>>>....,,,,,,,,,,,,,,,,,<<<<<<<<<<<<<"
+    );
+    console.log(req.params.num, "khjhkkhkkuuuu8889988989898998998");
+    userHelpers
+      .checkNumber(req.params.num)
+      .then((response) => {
+        console.log(response);
+        let user = response;
+        const token = createToken(user);
+        res.cookie("token", token, {
+          httpOnly: true,
+        });
+        res.status(201);
+        console.log("tpoek n", token);
 
-    console.log("?///////////////////..................>>>>>>>>>>>>>>>....,,,,,,,,,,,,,,,,,<<<<<<<<<<<<<");
-console.log(req.params.num,"khjhkkhkkuuuu8889988989898998998");
-    userHelpers.checkNumber(req.params.num).then((response)=>{
-      console.log(response);
-            let user = response;
-            const token = createToken(user);
-            res.cookie("token", token, {
-              httpOnly: true,
-            });
-            res.status(201);
-            console.log("tpoek n",token);
-    
-            next();
-    }).catch((err)=>{
-      console.log(err);
-      res.render("userView/loginWithOtp",{err})
-    })
-
+        next();
+      })
+      .catch((err) => {
+        console.log(err);
+        res.render("userView/loginWithOtp", { err });
+      });
   },
 
-
-  
-  googleSignupData:(req,res,next)=>{
+  googleSignupData: (req, res, next) => {
     // console.log(req.userData)
-   let data=  JSON.parse('{"' + decodeURI(req.params.userData.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
-console.log(data);
-    userHelpers.googleSignup(data).then((user)=>{
-        const token= createToken(user)
-               // console.log( user.isBlocked);
-//             const token =createToken(user);
+    let data = JSON.parse(
+      '{"' +
+        decodeURI(
+          req.params.userData.replace(/&/g, '","').replace(/=/g, '":"')
+        ) +
+        '"}'
+    );
+    console.log(data);
+    userHelpers
+      .googleSignup(data)
+      .then((user) => {
+        const token = createToken(user);
+        // console.log( user.isBlocked);
+        //             const token =createToken(user);
         res.cookie("token", token, {
           httpOnly: true,
         });
         console.log(token);
 
-      next()
-
-    }).catch(()=>{
-      alert('try not worked')
-    }).catch((user)=>{
-      console.log("eroorroorro");
-      res.render("userView/signup", {
-        errorMessage: "email id already exists in the database",
+        next();
+      })
+      .catch(() => {
+        alert("try not worked");
+      })
+      .catch((user) => {
+        console.log("eroorroorro");
+        res.render("userView/signup", {
+          errorMessage: "email id already exists in the database",
+        });
       });
-    })
   },
 
-    googleLoginData:(req,res,next)=>{
-      let data=  JSON.parse('{"' + decodeURI(req.params.userData.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
-      console.log(data);
-      userHelpers.googleLogin(data).then((Data)=>{
+  googleLoginData: (req, res, next) => {
+    let data = JSON.parse(
+      '{"' +
+        decodeURI(
+          req.params.userData.replace(/&/g, '","').replace(/=/g, '":"')
+        ) +
+        '"}'
+    );
+    console.log(data);
+    userHelpers
+      .googleLogin(data)
+      .then((Data) => {
         let user = Data;
         const token = createToken(user);
         res.cookie("token", token, {
           httpOnly: true,
         });
         console.log(token);
-      next()
-
-      }).catch((err) => {
+        next();
+      })
+      .catch((err) => {
         res.render("userView/login", {
           errorMessage: "Some error Occured",
         });
         console.log("error ducring login");
         console.log(err);
-      })
+      });
   },
-  cancelOrderSubmit:(req,res)=>{
-    userHelpers.cancelOrderSubmit(req.body.orderId).then((response)=>{
-      res.json(response)
-    })
-  },
-
-  returnOrderSubmit:(req,res)=>{
-    userHelpers.returnOrderSubmit(req.body.orderId).then((response)=>{
-      res.json(response)
-    })
+  cancelOrderSubmit: (req, res) => {
+    userHelpers.cancelOrderSubmit(req.body.orderId).then((response) => {
+      res.json(response);
+    });
   },
 
-  getWalletPage:async(req,res)=>{
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
+  returnOrderSubmit: (req, res) => {
+    userHelpers.returnOrderSubmit(req.body.orderId).then((response) => {
+      res.json(response);
+    });
+  },
 
-    let decode= tokenVerify(req);
-    let full
-    let allData
-    let walletTotal
-    let credits
-    let debits
-    // const 
-    await userHelpers.getWallet(decode.value.insertedId).then((data)=>{
-      full = data
-    })
+  getWalletPage: async (req, res) => {
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
 
-    walletTotal = full.total
-      allData=[...full.transactions?.credits,...full.transactions?.debits]
-      
-      credits=[...full.transactions?.credits]
-      
-      debits=[...full.transactions?.debits]
-      
+    let decode = tokenVerify(req);
+    let full;
+    let allData;
+    let walletTotal;
+    let credits;
+    let debits;
+    // const
+    await userHelpers.getWallet(decode.value.insertedId).then((data) => {
+      full = data;
+    });
+
+    walletTotal = full.total;
+    allData = [...full.transactions?.credits, ...full.transactions?.debits];
+
+    credits = [...full.transactions?.credits];
+
+    debits = [...full.transactions?.debits];
+
     console.log(credits);
 
-    res.render("userView/wallet",{userpar:true,user:decode.value.username,products,outofStock,count,total,allData,credits,debits,walletTotal})
+    res.render("userView/wallet", {
+      userpar: true,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      allData,
+      credits,
+      debits,
+      walletTotal,
+    });
   },
 
-sortShop:async(req,res)=>{
-  let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let walletData= await wallet(req)
-    let  dataCount
-    let categories
-    await userHelpers.getAllCategories().then((cat)=>{
-      categories = cat
-    })
+  sortShop: async (req, res) => {
+    let decode = tokenVerify(req);
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let walletData = await wallet(req);
+    let dataCount;
+    let categories;
+    await userHelpers.getAllCategories().then((cat) => {
+      categories = cat;
+    });
 
-  console.log(req.body);
-await userHelpers.getSortedData(req.body.opt).then((data)=>{
-  dataCount =data
-  }).catch(()=>{
-    console.log(`error occured during sorting`);
-  })
-  async function processImages(data) {
-    for (let i = 0; i < data.all.length; i++) {
-      if (data.all[i].Image1) {
-        data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+    console.log(req.body);
+    await userHelpers
+      .getSortedData(req.body.opt)
+      .then((data) => {
+        dataCount = data;
+      })
+      .catch(() => {
+        console.log(`error occured during sorting`);
+      });
+    async function processImages(data) {
+      for (let i = 0; i < data.all.length; i++) {
+        if (data.all[i].Image1) {
+          data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
+        }
       }
-
+      console.log("Data:", data);
+      return data;
     }
-    console.log("Data:", data);
-    return data;
-  }
-  console.log(dataCount,"sjjsjsj");
-  let data = await processImages(dataCount);
-  console.log("came data::>",data);
+    console.log(dataCount, "sjjsjsj");
+    let data = await processImages(dataCount);
+    console.log("came data::>", data);
 
+    console.log("it is hre right?");
+    res.render("userView/shop", {
+      userpar: true,
+      data,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      walletTotal: walletData.total,
+      categories,
+    });
 
-  console.log("it is hre right?");
-   res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
-  
-  //  res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
+    //  res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total})
   },
 
-  renderShop:async(req,res)=>{
+  renderShop: async (req, res) => {
     console.log("reacehed render Shop");
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let walletData= await wallet(req)
-    let  dataCount
-    let categories
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let walletData = await wallet(req);
+    let dataCount;
+    let categories;
 
-    
-        await userHelpers.getAllCategories().then((cat)=>{
-      categories = cat
-    })
+    await userHelpers.getAllCategories().then((cat) => {
+      categories = cat;
+    });
     console.log(req.session);
 
     // if(!req.session.isCategory && !req.session.isData){
@@ -1298,20 +1381,18 @@ await userHelpers.getSortedData(req.body.opt).then((data)=>{
     //   res.redirect("/user/shop")
     // }
 
-    if(req.session.isData){
+    if (req.session.isData) {
       console.log("enterd data");
-      dataCount =  req.session.data
-      req.session.isData =false
-
+      dataCount = req.session.data;
+      req.session.isData = false;
     }
-    console.log(dataCount,"llll");
-    req.session.data = {}
-    
-    if(req.session.isCategory){
+    console.log(dataCount, "llll");
+    req.session.data = {};
+
+    if (req.session.isCategory) {
       console.log("entererds acater");
-      dataCount =req.session.categoryData
-        req.session.isCategory = false
-      
+      dataCount = req.session.categoryData;
+      req.session.isCategory = false;
     }
     console.log("now dat is ", dataCount);
     async function processImages(data) {
@@ -1319,62 +1400,137 @@ await userHelpers.getSortedData(req.body.opt).then((data)=>{
         if (data.all[i].Image1) {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
-  
       }
       console.log("Data:", data);
       return data;
     }
-    console.log(dataCount,"sjjsjsj");
+    console.log(dataCount, "sjjsjsj");
     let data = await processImages(dataCount);
-    console.log("came data::>",data);
-    req.session={}
+    console.log("came data::>", data);
+    req.session = {};
     console.log(req.session);
     console.log("it is hre right?");
-     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
-
+    res.render("userView/shop", {
+      userpar: true,
+      data,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      walletTotal: walletData.total,
+      categories,
+    });
   },
-  filterCategory:async(req,res)=>{
+  filterCategory: async (req, res) => {
     let decode = tokenVerify(req);
-    let cart =await cartProd(req)
-    let products= cart.cartItems
-    let outofStock= cart.outofStock
-    let count= await CartCount(req)
-    let total= await TotalAmount(req)
-    let walletData= await wallet(req)
-    let  dataCount
-    let categories
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let walletData = await wallet(req);
+    let dataCount;
+    let categories;
 
-    await userHelpers.getAllCategories().then((cat)=>{
-      categories = cat
-    })
-    await userHelpers.getfilteredCategory(req.body.name).then((data)=>{
-     dataCount = data
-
-    })
+    await userHelpers.getAllCategories().then((cat) => {
+      categories = cat;
+    });
+    await userHelpers.getfilteredCategory(req.body.name).then((data) => {
+      dataCount = data;
+    });
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
-  
       }
       console.log("Data:", data);
       return data;
     }
-    console.log(dataCount,"sjjsjsj");
+    console.log(dataCount, "sjjsjsj");
     let data = await processImages(dataCount);
-    console.log("came data::>",data);
-  
-  
+    console.log("came data::>", data);
+
     console.log("it is hre right?");
-     res.render("userView/shop",{userpar:true,data,user:decode.value.username,products,outofStock,count,total,walletTotal:walletData.total,categories})
+    res.render("userView/shop", {
+      userpar: true,
+      data,
+      user: decode.value.username,
+      products,
+      outofStock,
+      count,
+      total,
+      walletTotal: walletData.total,
+      categories,
+    });
+  },
 
-  }
-  
-  
-  
+  checkCoupen: async (req, res) => {
+    let Total = await TotalAmount(req);
+    let decode= await tokenVerify(req)
+    let offerPrice;
+    console.log(req.body.code);
+    let coupenData;
+    await userHelpers
+      .findCoupen(req.body.code,decode.value.insertedId)
+      .then((resp) => {
+        coupenData = resp;
+        console.log(coupenData);
+    if (coupenData) {
+      if (coupenData.type === "normal") {
+        if (coupenData.startDate <= new Date()) {
+          if (coupenData.endDate >= new Date()) {
+            if(coupenData.totalCoupen !==0){
+              if (coupenData.redeemType === "percentage") {
+                offerPrice = parseInt(
+                  Math.floor((Total * coupenData.percentage) / 100)
+                  );
+                  console.log(offerPrice);
+                  if (Total >= coupenData.minLimit) {
+                  if (offerPrice <= coupenData.maxLimit) {
+                    Total = Total - offerPrice;
+                  } else {
+                    Total = Total - coupenData.maxLimit;
+                  }
+                  } else {
+                    let d = coupenData.minLimit - offerPrice;
+                    console.log(d);
+                    return res.status(404).send(`Please add ₹${d} worth items more `);
+                  }
+                } else {
+                  offerPrice = parseInt(Math.floor(Total - coupenData.amount));
+                  console.log(offerPrice);
+                  if (offerPrice <= coupenData.maxLimit) {
+                    Total = Total - offerPrice;
+                  } else {
+                    Total = Total - coupenData.maxLimit;
+                  }
+                }
+            }else{
+              return res.status(404).send("Coupen unavailable");
+            }
+            
+          } else {
+            return res.status(404).send("Coupon has expired");
+          }
+        } else {
+          return res.status(404).send("Coupen Not available..Please try later");
+        }
+      } else if (coupenData) {
+      }
+    } if(Total){
+      console.log(Total, "new total");
+      res.json({ Total });
 
-}
+    }
+      }) .catch((err) => {
+        return res.status(404).send(err.err);
+      });
+
+    
+  },
+};
 
 
 

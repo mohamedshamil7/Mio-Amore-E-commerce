@@ -658,6 +658,12 @@ getAddress:(userId)=>{
 
 
 placeOrder:(order,cart,total)=>{
+    let Coupen  
+    let coupens
+    console.log(`order.coupen code is ${order.Coupen_code}`);
+    if(order.Coupen_code){
+        Coupen = order.Coupen_code
+    }
 
 return new Promise(async(resolve,reject)=>{
 console.log(order.PaymentOption);
@@ -665,7 +671,18 @@ let userId=  order.id
 console.log(typeof userId);
 
      let order_status= 'pending'
-
+    //bug chance...?????????????/////////////////////////////////
+    if(Coupen){
+         coupens= await db.get().collection(collection.COUPEN_COLLECTION).findOneAndUpdate({code:Coupen},{
+           $inc: {totalCoupen:-1}
+        })
+        console.log("///////////////////////////",coupens);
+        if(coupens) console.log(`coupen applied and and total couepen is updated`);
+        let usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+            $push:{usedcoupens:coupens.value._id}
+        },{upsert:true})
+    }   
+     /////////////////////////////////////////
     // console.log(order_status);
 
     let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
@@ -709,7 +726,7 @@ console.log(typeof userId);
     let orderObj={
         deleviryDetails:address[0].deleviryDetails ,
         userId:userId,
-    
+        
         totalAmount:total,
         paymentMethod:order.PaymentOption,
         PaymentStatus: order.PaymentStatus,
@@ -1110,7 +1127,7 @@ debitFromWallet:(orderId,total,user)=>{
     })
 },
 
-placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userId)=>{
+    placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userId)=>{
         console.log(`paymetn motjog on trans ss  ${payment_method}`)
         let error
         let success
@@ -1310,6 +1327,24 @@ getfilteredCategory:(catname)=>{
         }
         else{
             reject(err)
+        }
+    })
+},
+
+findCoupen:(code,userid)=>{
+    return new Promise(async(resolve,reject)=>{
+     let Coupen = await db.get().collection(collection.COUPEN_COLLECTION).findOne({code:code})
+     let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userid),usedcoupens:Coupen._id})
+     console.log(user,"././,,,.");
+      
+        if (Coupen){
+            if(user!==null){
+                reject({err:"coupen already used"})
+            }else{
+                resolve(Coupen)
+            }
+        }else{
+            reject({err:"Coupen Not Found"})
         }
     })
 }

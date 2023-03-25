@@ -44,7 +44,8 @@ const {
   nocache,
   sortShop,
   renderShop,
-  filterCategory
+  filterCategory,
+  checkCoupen
 
 } = require("../controller/usercontroller");
 
@@ -114,6 +115,7 @@ router.get("/renderShop",nocache,renderShop)
 
 router.post("/sort",nocache,sortShop)
 router.post("/changeCategory",nocache,filterCategory)
+router.post("/checkCoupen",nocache,checkCoupen)
 
 module.exports = router;
 

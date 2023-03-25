@@ -3,6 +3,8 @@
         <div class="container-fluid-lg">
                 <form action="" id="placeorder_form">
                     <input type="text " name="order" value="true" hidden>
+                     <input type="text" id="amount" name="offerPrice" hidden>
+                     <input type="text" id="Coupen_code" name="Coupen_code" hidden>
             <div class="row g-sm-4 g-3">
                 <div class="col-lg-8">
                     <div class="left-sidebar-checkout">
@@ -311,10 +313,16 @@
                               
 
                             <ul class="summery-total">
-                                {{!-- <li>
-                                    <h4>Subtotal</h4>
-                                    <h4 class="price">{{total}}</h4>
-                                </li> --}}
+                             <div class="coupon-cart">
+                                <h6 class="text-content mb-2">Coupon Apply</h6>
+                                <div class="mb-3 coupon-box input-group">
+                                    <input type="text" class="form-control" id="code"
+                                        placeholder="Enter Coupon Code Here...">
+                                    <button type="button" style="background-color: rgb(215, 215, 215);" onclick="checkCoupen()" >Apply</button>
+                                </div>
+                                      <p id="error-2" style="color: red;" ></p>
+
+                            </div>
 
                                 {{!-- <li>
                                     <h4>Shipping</h4>
@@ -333,7 +341,8 @@
 
                                 <li class="list-total">
                                     <h4>Total (INR)</h4>
-                                    <h4 class="price"> {{total}}</h4>
+                                    <h4 class="price" id="offer"> {{total}}</h4>
+                                    <span id="hurPrice" style="color: green;"></span>
                                 </li>
                              
                             </ul>
@@ -538,7 +547,36 @@
                     payment,order
                 },
                 method:"post",
+                success:(response=>{
+                    if(response.status == true){
+                        location.href="http://localhost:8001/user/orderSuccess"
+                    }
+                })
             })
+        }
+
+        function checkCoupen(){
+              var code = document.getElementById('code').value
+              $.ajax({
+                url:'http://localhost:8001/user/checkCoupen',
+                data:{
+                    code
+                },
+                method:"post",
+                success:(response=>{
+                     document.getElementById('offer').innerHTML = '₹' + response.Total 
+                     document.getElementById('hurPrice').innerHTML = `(offer applied)`
+                      document.getElementById('amount').value = response.Total
+                      document.getElementById('Coupen_code').value = code
+                      document.getElementById('error-2').innerHTML = ''
+                })  ,
+                error:(xhr, thrownError)=>{
+                    alert(xhr.responseText)
+                 document.getElementById('error-2').innerHTML = `${xhr.responseText}`
+                  {{!-- document.getElementById('offer').innerHTML = '₹' + --}}
+                  var code = document.getElementById('code').value =""
+        }
+              })
         }
         
     </script>
