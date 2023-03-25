@@ -637,7 +637,37 @@ module.exports={
                 }
                 resolve()
             })
-        }        
+        }   ,
+        deleteImage:(image,product,no)=>{
+        
+            return new Promise(async(resolve,reject)=>{
+                if(no==="Image1"){
+                    console.log(";;hereree");
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                        $unset:{Image1:1}
+                    })
+                }
+              else  if(no==="Image2"){
+                    console.log(";;hereree");
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                        $set:{Image2:''}
+                    })
+                }
+               else if(no==="Image3"){
+                    console.log(";;hereree");
+                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                        $unset:{Image3:1}
+                    })
+                }
+                else if(no==="Image4"){
+                    console.log(";;hereree");
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                        $unset:{Image4:1}
+                    })
+                }
+                resolve()
+            })
+        }
     }
     
     

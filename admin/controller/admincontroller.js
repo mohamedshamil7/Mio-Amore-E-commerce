@@ -4,7 +4,7 @@ const voucher_codes = require('voucher-code-generator');
 const { resolve } = require("path");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { S3Client, PutObjectCommand,GetObjectCommand  } = require("@aws-sdk/client-s3");
+const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = require("@aws-sdk/client-s3");
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
@@ -429,16 +429,19 @@ module.exports = {
     async function processImages(Data) {
       console.log(Data);
       if (Data.Image1) {
+        Data.isImage1= true
         Data.urlImage1 = await getImgUrl(Data.Image1);
-        // console.log("Data[i].urlImage1:", Data.urlImage1);
       }
       if (Data.Image2) {
+        Data.isImage2= true
         Data.urlImage2 = await getImgUrl(Data.Image2);
       }
       if (Data.Image3) {
+        Data.isImage3= true
         Data.urlImage3 = await getImgUrl(Data.Image3);
       }
       if (Data.Image4) {
+        Data.isImage4= true
         Data.urlImage4 = await getImgUrl(Data.Image4);
       }
 
@@ -456,8 +459,8 @@ module.exports = {
 
 
   EditProductData: async (req, res) => {
-    console.log(req.body);
-    console.log(req.files);
+    console.log("body",req.body);
+    console.log("req",req.files);
 
     const files = req.files;
 
@@ -471,16 +474,16 @@ module.exports = {
       arr2.map(async (files) => {
         const { fieldname } = files;
         if(fieldname === "Image1"){
-          name = req.body.imagename1
+          name = randomImgName();
         }else if(fieldname === "Image2"){
-          name = req.body.imagename2
+          name = randomImgName();
         }else if(fieldname === "Image3"){
-          name = req.body.imagename3
+          name = randomImgName();
         }else if(fieldname === "Image4"){
-          name = req.body.imagename4
+          name = randomImgName();
         }
         // let imageName = randomImgName();
-        // data.push({ fieldname, img: imageName });
+        data.push({ fieldname, img: name });
 
         const { buffer } = files;
         const { mimetype } = files;
@@ -507,13 +510,28 @@ if(data.length!==0){
   console.log("entereed");
   data.map((value) => {
     if (value.fieldname === "Image1" && value.img!=null) {
-      req.body.Image1 = value?.img
+      req.body.Image1 = value?.img;
+      req.body.Image2 = req.body?.imagename2;
+      req.body.Image3 = req.body?.imagename3;
+      req.body.Image4 = req.body?.imagename4;
     } else if (value.fieldname === "Image2"  && value.img!=null) {
       req.body.Image2 = value?.img;
+      req.body.Image1 = req.body?.imagename1;
+      req.body.Image3 = req.body?.imagename3;
+      req.body.Image4 = req.body?.imagename4;
     } else if (value.fieldname === "Image3"  && value.img!=null) {
+      req.body.Image1 = req.body?.imagename1;
+      req.body.Image2 = req.body?.imagename2
       req.body.Image3 = value?.img;
+      req.body.Image4 = req.body?.imagename4;
+      
+      req.body.Image4 = req.body.imagename4
     } else if (value.fieldname === "Image4 "  && value.img!=null) {
+      req.body.Image1 = req.body?.imagename1;
+      req.body.Image2 = req.body?.imagename2
+      req.body.Image3 = req.body?.imagename3
       req.body.Image4 = value?.img;
+
     }
   });
 }else{
@@ -529,47 +547,30 @@ if(data.length!==0){
 
       res.redirect("/admin/stocks");
     });
-
-    
-
-    // console.log(req.files.Image2);
-    // if (req.files.Image1 == null) {
-    //   Image1 = await adminHelper.fetchImage1(req.body.id);
-    // } else {
-    //   Image1 = req.files.Image1[0].filename;
-    // }
-
-    // if (req.files.Image2 == null) {
-    // Image2 = await adminHelper.fetchImage2(req.body.id);
-    // } else {
-    //   Image2 = req.files.Image2[0].filename;
-    // }
-    // if (req.files.Image3 == null) {
-    //   Image3 = await adminHelper.fetchImage3(req.body.id);
-    // } else {
-    //   Image3 = req.files.Image3[0].filename;
-    // }
-
-    // if (req.files.Image4 == null) {
-    //   Image4 = await adminHelper.fetchImage4(req.body.id);
-    // } else {
-    //   Image4 = req.files.Image4[0].filename;
-    // }
-
-    // req.body.Image1 = Image1;
-    // req.body.Image2 = Image2;
-    // req.body.Image3 = Image3;
-    // req.body.Image4 = Image4;
-
-    // adminHelper.editProduct(req.body).then((response) => {
-    //   console.log(response);
-
-    //   res.redirect("/admin/stocks");
-    // });
   },
 
-  deleteImage:(req,res)=>{
+  deleteImage:async(req,res)=>{
+    console.log("lll");
     console.log(req.body);
+    let image = req.body.image
+    if(image==''){
+      return res.status(404).send("no Image");
+    }
+    let prodId = req.body.id
+    let no= req.body.no
+    const params = {
+      Bucket: bucketname,
+      Key: image,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command)
+    let del = await adminHelper.deleteImage(image,prodId,no).then(()=>{
+      res.json({status:true})
+
+    }).catch(()=>{
+      console.log("err");
+    })
   },
 
   ImageSupplier: (req, res) => {

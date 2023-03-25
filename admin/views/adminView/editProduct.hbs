@@ -34,39 +34,68 @@
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
           <img style="width: 50px;" src="{{product.urlImage1}}" alt="no">
-          <input type="text" name="imagename1" value="{{product.Image1}}" hidden>
-          <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image1" id="formFile">
+          {{#if product.isImage1}}
+            <button type="button"  style="float: right; width: 60px;" class="btn btn-danger" id="delBtn1" onclick="return deleteImage('{{product.Image1}}','{{product._id}}','Image1')" ><i class="bi bi-trash"></i></button>
+          <input type="text"  class="col-sm-4" name="imagename1" id="imagename1" value="{{product.Image1}}" readonly >
+           <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image1" id="imgFile1" style="display: none;">
           </div>
+          {{else}}
+         <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image1" id="formFile" >
+          </div>
+          {{/if}}
         </div>
 
           <div class="row mb-3">
 
           <label class="col-sm-2 col-form-label">File Upload</label>
           <img style="width: 50px;" src="{{product.urlImage2}}" alt="no">
-          <input type="text" name="imagename2" value="{{product.Image2}}" hidden>
+              {{#if product.isImage2}}
+            <button type="button" style="float: right; width: 60px;" class="btn btn-danger  " id="delBtn2" onclick="return deleteImage('{{product.Image2}}','{{product._id}}','Image2')" ><i class="bi bi-trash"></i></button>
+          <input type="text" class="col-sm-4" name="imagename2" id="imagename2" value="{{product.Image2}}" readonly>
           <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image2" id="formFile">
+            <input class="form-control" type="file" name="Image2" id="imgFile2" style="display: none;">
           </div>
+          {{else}}
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image2" id="formFile" >
+          </div>
+          {{/if}}
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
           <img style="width: 50px;" src="{{product.urlImage3}}" alt="no">
-          <input type="text" name="imagename3" value="{{product.Image3}}" hidden>
+            {{#if product.isImage3}}
+            <button type="button" style="float: right; width: 60px;" class="btn btn-danger "  onclick="deleteImage('{{product.Image3}}','{{product._id}}','Image3')" ><i class="bi bi-trash"></i></button>
+          <input type="text"  class="col-sm-4" name="imagename3" id="imagename3" value="{{product.Image3}}" readonly>
           <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image3" value="{{product.Image3}}" id="formFile">
+            <input class="form-control" type="file" name="Image3" value="{{product.Image3}}" id="delBtn3" style="display: none;">
           </div>
+          {{else}}
+          <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image3" value="{{product.Image3}}" id="formFile" >
+          </div>
+          {{/if}}
         </div>
 
         <div class="row mb-3">
           <label class="col-sm-2 col-form-label">File Upload</label>
           <img style="width: 50px;" src="{{product.urlImage4}}" alt="no">
-            {{!-- <button style="float: right; width: 100px;" class="btn btn-danger" >Delete</button> --}}
-            <input type="text" name="imagename4" value="{{product.Image4}}" hidden>
+            {{#if product.isImage4}}
+            <button type="button" style="float: right; width: 60px;"  class="btn btn-danger " id="delBtn4" onclick="return deleteImage('{{product.Image4}}','{{product._id}}','Image4')" ><i class="bi bi-trash"></i></button>
+            <input type="text" class="col-sm-4" name="imagename4" id="imagename4" value="{{product.Image4}}" readonly>
+            
           <div class="col-sm-4 mb-3">
-            <input class="form-control" type="file" name="Image4" id="formFile" value="{{product.Image4}}">
+            <input class="form-control" type="file" name="Image4" id="imgFile4" value="{{product.Image4}}" style="display: none;">
           </div>
+
+          {{else}}
+           <div class="col-sm-4 mb-3">
+            <input class="form-control" type="file" name="Image4" id="formFile" value="{{product.Image4}}" >
+          </div>
+            {{/if}}
         </div>
 
 
@@ -139,5 +168,82 @@
 
 <script>
   document.getElementById("myTextarea1").defaultValue = document.getElementById('Description').value;
+
+  function deleteImage(image,id,no){
+  {{!-- let image = image
+  let id=id
+  let no =no --}}
+  Swal.fire({
+      title: 'Are you sure you want to Delete  this Image ?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Delete it!'
+  }).then((result)=>{
+      if(result.isConfirmed){
+       
+          $.ajax({
+              url:"http://localhost:8001/admin/deleteImage",
+              method:'delete',
+              data:{
+                  image,id,no
+              },
+              success:(response)=>{
+                 if(no==='Image1'){
+          document.getElementById("delBtn1").style.display="none"
+          document.getElementById("imgFile1").style.display="inline"
+          document.getElementById('imagename1').value=''
+          document.getElementById('imagename1').style.display="none"
+        }else if(no==='Image2'){
+          document.getElementById("delBtn2").style.display="none"
+          document.getElementById("imgFile2").style.display="inline"
+          document.getElementById('imagename2').value=''
+          document.getElementById('imagename2').style.display="none"
+          
+        }else if(no==='Image3'){
+          
+          document.getElementById("delBtn3").style.display="none"
+          document.getElementById("imgFile3").style.display="inline"
+          document.getElementById('imagename3').value=''
+          document.getElementById('imagename3').style.display="none"
+          
+        }else if(no==='Image4'){
+          document.getElementById("delBtn4").style.display="none"
+          document.getElementById("imgFile4").style.display="inline"
+          document.getElementById('imagename4').value=''
+          document.getElementById('imagename4').style.display="none"
+
+        }
+
+                if(response.status){
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Image Deleted',
+                    showConfirmButton: false,
+
+                  })
+
+                }
+                 
+                      //  location.reload()
+
+                  }, error:(xhr, thrownError)=>{
+                    // alert(xhr.responseText)
+                    Swal.fire({
+                      icon: 'warning',
+                      title: xhr.responseText,
+                      showConfirmButton: false,
+
+                    })
+                    
+
+
+        }
+          })
+      }
+    })
+}// })
 
 </script>

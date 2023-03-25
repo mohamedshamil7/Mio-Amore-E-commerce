@@ -203,20 +203,8 @@ function sales(value){
   })
 }
 
-function Delete(name){
-  console.log(name);
-  // $.ajax({
-  //   url:"/admin/deleteImage",
-  //   data: {
-  //     name
-  //   },
-  //   method:'post',
-  //   // success: () => {
-  //   //   // alert(";")
-  //   //   location.reload(); 
-  //   // },
-  // })
-}
+
+
 
  function couponDelete(id){
   Swal.fire({
@@ -255,3 +243,7 @@ function Delete(name){
   }
   })
  }
+
+
+
+ 
