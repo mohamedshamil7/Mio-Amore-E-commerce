@@ -1347,6 +1347,22 @@ findCoupen:(code,userid)=>{
             reject({err:"Coupen Not Found"})
         }
     })
+},
+
+delAddress:(id,user)=>{
+    console.log(id,"This is id");
+    return new Promise(async(resolve,reject)=>{
+      let del=  await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(user)},{
+            $pull:{
+                Address:{id:ObjectId(id)}
+            }
+        })
+        if(del){
+            console.log(`${del.modifiedCount} was/ were delted from user collection` );
+            resolve()
+            console.log(del);
+        }
+    })
 }
 
 

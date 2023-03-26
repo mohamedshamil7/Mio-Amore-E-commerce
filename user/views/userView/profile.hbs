@@ -298,9 +298,9 @@
                                         </span>
                                     </div>
 
-                                    <button class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
-                                        data-bs-toggle="modal" data-bs-target="#add-address"><i data-feather="plus"
-                                            class="me-2"></i> Add New Address</button>
+                                     <button type="button" class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#add-addresss"><i data-feather="plus"
+                                                class="me-2"></i> Add New Address</button>
                                 </div>
 
                                 {{#if data.Address}}
@@ -356,10 +356,13 @@
                                             </div>
 
                                             <div class="button-group">
-                                                <button class="btn btn-sm add-button w-100" data-bs-toggle="modal"
-                                                    data-bs-target="#editProfile"><i data-feather="edit"></i>
-                                                    Edit</button>
-                                                <button class="btn btn-sm add-button w-100" data-bs-toggle="modal"
+                                                {{!-- <button c type="button"lass="btn btn-sm add-button w-100" data-bs-toggle="modal"
+                                                    data-bs-target="#editAddress">
+                                                   </button> --}}
+                                                     <button type="button" class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
+                                                     data-bs-toggle="modal" data-bs-target="#edit-address"><i data-feather="edit"></i>  Edit</button>
+
+                                                <button onclick="return deleteAdd('{{this.id}}')" class="btn btn-sm add-button w-100" data-bs-toggle="modal"
                                                     data-bs-target="#removeProfile"><i data-feather="trash-2"></i>
                                                     Remove</button>
                                             </div>
@@ -608,5 +611,173 @@
             </div>
         </div>
     </div>
+     <div class="modal fade theme-modal" id="add-addresss" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a new address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{!--http://localhost:8001/user/addAddress --}}
+                    <form action="" id="address_Prof_form" method="post">
+                        <div>
+                                <div class="form-floating theme-form-floating">
+                                    <select name="Address-Type" class="form-select" id="floatingSelect">
+                                        <option selected>Choose Address Type</option>
+                                        <option  >Home</option>
+                                        <option >Work</option>
+                                       
+                                    </select>
+                                    <label for="floatingSelect">Address Type</label>
+                                </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="fname" name="fullName"
+                                    placeholder="Enter Full Name" oninput="validateName()">
+                                <label for="fname">Full Name</label>
+                                <span id="name-error" style="color: red;"></span>
+                            </div>
+                             <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    placeholder="mobile No" oninput="validatePhone()">
+                                <label for="lname">mobile No</label>
+                             <span id="phone-error" style="color: red;"></span>
+
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="pin" name="pin" placeholder="Enter Pin Code" oninput="validatePin()">
+                                <label for="pin">Pin Code</label>
+                                  <span id="pin-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="houseNo" name="houseNo"
+                                    placeholder="" oninput="validateHouse()">
+                                <label for="Houseno"> House No/flat No</label>
+                                  <span id="house-error" style="color: red;"></span>
+                            </div>
+
+                          
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="landmarkad" name="landMark"
+                                    placeholder="landmark" oninput="validateLandmark()">
+                                <label for="lname">LandMark</label>
+                                  <span id="landmark-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" name="useradd"
+                                    id="address" style="height: 100px" oninput="validateAddress()"></textarea>
+                                <label for="address">Enter Address</label>
+                                  <span id="address-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="town" name="town" oninput="validateTown()">
+                                <label for="lname">town/city</label>
+                                  <span id="town-error" style="color: red;"></span>
+                            </div>
+    
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-md"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button type="submit"   class="btn theme-bg-color btn-md text-white"
+
+                                   >Add </button>
+                                    <span id="submit-error" style="color: red;" ></span>
+                                    <span id="error" style="color: red;" >{{error}}</span>
+                            </div>
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    <!-- edit Address start -->
+     <div class="modal fade theme-modal" id="edit-address" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit a new address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{!--http://localhost:8001/user/addAddress --}}
+                    <form action="" id="address_Prof_form" method="post">
+                        <div>
+                                <div class="form-floating theme-form-floating">
+                                    <select name="Address-Type" class="form-select" id="floatingSelect">
+                                        <option selected>Choose Address Type</option>
+                                        <option  >Home</option>
+                                        <option >Work</option>
+                                       
+                                    </select>
+                                    <label for="floatingSelect">Address Type</label>
+                                </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="fname" name="fullName"
+                                    placeholder="Enter Full Name" oninput="validateName()">
+                                <label for="fname">Full Name</label>
+                                <span id="name-error" style="color: red;"></span>
+                            </div>
+                             <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="mobile" name="mobile"
+                                    placeholder="mobile No" oninput="validatePhone()">
+                                <label for="lname">mobile No</label>
+                             <span id="phone-error" style="color: red;"></span>
+
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="pin" name="pin" placeholder="Enter Pin Code" oninput="validatePin()">
+                                <label for="pin">Pin Code</label>
+                                  <span id="pin-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="number" class="form-control" id="houseNo" name="houseNo"
+                                    placeholder="" oninput="validateHouse()">
+                                <label for="Houseno"> House No/flat No</label>
+                                  <span id="house-error" style="color: red;"></span>
+                            </div>
+
+                          
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="landmarkad" name="landMark"
+                                    placeholder="landmark" oninput="validateLandmark()">
+                                <label for="lname">LandMark</label>
+                                  <span id="landmark-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <textarea class="form-control" placeholder="Leave a comment here" name="useradd"
+                                    id="address" style="height: 100px" oninput="validateAddress()"></textarea>
+                                <label for="address">Enter Address</label>
+                                  <span id="address-error" style="color: red;"></span>
+                            </div>
+                            <div class="form-floating mb-4 theme-form-floating">
+                                <input type="text" class="form-control" id="town" name="town" oninput="validateTown()">
+                                <label for="lname">town/city</label>
+                                  <span id="town-error" style="color: red;"></span>
+                            </div>
+    
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-md"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button type="submit"   class="btn theme-bg-color btn-md text-white"
+
+                                   >Add </button>
+                                    <span id="submit-error" style="color: red;" ></span>
+                                    <span id="error" style="color: red;" >{{error}}</span>
+                            </div>
+                    </form>
+                </div>
+    
+            </div>
+        </div>
+    </div>
 </section>
 <!-- User Dashboard Section End -->
+
+
+<script src="http://localhost:4000/javascripts/address-val.js"></script>

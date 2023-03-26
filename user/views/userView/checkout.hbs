@@ -386,7 +386,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="http://localhost:8001/user/addAddress" method="post">
+                    {{!--http://localhost:8001/user/addAddress --}}
+                    <form action="" id="address_form" method="post">
                         <div>
                                 <div class="form-floating theme-form-floating">
                                     <select name="Address-Type" class="form-select" id="floatingSelect">
@@ -444,9 +445,9 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary btn-md"
                                     data-bs-dismiss="modal">Close</button>
-                                <button type="submit"  onclick="submitAdd()" class="btn theme-bg-color btn-md text-white"
+                                <button type="submit"   class="btn theme-bg-color btn-md text-white"
 
-                                    data-bs-dismiss="modal">Add </button>
+                                   >Add </button>
                                     <span id="submit-error" style="color: red;" ></span>
                                     <span id="error" style="color: red;" >{{error}}</span>
                             </div>

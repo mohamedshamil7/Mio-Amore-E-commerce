@@ -85,12 +85,48 @@ function validateTown(){
     return true
 }
 
-function submitAdd(){
-    if(validateName ()!= true|| validatePhone() || validateAddress ()|| validateHouse () || validateLandmark () || validatePin() || validateTown ()){
-        submitError.innerHTML = "Please Enter Details"
+// function submitAdd(){
+//     if(validateName ()!= true|| validatePhone() || validateAddress ()|| validateHouse () || validateLandmark () || validatePin() || validateTown ()){
+//         submitError.innerHTML = "Please Enter Details"
+//         return false
+//     }
+//     submitError.innerHTML = ""
+
+//     return true
+// }
+
+
+$("#address_form").submit((e)=>{
+    e.preventDefault()
+    if(validateName()&& validatePhone() && validateHouse() && validateAddress() && validatePin() && validateLandmark() && validateTown()){
+        $.ajax({
+            url:'http://localhost:8001/user/addAddress',
+            data:$('#address_form').serialize(),
+            method:'post',
+            success:(response)=>{
+                window.location.reload()
+            }
+        })
+    }else{
+        submitError.innerHTML='Enter all Data required'
         return false
     }
-    submitError.innerHTML = ""
+})
 
-    return true
-}
+
+$("#address_Prof_form").submit((e)=>{
+    e.preventDefault()
+    if(validateName()&& validatePhone() && validateHouse() && validateAddress() && validatePin() && validateLandmark() && validateTown()){
+        $.ajax({
+            url:'http://localhost:8001/user/addAddress',
+            data:$('#address_Prof_form').serialize(),
+            method:'post',
+            success:(response)=>{
+                window.location.reload()
+            }
+        })
+    }else{
+        submitError.innerHTML='Enter all Data required'
+        return false
+    }
+})

@@ -45,7 +45,8 @@ const {
   sortShop,
   renderShop,
   filterCategory,
-  checkCoupen
+  checkCoupen,
+  delAddress
 
 } = require("../controller/usercontroller");
 
@@ -116,6 +117,7 @@ router.get("/renderShop",nocache,renderShop)
 router.post("/sort",nocache,sortShop)
 router.post("/changeCategory",nocache,filterCategory)
 router.post("/checkCoupen",nocache,checkCoupen)
+router.delete("/deleteAdd",nocache,delAddress)
 
 module.exports = router;
 
