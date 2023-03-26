@@ -1138,10 +1138,15 @@ module.exports = {
       });
   },
 
-  orderSuccess: (req, res) => {
+  orderSuccess: async(req, res) => {
+    let cart = await cartProd(req);
+    let count = await CartCount(req);
+    let decode = tokenVerify(req);
+    let walletData = await wallet(req);
+
     console.log("call i shere");
 
-    res.render("userView/orderSuccess");
+    res.render("userView/orderSuccess",{userpar:true,cart,count,user:decode.value.username, walletTotal: walletData.total,});
   },
 
   loginWtihOtpPage: (req, res) => {
