@@ -46,11 +46,18 @@ const {
   addCoupenSubmit,
   codeGenerator,
   getCoupenpage,
-  deletecoupon
+  deletecoupon,
+  bannerPage,
+  banner1Add,
+  banner2Add,
+  banner3Add,
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
-  upload
+  upload,
+  upload1,
+  upload2,
+  upload3,
 }=require("../public/javascripts/multer")
 /* GET home page. */
 router.get('/',renderadminLogin);
@@ -106,6 +113,11 @@ router.post('/addcouponsubmit',nocache,autherization,addCoupenSubmit)
 router.get('/generatecode', autherization, codeGenerator);
 router.post('/deletecoupon', autherization, deletecoupon);
 
+router.get("/banners",nocache,autherization,bannerPage)
+
+router.post("/banner1-submit",autherization,upload1,banner1Add)
+router.post("/banner2-submit",autherization,upload2,banner2Add)
+router.post("/banner3-submit",autherization,upload3,banner3Add)
 
 module.exports = router;
 

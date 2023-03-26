@@ -689,5 +689,159 @@ if(data.length!==0){
     adminHelper.deleteCoupen(req.body.id).then(()=>{
       res.json({ status: true });
     })
+  },
+
+  bannerPage:async(req,res)=>{
+    let products 
+    // let banners
+    let data
+    await adminHelper.getAllStocks().then((prod)=>{
+      products = prod
+    })
+    await adminHelper.getBanners().then((datas)=>{
+      data = datas
+    })
+    console.log("thisi sdata",data);
+    async function processImages(Data) {
+      console.log(Data,"ethida");
+      for(let i=0;i<Data.length;i++){
+        if (Data[i].name==='banner1') {
+          console.log("enteredd kop");
+          Data[i].isbanner1= true
+          Data[i].bannerUrl1 = await getImgUrl(Data[i].img);
+        }
+        if (Data[i].name==='banner2') {
+          Data[i].isbanner2= true
+          Data[i].bannerUrl2 = await getImgUrl(Data[i].img);
+        }
+        if (Data[i].name==='banner3') {
+          Data[i].isbanner3= true
+          Data[i].bannerUrl3 = await getImgUrl(Data[i].img);
+        }
+
+  
+      }
+        console.log("Data:", Data);
+        return Data;
+     
+    }
+    let banners = await processImages(data);
+    let banner1 = {
+      _id:banners[0]?._id,
+      name:banners[0]?.name,
+      linkto:banners[0]?.linkTo,
+      bannerUrl1:banners[0]?.bannerUrl1
+    }
+    let banner2 = {
+      _id:banners[1]?._id,
+      name:banners[1]?.name,
+      linkto:banners[1]?.linkTo,
+      bannerUrl2:banners[1]?.bannerUrl2
+    }
+    let banner3 = {
+      _id:banners[2]?._id,
+      name:banners[2]?.name,
+      linkto:banners[2]?.linkTo,
+      bannerUrl3:banners[2]?.bannerUrl3
+    }
+    // console.log(products);
+    res.render('adminView/banner',{admin:true,products,banner1,banner2,banner3})
+  },
+
+  banner1Add:async(req,res)=>{
+    console.log(req.body);
+
+    console.log("filese:", req.file);
+    const {fieldname} = req.file
+let imageName = randomImgName();
+const { buffer } = req.file;
+const { mimetype } = req.file;
+const params = {
+  Bucket: bucketname,
+  Key: imageName,
+  Body: buffer,
+  ContentType: mimetype,
+};
+try {
+  const command = new PutObjectCommand(params);
+  const result = await s3.send(command);
+  // console.log(result);
+  // return result;
+} catch (e) {
+  console.log("eror");
+  // console.log(e);
+}
+console.log("lllaalla");
+req.body.banner= fieldname
+req.body.img= imageName
+await adminHelper.updateBanner1(req.body).then(()=>{
+  res.redirect('/admin/banners')
+})
+
+
+  },
+  banner2Add:async(req,res)=>{
+    console.log(req.body);
+
+    console.log("filese:", req.file);
+    const {fieldname} = req.file
+let imageName = randomImgName();
+const { buffer } = req.file;
+const { mimetype } = req.file;
+const params = {
+  Bucket: bucketname,
+  Key: imageName,
+  Body: buffer,
+  ContentType: mimetype,
+};
+try {
+  const command = new PutObjectCommand(params);
+  const result = await s3.send(command);
+  // console.log(result);
+  // return result;
+} catch (e) {
+  console.log("eror");
+  // console.log(e);
+}
+console.log("lllaalla");
+req.body.banner= fieldname
+req.body.img= imageName
+await adminHelper.updateBanner2(req.body).then(()=>{
+  res.redirect('/admin/banners')
+})
+
+
+  },
+  banner3Add:async(req,res)=>{
+    console.log(req.body);
+
+    console.log("filese:", req.file);
+    const {fieldname} = req.file
+let imageName = randomImgName();
+const { buffer } = req.file;
+const { mimetype } = req.file;
+const params = {
+  Bucket: bucketname,
+  Key: imageName,
+  Body: buffer,
+  ContentType: mimetype,
+};
+try {
+  const command = new PutObjectCommand(params);
+  const result = await s3.send(command);
+  // console.log(result);
+  // return result;
+} catch (e) {
+  console.log("eror");
+  // console.log(e);
+}
+console.log("lllaalla");
+req.body.banner= fieldname
+req.body.img= imageName
+await adminHelper.updateBanner3(req.body).then(()=>{
+  res.redirect('/admin/banners')
+})
+
+
   }
 };

@@ -11,5 +11,6 @@ module.exports={
     WALLET_COLLECTION:'wallet',
     BRAND_COLLECTION:'brands',
     COUPEN_COLLECTION:'coupen',
+    BANNER_COLLECTION:'banner'
 
 }

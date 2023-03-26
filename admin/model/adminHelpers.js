@@ -667,6 +667,76 @@ module.exports={
                 }
                 resolve()
             })
+        },
+        updateBanner1:(body)=>{
+            console.log("it is here ta");
+            return new Promise(async(resolve,reject)=>{
+                if(body.linkTo ==="shop"){
+                    // https://www.google.co.in
+                }else{
+                    console.log("entered else");
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
+                }
+            })
+        },
+        updateBanner2:(body)=>{
+            console.log("it is here ta");
+            return new Promise(async(resolve,reject)=>{
+                if(body.linkTo ==="shop"){
+                    // https://www.google.co.in
+                }else{
+                    console.log("entered else");
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
+                }
+            })
+        },
+        updateBanner3:(body)=>{
+            console.log("it is here ta");
+            return new Promise(async(resolve,reject)=>{
+                if(body.linkTo ==="shop"){
+                    // https://www.google.co.in
+                }else{
+                    console.log("entered else");
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
+                }
+            })
+        },
+        getBanners:()=>{
+            return new Promise(async(resolve,reject)=>{
+                let banners = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
+                if(banners){
+                    resolve(banners)
+                }else{
+                    reject()
+                }
+            })
         }
     }
     
