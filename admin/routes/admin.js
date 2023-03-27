@@ -51,6 +51,7 @@ const {
   banner1Add,
   banner2Add,
   banner3Add,
+  delBanner,
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -119,5 +120,6 @@ router.post("/banner1-submit",autherization,upload1,banner1Add)
 router.post("/banner2-submit",autherization,upload2,banner2Add)
 router.post("/banner3-submit",autherization,upload3,banner3Add)
 
+router.delete("/delBanner",nocache,autherization,delBanner)
 module.exports = router;
 

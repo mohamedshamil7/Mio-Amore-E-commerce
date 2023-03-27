@@ -194,55 +194,69 @@ module.exports = {
     let products = cart.cartItems;
     let outofStock = cart.outofStock;
     let datas = null;
+    let banner1
+    let banner2
+    let banner3
     // console.log(cart);
     let banner = await userHelpers.getallBanners()
     async function processImagesd(Data) {
       console.log(Data,"ethida");
       for(let i=0;i<Data.length;i++){
         if (Data[i].name==='banner1') {
-          console.log("enteredd kop");
-          Data[i].isbanner1= true
-          Data[i].bannerUrl1 = await getImgUrl(Data[i].img);
-        }
-        if (Data[i].name==='banner2') {
-          Data[i].isbanner2= true
-          Data[i].bannerUrl2 = await getImgUrl(Data[i].img);
-        }
-        if (Data[i].name==='banner3') {
-          Data[i].isbanner3= true
-          Data[i].bannerUrl3 = await getImgUrl(Data[i].img);
-        }
+          banner1={
+            name: Data[i]?.name,
+            linkto:Data[i]?.linkTo,
+            bannerUrl1:await getImgUrl(Data[i].img),
+            isbanner1:true
+          }
+          }
 
-  
-      }
-        console.log("Data:", Data);
-        return Data;
+          if (Data[i].name==='banner2') {
+            banner2={
+              name: Data[i]?.name,
+              linkto:Data[i]?.linkTo,
+              bannerUrl2:await getImgUrl(Data[i].img),
+              isbanner2:true
+            }
+          }
+          if (Data[i].name==='banner3') {
+            banner3={
+              name: Data[i]?.name,
+              linkto:Data[i]?.linkTo,
+              bannerUrl3:await getImgUrl(Data[i].img),
+              isbanner3:true
+            }
+          }
+        }
+          console.log("Data:", Data);
+        // return Data;
      
     }
-    let banners = await processImagesd(banner);
-    let banner1 = {
-      name:banners[0]?.name,
-      linkto:banners[0]?.linkTo,
-      bannerUrl1:banners[0]?.bannerUrl1,
-      isbanner1:banners[0]?.isbanner1
-    }
-    let banner2 = {
-      name:banners[1]?.name,
-      linkto:banners[1]?.linkTo,
-      bannerUrl2:banners[1]?.bannerUrl2,
-      isbanner2:banners[1]?.isbanner2
-    }
-    let banner3 = {
-      name:banners[2]?.name,
-      linkto:banners[2]?.linkTo,
-      bannerUrl3:banners[2]?.bannerUrl3,
-      isbanner3:banners[2]?.isbanner3
-    }
+     await processImagesd(banner);
+    //  banner1 = {
+    //   name:banners[0]?.name,
+    //   linkto:banners[0]?.linkTo,
+    //   bannerUrl1:banners[0]?.bannerUrl1,
+    //   isbanner1:banners[0]?.isbanner1
+    // }
+    //  banner2 = {
+    //   name:banners[1]?.name,
+    //   linkto:banners[1]?.linkTo,
+    //   bannerUrl2:banners[1]?.bannerUrl2,
+    //   isbanner2:banners[1]?.isbanner2
+    // }
+    //  banner3 = {
+    //   name:banners[2]?.name,
+    //   linkto:banners[2]?.linkTo,
+    //   bannerUrl3:banners[2]?.bannerUrl3,
+    //   isbanner3:banners[2]?.isbanner3
+    // }
+    console.log("banners ", banner3);
     let count = await CartCount(req);
-    console.log(
-      cart,
-      " this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    );
+    // console.log(
+    //   cart,
+    //   " this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+    // );
     // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     await userHelpers
       .getAllProducts()
@@ -265,12 +279,12 @@ module.exports = {
           // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
       }
-      console.log("Data:", data);
+      // console.log("Data:", data);
       return data;
     }
-    console.log(datas,";lkjhg");
+
     let data = await processImages(datas);
-    console.log("came data:::::>>>>", data);
+    // console.log("came data:::::>>>>", data);
 
     res.render("userView/home", {
       data,

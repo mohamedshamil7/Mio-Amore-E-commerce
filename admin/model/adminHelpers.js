@@ -672,7 +672,16 @@ module.exports={
             console.log("it is here ta");
             return new Promise(async(resolve,reject)=>{
                 if(body.linkTo ==="shop"){
-                    // https://www.google.co.in
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/shop',
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
                 }else{
                     console.log("entered else");
                     let data= {
@@ -692,7 +701,16 @@ module.exports={
             console.log("it is here ta");
             return new Promise(async(resolve,reject)=>{
                 if(body.linkTo ==="shop"){
-                    // https://www.google.co.in
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/shop',
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
                 }else{
                     console.log("entered else");
                     let data= {
@@ -712,7 +730,16 @@ module.exports={
             console.log("it is here ta");
             return new Promise(async(resolve,reject)=>{
                 if(body.linkTo ==="shop"){
-                    // https://www.google.co.in
+                    let data= {
+                        name:body.banner,
+                       linkTo:'http://localhost:8001/user/shop',
+                       img:body.img 
+                    }
+                    let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
+                    if(ban.insertedId){
+                        resolve()
+                    }
+                    else reject()
                 }else{
                     console.log("entered else");
                     let data= {
@@ -733,6 +760,16 @@ module.exports={
                 let banners = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
                 if(banners){
                     resolve(banners)
+                }else{
+                    reject()
+                }
+            })
+        },
+        delBanner:(banner)=>{
+            return new Promise(async(resolve,reject)=>{
+                let del =await db.get().collection(collection.BANNER_COLLECTION).deleteOne({name:banner})
+                if(del){
+                    resolve(del)
                 }else{
                     reject()
                 }

@@ -5,36 +5,37 @@
         <form action="/admin/banner1-submit" method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <img src="{{banner1.bannerUrl1}}"  width="150" alt="left"> <button type="button" style="float: right; width: 60px;"
-                        class="btn btn-danger " id="delBtn4" ><i
+                    <img src="{{banner1.bannerUrl1}}" width="150" alt="left"> <button type="button"
+                        style="float: right; width: 60px;" class="btn btn-danger " onclick="return delBanner('banner1')" id="delBtn4"><i
                             class="bi bi-trash"></i></button>
                     {{!-- <p>Banner1</p> --}}
                 </div>
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Banner 1</label>
-                {{#if isbanner1}}
+                {{#if banner1.isbanner1}}
+
                 {{else}}
                 <div class="col-sm-4">
-                    <input type="file" class="form-control" name="banner1" id="inputText" hidden>
+                    <input type="file" class="form-control" name="banner1" id="inputText" >
                 </div>
-                 <div class="col-sm-4 " hidden>
-            <select class="form-select" name="linkTo" aria-label="Default select example" >
-             {{#if products}}
-              <option value="{{this._id}}">{{this.productName}}</option>
-              {{else}}
-              <option selected>select link </option>
-              {{/if}}
-              <option value="shop">Shop</option>
-              {{#each products}}
-              <option value="{{this._id}}">{{this.ProductName}}</option>
-              {{/each}}
-            </select>
-          </div>
-          {{/if}}
-            </div>
+                <div class="col-sm-4 " >
+                    <select class="form-select" name="linkTo" aria-label="Default select example">
+                        {{#if products}}
+                        <option value="{{this._id}}">{{this.productName}}</option>
+                        {{else}}
+                        <option selected>select link </option>
+                        {{/if}}
+                        <option value="shop">Shop</option>
+                        {{#each products}}
+                        <option value="{{this._id}}">{{this.ProductName}}</option>
+                        {{/each}}
+                    </select>
+                </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
-                    
+            </div>
+            {{/if}}
+        
         </form>
             <hr>
 
@@ -42,12 +43,13 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <img src="{{banner2.bannerUrl2}}" width="150" alt="left"> <button type="button" style="float: right; width: 60px;"
-                        class="btn btn-danger " id="delBtn4" onclick="return deleteImage()"><i
+                        class="btn btn-danger " id="delBtn4" onclick="return delBanner('banner2')"><i
                             class="bi bi-trash"></i></button>
                     <p>Banner2</p>
                 </div>
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Banner 2</label>
-                {{#if isbanner2}}
+                 {{#if banner2.isbanner2}}
+                {{else}}
                 <div class="col-sm-4">
                     <input type="file" class="form-control" name="banner2" id="inputText">
                 </div>
@@ -64,11 +66,11 @@
               {{/each}}
             </select>
           </div>
-          {{/if}}
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
+          {{/if}}
                     
         </form>
             <hr>
@@ -76,12 +78,14 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <img src="{{banner3.bannerUrl3}}"  width="150" alt="left"> <button type="button" style="float: right; width: 60px;"
-                        class="btn btn-danger " id="delBtn4" onclick="return deleteImage()"><i
+                        class="btn btn-danger " id="delBtn4" onclick="return delBanner('banner3')"><i
                             class="bi bi-trash"></i></button>
                     <p>Banner3</p>
                 </div>
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Banner 3</label>
-                {{#if isbanner3}}
+                {{#if banner3.isbanner3}}
+    
+                {{else}}
                 <div class="col-sm-4">
                     <input type="file" class="form-control" name="banner3" id="inputText">
                 </div>
@@ -98,11 +102,11 @@
               {{/each}}
             </select>
           </div>
-          {{/if}}
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
+          {{/if}}
                     
         </form>
             </div>
@@ -116,29 +120,43 @@
 </section>
 
 
-
-{{!-- <div class="card">
-    <div class="card-header">Banners</div>
-    <div class="card-body">
-        <div class="column">
-            <div class="col-md-4">
-                <img src="" alt="left"> <button type="button" style="float: right; width: 60px;" class="btn btn-danger "
-                    id="delBtn4" onclick="return deleteImage()"><i class="bi bi-trash"></i></button>
-                <p>Banner1</p>
-            </div>
-            <div class="col-md-4">
-                <img src="../banners/{{response.middle}}.jpg" alt="left">
-                <p>Middle banner</p>
-            </div>
-            <div class="col-md-4">
-                <img src="../banners/{{response.right}}.jpg" alt="left">
-                <p>Right side banner</p>
-            </div>
-        </div>
-    </div>
-    <div class="card-footer">
-        <a href="/admin/edit-banner">
-            <button class="btn btn-secondary">Edit</button>
-        </a>
-    </div>
-</div> --}}
+<script>
+    function delBanner(bannername){
+        let banner= bannername
+  Swal.fire({
+      title: 'Are you sure you want to delete  this ?',
+      // text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+  }).then((result)=>{
+      if(result.isConfirmed){
+         $.ajax({
+             url:"http://localhost:8001/admin/delBanner",
+             data:{
+                banner
+             },
+             method:"delete",
+             success:(response)=>{
+                if(response.status){
+                        Swal.fire({
+                      icon: 'success',
+                      title: 'Order Cancelled',
+                      showConfirmButton: false,
+                      timer: 1000
+                    })
+                    setTimeout(()=>{
+                       location.reload()
+                  },1000)
+                }
+                
+             }
+        })
+         
+      }
+    })
+       
+    }
+</script>

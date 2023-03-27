@@ -695,6 +695,9 @@ if(data.length!==0){
     let products 
     // let banners
     let data
+    let banner1 
+    let banner2
+    let banner3
     await adminHelper.getAllStocks().then((prod)=>{
       products = prod
     })
@@ -706,44 +709,39 @@ if(data.length!==0){
       console.log(Data,"ethida");
       for(let i=0;i<Data.length;i++){
         if (Data[i].name==='banner1') {
-          console.log("enteredd kop");
-          Data[i].isbanner1= true
-          Data[i].bannerUrl1 = await getImgUrl(Data[i].img);
+          banner1={
+            name: Data[i]?.name,
+            linkto:Data[i]?.linkTo,
+            bannerUrl1:await getImgUrl(Data[i].img),
+            isbanner1:true
+          }
         }
         if (Data[i].name==='banner2') {
-          Data[i].isbanner2= true
-          Data[i].bannerUrl2 = await getImgUrl(Data[i].img);
+          banner2={
+            name: Data[i]?.name,
+            linkto:Data[i]?.linkTo,
+            bannerUrl2:await getImgUrl(Data[i].img),
+            isbanner2:true
+          }
         }
         if (Data[i].name==='banner3') {
-          Data[i].isbanner3= true
-          Data[i].bannerUrl3 = await getImgUrl(Data[i].img);
+          console.log("banner 3 is here");
+          banner3={
+            name: Data[i]?.name,
+            linkto:Data[i]?.linkTo,
+            bannerUrl3:await getImgUrl(Data[i].img),
+            isbanner3:true
+          }
         }
 
   
       }
         console.log("Data:", Data);
-        return Data;
+        // return Data;
      
     }
-    let banners = await processImages(data);
-    let banner1 = {
-      _id:banners[0]?._id,
-      name:banners[0]?.name,
-      linkto:banners[0]?.linkTo,
-      bannerUrl1:banners[0]?.bannerUrl1
-    }
-    let banner2 = {
-      _id:banners[1]?._id,
-      name:banners[1]?.name,
-      linkto:banners[1]?.linkTo,
-      bannerUrl2:banners[1]?.bannerUrl2
-    }
-    let banner3 = {
-      _id:banners[2]?._id,
-      name:banners[2]?.name,
-      linkto:banners[2]?.linkTo,
-      bannerUrl3:banners[2]?.bannerUrl3
-    }
+   await processImages(data);
+
     // console.log(products);
     res.render('adminView/banner',{admin:true,products,banner1,banner2,banner3})
   },
@@ -843,5 +841,11 @@ await adminHelper.updateBanner3(req.body).then(()=>{
 })
 
 
+  },
+  delBanner:async(req,res)=>{
+      let del = await  adminHelper.delBanner(req.body.banner)
+      if(del){
+        res.json({status:true})
+      }
   }
 };
