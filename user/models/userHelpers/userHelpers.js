@@ -1363,6 +1363,16 @@ delAddress:(id,user)=>{
             console.log(del);
         }
     })
+},
+getallBanners:()=>{
+    return new Promise(async(resolve,reject)=>{
+        let banners = await db.get().collection(collection.BANNER_COLLECTION).find().toArray()
+        if(banners){
+            resolve(banners)
+        }else{
+            reject()
+        }
+    })
 }
 
 
