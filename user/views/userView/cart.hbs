@@ -13,7 +13,7 @@
                                     <tr class="product-box-contain">
                                         <td class="product-detail">
                                             <div class="product border-0">
-                                                <a href="product-left-thumbnail.html" class="product-image">
+                                                <a href="/user/product/{{this.cart_product._id}}" class="product-image">
                                                     <img src="{{this.cart_product.urlImage1}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </a>
@@ -209,9 +209,40 @@
                                         class="btn btn-light shopping-button text-dark">
                                         <i class="fa-solid fa-arrow-left-long"></i>Return To Shopping</button>
                                 </li>
+                                
+                                     
+                                {{!-- </li> --}}
                             </ul>
                         </div>
                     </div>
+                     <div class="mt-5  ">
+                            <div class="category-menu p-3  p-sticky">
+                                <h3>Available coupens</h3>
+
+                                <ul class="product-list product-right-sidebar border-0 p-0">
+                                    {{#each normalCoupens}}
+                                    <li>
+                                        <div class="offer-product">
+                                            <div class="offer-detail">
+                                                <div>
+                                                    <h6 class="price theme-color"> {{this.name}}</h6>
+                                                    <h6 class="price theme-color">use the code : {{this.code}}</h6>
+                                                    </a>
+                                                    {{#if this.percentage}}
+                                                    <span>{{this.percentage}}% off !!!</span>
+                                                    {{else}}
+                                                    <span>flat {{this.amount}} rupees off !!!</span>
+                                                    {{/if}}
+                                                        <h6 class="name">* minimum Purchase of rupees :{{this.minLimit}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
                 </div>
                 {{/if}}
             </div>

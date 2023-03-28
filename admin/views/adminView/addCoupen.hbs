@@ -3,29 +3,7 @@
          <div class="row">
     <h2>Add new Coupon</h2>
                 <form action="/admin/addcouponsubmit" id="form" method="post">
-        <div class="row mb-3">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Offer Type</label>
-            <div class="col-sm-4">
-                <select class="form-select" name="type" id="select" onchange="return selector()"
-                    aria-label="Default select example">
-                    <option value="normal" selected>Normal</option>
-                    <option value="product">Product</option>
-                    <option value="category">Category</option>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-3" id="category" style="display: none;">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Category</label>
-            <div class="col-sm-4">
-                <select class="form-select" name="category" id="category"
-                    aria-label="Default select example">
-                    <option selected value="">Select Category</option>
-                    {{#each categories}}
-                    <option value="{{this.categoryName}}">{{this.categoryName}}</option>
-                    {{/each}}
-                </select>
-            </div>
-        </div>
+
         <div class="row mb-3 mt-5" id="normal-1">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Coupon Name</label>
             <div class="col-sm-4">
@@ -106,7 +84,7 @@
 
 
         <div class="row mb-3 mt-5" id="limit">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Maximum Purchase Limit </label>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Maximum  Limit </label>
             <div class="col-sm-4">
                 <input type="text" class="form-control" name="limit">
             </div>
@@ -117,113 +95,8 @@
 
 
     </form>
-    <div id="product" style="display: none;">
-        <table class="table table-bordered " id="pro">
-                <thead>
-                  <tr>
-                    <th scope="col">Image</th>
-                    <th scope="col">Product</th>
-                    <th scope="col">Brand</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">MF Date</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    {{#each products}}
-                  <tr >
-                    <td class="book-image"><img src="/book-image/{{this._id}}.jpg" alt="no"></td>
-                    <td>{{this.ProductName}}</td>
-                    <td>{{this.Company}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.ManufacturingDate}}</td>
-                    <td>₹{{this.Price}}</td>
-                    <td class="button-set">
-                        <button class="btn btn-success"  onclick="return IdPass('{{this._id}}')" data-toggle="modal" data-target="#modalLoginForm">
-                            Create Offer
-                          </button>
-                    </td>
-                  </tr>
-                  {{/each}}
-                </tbody>
-              </table>
-    </div>
-    <div class="modal fade " id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog " role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">Create offer</h4>
-        <button type="button" class="close " data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form action="/admin/addcouponsubmit"  method="post">
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-            <input type="text" name="type" value="product" hidden>
-            <input type="text" name="id" id="proId" hidden>
-          
-        </div >
-
-        <div class="md-form mb-5">
-            <input type="text" name="name" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Coupen name</label>
-        </div>
-
-        <div class="md-form mb-5">
-            <input type="text" name="code" id="ids" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Coupon Code/ID</label>
-          <p onclick="codeGenerators()" class="btn btn-primary" style="margin-top: 5px;">generate Code</p>
-        </div>
-         {{!-- <div class="md-form mb-5">
-            <select class="form-select" name="redeemType" id="redeemType" onchange="return typeSelectors()"
-                        aria-label="Default select example">
-                        <option value="amount" selected>Amount</option>
-                        <option value="percentage">%</option>
-                    </select>
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Redeem type</label>
-        </div> --}}
- <div class="md-form mb-5" id="catPercs">
-
-        <input type="number"  onKeyPress="if(this.value.length==2) return false;"  name="percentage" id="" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Percentage</label>
- </div>
- {{!-- <div class="md-form mb-5" id="catAmounts"   >
-
-        <input type="number" name="amount" id="" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email">Amount</label>
- </div> --}}
-  <div class="md-form mb-5">
-            <input type="number" name="total_coupens" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email"> Total Coupen</label>
-        </div>
-
-        <div class="md-form mb-5">
-            <input type="number" name="limit" id="defaultForm-email" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-email"> Maximum Purchase Limit</label>
-        </div>
-
-         <div class="md-form mb-4">
-          <input type="date" name="startDate" id="defaultForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Begins On</label>
-        </div>
-
-        <div class="md-form mb-4">
-          <input type="date" name="endDate" id="defaultForm-pass" class="form-control validate">
-          <label data-error="wrong" data-success="right" for="defaultForm-pass">Expires</label>
-        </div>
-
-
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-        <button class="btn btn-default" type="submit">Create</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
+    
+   
 
          </div>
 
@@ -311,4 +184,4 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
+{{!-- <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>  --}}

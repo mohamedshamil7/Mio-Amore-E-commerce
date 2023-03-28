@@ -634,17 +634,9 @@ if(data.length!==0){
   },
 
   getAddCoupenPage:async(req,res)=>{
-    let categories = null
-    let products = null
-    await adminHelper.getAllCategories().then((cat)=>{
-      categories = cat
-    })
-    await adminHelper.getAllStocks().then((result)=>{
-      products = result
-    })
-    console.log(products);
-    res.render('adminView/addCoupen',{admin:true,categories,products})
+    res.render('adminView/addCoupen',{admin:true})
   },
+
   addCoupenSubmit:async(req,res)=>{
     console.log(req.body);
 
@@ -673,15 +665,6 @@ if(data.length!==0){
           element.isAmount = true
         }
     });
-
-    coupens.categoryCoupens.forEach(element => {
-      if(element.redeemType ==="amount"){
-        element.isAmount = true
-      }
-  });
-
-
-
     console.log(coupens,"///");
     res.render('adminView/coupen',{admin: true, coupens})
   },
@@ -840,8 +823,8 @@ await adminHelper.updateBanner3(req.body).then(()=>{
   res.redirect('/admin/banners')
 })
 
-
   },
+  
   delBanner:async(req,res)=>{
       let del = await  adminHelper.delBanner(req.body.banner)
       if(del){

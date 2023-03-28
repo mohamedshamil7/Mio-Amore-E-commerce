@@ -233,31 +233,8 @@ module.exports = {
      
     }
      await processImagesd(banner);
-    //  banner1 = {
-    //   name:banners[0]?.name,
-    //   linkto:banners[0]?.linkTo,
-    //   bannerUrl1:banners[0]?.bannerUrl1,
-    //   isbanner1:banners[0]?.isbanner1
-    // }
-    //  banner2 = {
-    //   name:banners[1]?.name,
-    //   linkto:banners[1]?.linkTo,
-    //   bannerUrl2:banners[1]?.bannerUrl2,
-    //   isbanner2:banners[1]?.isbanner2
-    // }
-    //  banner3 = {
-    //   name:banners[2]?.name,
-    //   linkto:banners[2]?.linkTo,
-    //   bannerUrl3:banners[2]?.bannerUrl3,
-    //   isbanner3:banners[2]?.isbanner3
-    // }
     console.log("banners ", banner3);
     let count = await CartCount(req);
-    // console.log(
-    //   cart,
-    //   " this was cart>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-    // );
-    // console.log(cart[0].cart_product,"anser for my question ^^^^^^^^^^^^^^^^^^^^^^^^");
     await userHelpers
       .getAllProducts()
       .then((prodData) => {
@@ -267,9 +244,6 @@ module.exports = {
         console.log(err);
         console.log("didtn get my all Products");
       });
-
-    // console.log("the then data is :", datas.all);
-
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
@@ -279,13 +253,10 @@ module.exports = {
           // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
       }
-      // console.log("Data:", data);
       return data;
     }
 
     let data = await processImages(datas);
-    // console.log("came data:::::>>>>", data);
-
     res.render("userView/home", {
       data,
       user: decode.value.username,
@@ -398,7 +369,7 @@ module.exports = {
     let walletData = await wallet(req);
     console.log(req.params.id);
     let prodId = req.params.id;
-
+    let normalCoupens
     let datas = null;
     let wishlist;
     await userHelpers
@@ -418,6 +389,9 @@ module.exports = {
       .catch(() => {
         wishlist = false;
       });
+       await userHelpers.getAllCoupens().then((coupens)=>{
+        normalCoupens = coupens.normal
+      })
 
     async function processImages(Data) {
       console.log(Data);
@@ -450,6 +424,7 @@ module.exports = {
       count,
       total,
       walletTotal: walletData.total,
+      normalCoupens
     });
   },
   imageRoute: (req, res) => {
@@ -573,6 +548,7 @@ module.exports = {
     console.log(total);
     let product;
     let outofStock;
+    let normalCoupens
     await userHelpers.getcart(decode.value.insertedId).then((obj) => {
       console.log(obj.outofStock);
       product = obj.cartItems;
@@ -593,7 +569,9 @@ module.exports = {
       return Data;
     }
     let products = await processImages(product);
-
+    await userHelpers.getAllCoupens().then((coupens)=>{
+      normalCoupens = coupens.normal
+    })
     res.render("userView/cart", {
       products,
       userpar: true,
@@ -601,6 +579,7 @@ module.exports = {
       outofStock,
       count,
       walletTotal: walletData.total,
+      normalCoupens
     });
   },
 
@@ -1553,14 +1532,10 @@ module.exports = {
                     console.log(d);
                     return res.status(404).send(`Please add ₹${d} worth items more `);
                   }
-                } else {
-                  offerPrice = parseInt(Math.floor(Total - coupenData.amount));
-                  console.log(offerPrice);
-                  if (offerPrice <= coupenData.maxLimit) {
-                    Total = Total - offerPrice;
-                  } else {
-                    Total = Total - coupenData.maxLimit;
-                  }
+                } else if(coupenData.redeemType ==="amount") {
+                  console.log("entred here ta amount");
+                  Total = parseInt(Math.floor(Total - coupenData.amount));
+                  // console.log(offerPrice);
                 }
             }else{
               return res.status(404).send("Coupen unavailable");

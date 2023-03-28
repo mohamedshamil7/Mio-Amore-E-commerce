@@ -509,74 +509,7 @@ module.exports={
             console.log("copen",coupen);
 
             return new Promise(async(resolve,reject)=>{
-                if(coupen.type ==="product"){
-                    let data ={
-                        type:coupen.type,
-                        productId:coupen.id,
-                        name:coupen.name,
-                        code:coupen.code,
-                        percentage:coupen.percentage,
-                        totalCoupen:coupen.total_coupens,
-                        maxLimit:coupen.limit,
-                        startDate:coupen.startDate,
-                        endDate:coupen.endDate
-
-                    }
-                 let prodectCoupen=   await db.get().collection(collection.COUPEN_COLLECTION).insertOne(data)
-                 if(prodectCoupen){
-                    let samp = await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
-                        {
-                            $match:{
-                                _id:ObjectId(data.productId)
-                            }
-                        },
-                        {
-                            $project: { Price: 1 },
-                          },
-                          {
-                            $addFields: {
-                              offer: { $subtract: ['$Price', { $divide: [{ $multiply: ['$Price', data.percentage] }, 100] }] },
-                  
-                            },
-                          },
-                  
-                    ]).toArray()
-                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:(ObjectId(data.productId))},{
-                        $set: {
-                            offer:Math.floor( samp[0].offer),
-                            offerPercent:data.percentage,
-                            coupenId:prodectCoupen.insertedId
-                          },
-                     })
-                 }
- 
-                 }else if(coupen.type ==="category"){
-                    coupen.categoryOption = true;
-                    let data ={
-                        type:coupen.type,
-                        category:coupen.category,
-                        categoryOption:coupen.categoryOption,
-                        name:coupen.name,
-                        code:coupen.code,
-                        redeemType:coupen.redeemType,
-                        percentage:coupen?.percentage,
-                        amount:coupen?.amount,
-                        totalCoupen:coupen.total_coupens,
-                        maxLimit:coupen.limit,
-                        minLimit:coupen.minimum,
-                        startDate:coupen.startDate,
-                        endDate:coupen.endDate,
-                    }
-                    let catCoupen=   await db.get().collection(collection.COUPEN_COLLECTION).insertOne(data)
-                    if(catCoupen){
-                        let simp = await db.get().collection(collection.CATTEGORY_COLLECTION).updateOne({categoryName:data.category},{
-                            $set:{
-                                coupenId:catCoupen.insertedId
-                            }
-                        })
-                    }
-
-                }else{
+               
                     let data={
                         type:coupen.type,
                         name:coupen.name,
@@ -595,7 +528,7 @@ module.exports={
                     if(normalCoupen){
                         console.log('normal');
                     }
-                }
+                
 
                 resolve()
 
@@ -606,22 +539,8 @@ module.exports={
             let coupens
             return new Promise(async(resolve,reject)=>{
                 const normalCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({ type: 'normal' }).toArray();
-                const categoryCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({ type: 'category' }).toArray();
-                let productCoupens = await db.get().collection(collection.COUPEN_COLLECTION).find({type:'product'}).toArray()
-                for(let i = 0;i<productCoupens.length;i++){
-                    let data =await  db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(productCoupens[i].productId)})
-                    productCoupens[i].prodName = data.ProductName
-                    async function processImages(Image1) {
-                        let  urlImage1
-                             urlImage1 = await getImgUrl(Image1);
-                          
-                        return urlImage1;
-                      }
-                    productCoupens[i].urlImage1= await processImages(data.Image1)
-                }
-                console.log(productCoupens);
-                if (normalCoupens.length != 0 || categoryCoupens.length != 0) {
-                    resolve({ categoryCoupens, normalCoupens, productCoupens });
+                if (normalCoupens.length != 0 ) {
+                    resolve({normalCoupens});
                   } else {
                     reject();
                   }

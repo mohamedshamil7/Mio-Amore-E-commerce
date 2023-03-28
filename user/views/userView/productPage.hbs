@@ -232,10 +232,10 @@
                                     </a>
                                     
                                     {{/if}}
-                                    <a href="compare.html">
-                                        <i data-feather="shuffle"></i>
-                                        <span>Add To Compare</span>
-                                    </a>
+                                    {{!-- <a href="compare.html"> --}}
+                                        {{!-- <i data-feather="shuffle"></i> --}}
+                                        {{!-- <span>Add To Compare</span> --}}
+                                    {{!-- </a> --}}
                                 </div>
 
                                     {{!-- <div class="pickup-box">
@@ -335,7 +335,9 @@
                                     </div> --}}
 
                                 </div>
+                                
                             </div>
+                            
 
                             {{!-- <p class="vendor-detail">Noodles & Company is an American fast-casual
                                 restaurant that offers international and American noodle dishes and pasta.</p> --}}
@@ -367,7 +369,43 @@
                             </div>
                         </div> --}}
                     </div>
+
+
+                     <div class="pt-25">
+                            <div class="category-menu">
+                                <h3>Available coupens</h3>
+
+                                <ul class="product-list product-right-sidebar border-0 p-0">
+                                    {{#each normalCoupens}}
+                                    <li>
+                                        <div class="offer-product">
+                                            <div class="offer-detail">
+                                                <div>
+                                                    <h6 class="price theme-color"> {{this.name}}</h6>
+                                                    <h6 class="price theme-color">use the code : {{this.code}}</h6>
+                                                    </a>
+                                                    {{#if this.percentage}}
+                                                    <span>{{this.percentage}}% off !!!</span>
+                                                    {{else}}
+                                                    <span>flat {{this.amount}} rupees off !!!</span>
+                                                    {{/if}}
+                                                        <h6 class="name">* minimum Purchase of rupees :{{this.minLimit}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    
+
+                                  
+
+                                    
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
                 </div>
+                
             </div>
         </div>
     </section>

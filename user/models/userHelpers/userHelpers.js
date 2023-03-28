@@ -1332,9 +1332,14 @@ getfilteredCategory:(catname)=>{
 },
 
 findCoupen:(code,userid)=>{
+    let Coupen
+    let user
     return new Promise(async(resolve,reject)=>{
-     let Coupen = await db.get().collection(collection.COUPEN_COLLECTION).findOne({code:code})
-     let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userid),usedcoupens:Coupen._id})
+    Coupen = await db.get().collection(collection.COUPEN_COLLECTION).findOne({code:code})
+     if(Coupen){
+     user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userid),usedcoupens:Coupen._id})
+
+     }
      console.log(user,"././,,,.");
       
         if (Coupen){
@@ -1372,6 +1377,16 @@ getallBanners:()=>{
         }else{
             reject()
         }
+    })
+},
+getAllCoupens:()=>{
+    return new Promise(async(resolve,reject)=>{
+       let normal = await db.get().collection(collection.COUPEN_COLLECTION).find().toArray()
+       if(normal){
+        resolve({normal})
+       }else{
+        reject()
+       }
     })
 }
 
