@@ -328,12 +328,19 @@ module.exports = {
 
   addNewProduct: async (req, res) => {
     const files = req.files;
+
     let arr1 = Object.values(files);
+
     let arr2 = arr1.flat();
+
     console.log("arr2:", arr2);
+
     let data = [];
+
     const urls = await Promise.all(
+
       arr2.map(async (files) => {
+
         const { fieldname } = files;
         let imageName = randomImgName();
         data.push({ fieldname, img: imageName });
@@ -373,31 +380,14 @@ module.exports = {
         req.body.Image4 = value.img;
       }
     });
+
+    let mrp = parseInt(req.body.MRP)
+    let sellingprice = parseInt (req.body.Price)
+    req.body.offer = parseInt(((mrp-sellingprice)/mrp)*100)
+
     adminHelper.addNewProduct(req.body).then((response) => {
       res.redirect("/admin/stocks");
     });
-
-    // var image=req.files.Image
-    // console.log(",this is the issue",image);
-    // adminHelper.addNewProduct(req.body).then((response)=>{
-    //   console.log(response);
-    //   req.prod=response
-    //   // console.log("this is req.prod,",req.prod);
-    //   // next()
-
-    //   // console.log(req.files);
-    //   // image.mv('./public/images/product-images/'+response+'.jpg',(err,done)=>{
-    //   //   if(err){
-    //   //     console.log(err);
-    //   //   }else{
-    //   //     res.redirect("/admin/stocks")
-    //   //   }
-    //   // })
-    // }).catch((error)=>{
-    //   console.log(error);
-    // })
-    // console.log(req.body);
-    // console.log(req.files.Image);
   },
 
   availabilityCheck: (req, res) => {
@@ -541,7 +531,10 @@ if(data.length!==0){
   req.body.Image3 = req.body.imagename3
   req.body.Image4 = req.body.imagename4
 }
-   
+   let mrp = req.body.MRP
+   let sellingprice = req.body.Price
+  //  req.body.offer = parseInt(((mrp-sellingprice)/mrp)/100)
+   req.body.offer = parseInt(((mrp-sellingprice)/mrp)*100)
     adminHelper.editProduct(req.body).then((response) => {
       console.log(response);
 

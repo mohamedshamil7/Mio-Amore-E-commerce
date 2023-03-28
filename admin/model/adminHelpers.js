@@ -259,6 +259,7 @@ module.exports={
         Data.inStock= true
         Data.Availability=true
         Data.Price = Number(Data.Price)
+        Data.offer = Number(Data.offer)
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){
@@ -310,6 +311,7 @@ module.exports={
         id.Price = Number(id.Price)
         id.MRP= Number(id.MRP)
         id.Stock=Number(id.Stock)
+        id.offer = Number(id.offer)
         if(id.Stock<1){
             console.log(id.Stock);
             console.log("false do");
@@ -326,6 +328,7 @@ module.exports={
                     Company:id.Company,
                     MRP:id.MRP,
                     Price:id.Price,
+                    offer:id.offer,
                     Description:id.Description,
                     category:id.category,
                     ManufacturingDate:id.ManufacturingDate,
