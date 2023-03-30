@@ -1,11 +1,11 @@
-require("dotenv").config();
-const userHelpers = require("../models/userHelpers/userHelpers");
 const jwt = require("jsonwebtoken");
-const { read } = require("fs");
+const userHelpers = require("../models/userHelpers/userHelpers");
+const { read, rmSync } = require("fs");
 const { send } = require("process");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
 
+require("dotenv").config();
 
 // const Swal = window.Swal;
 // import Swal from 'sweetalert2'
@@ -88,6 +88,8 @@ const wallet= async(req)=>{
   let decode = tokenVerify(req)
   return userHelpers.getWallet(decode.value.insertedId).then((wallet)=>{
     return wallet
+  }).catch(()=>{
+    return 0
   })
 }
 
@@ -1308,7 +1310,7 @@ module.exports = {
     let total = await TotalAmount(req);
 
     let decode = tokenVerify(req);
-    let full;
+    let full = null
     let allData;
     let walletTotal;
     let credits;
@@ -1316,29 +1318,39 @@ module.exports = {
     // const
     await userHelpers.getWallet(decode.value.insertedId).then((data) => {
       full = data;
-    });
+      walletTotal = full?.total;
+      allData = [...full?.transactions?.credits, ...full?.transactions?.debits];
+  
+      credits = [...full?.transactions?.credits];
+  
+      debits = [...full?.transactions?.debits];
+  
+      console.log(credits);
+  
+      res.render("userView/wallet", {
+        userpar: true,
+        user: decode.value.username,
+        products,
+        outofStock,
+        count,
+        total,
+        allData,
+        credits,
+        debits,
+        walletTotal,
+      });
+    }).catch(()=>{
+      res.render("userView/wallet", {
+        userpar: true,
+        user: decode.value.username,
+        products,
+        outofStock,
+        count,
+        total,
+      });
+    })
 
-    walletTotal = full.total;
-    allData = [...full.transactions?.credits, ...full.transactions?.debits];
 
-    credits = [...full.transactions?.credits];
-
-    debits = [...full.transactions?.debits];
-
-    console.log(credits);
-
-    res.render("userView/wallet", {
-      userpar: true,
-      user: decode.value.username,
-      products,
-      outofStock,
-      count,
-      total,
-      allData,
-      credits,
-      debits,
-      walletTotal,
-    });
   },
 
   sortShop: async (req, res) => {

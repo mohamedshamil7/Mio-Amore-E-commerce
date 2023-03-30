@@ -52,6 +52,7 @@ const {
   banner2Add,
   banner3Add,
   delBanner,
+  confrimReturn
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -103,7 +104,8 @@ router.get("/allorders",nocache,autherization,allorders)
 router.post('/cancelOrder',autherization, cancelOrderAdmin);
 
 router.get('/view-order-product/:id',nocache,autherization, viewOrderProduct);
-router.post("/delivery-status/:id",autherization, deliveryStatus)
+router.get('/returnConfirm/:id',nocache,autherization, confrimReturn);
+router.post("/delivery-status",autherization, deliveryStatus)
 
 router.get("/logout",nocache,autherization,adminLogout)
 router.delete("/deleteImage",nocache,autherization,deleteImage)

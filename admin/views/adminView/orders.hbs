@@ -14,6 +14,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">DeliveryStatus</th>
                 <th>View</th>
+                    <th>Return</th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +37,8 @@
                 </td>
                 <td>
                      <p class="badge badge-secondary">{{this.deliveryStatus}}</p> <br>
-                    <form action="/admin/delivery-status/{{this._id}}" method="post">
+                     {{!--/admin/delivery-status/{{this._id}}---}}
+                    <form action="" method="post">
                     {{!-- <input type="text " value="{{this.cart.item}} " name="id"> --}}
                     {{!-- <input type="text" value="{{this._id}}" name="orderid" > --}}
                     {{#if this.btnStatus}}
@@ -49,7 +51,7 @@
                             <option  value="Delivered">Delivered</option>
                         </select>
                     
-                     <input type="submit" value="Change">
+                     <input type="button" onclick="delivwerStatuschange('{{this._id}}')" value="Change">
                     </form>
 
                     {{else}}
@@ -57,7 +59,16 @@
                     {{/if}}
                 </td>
                 
-                <td><a href="/admin/view-order-product/{{this._id}}"><button class="btn btn-secondary">ViewProducts</button></a></td>
+                <td><a href="/admin/view-order-product/{{this._id}}"><button type="button" class="btn btn-secondary">ViewProducts</button></a></td>
+                {{#if this.returnplaced }}
+                 <td><a href="/admin/returnConfirm/{{this._id}}"><button type="button" class="btn btn-secondary">Confirm Return?</button></a>
+                 
+                 {{/if}}
+                 {{#if this.returnConfirmed}}
+                 <h5>Order returned</h5>
+                 {{/if}}
+                 
+                 </td>
             </tr>
             {{/each}}
         </tbody>

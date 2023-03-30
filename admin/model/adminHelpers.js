@@ -8,7 +8,9 @@ const { reject, promiseProps } = require('firebase-tools/lib/utils')
 const {S3Client, GetObjectCommand  } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
+const mongoClient=require('mongodb').MongoClient
 
+const MONGODB=process.env.MONGODB
 
 const MY_SECRET = process.env.MY_SECRET;
 
@@ -396,11 +398,13 @@ module.exports={
                     },
                     {
                         $project:{
-                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1
+                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1,returnplaced:1,
                         }
                     }
                 ]).toArray()
+                console.log("all orders:", allOrders);
                 if(allOrders.length ==0){
+                    console.log("0");
                     reject()
                 }
                 else{
@@ -696,7 +700,154 @@ module.exports={
                     reject()
                 }
             })
-        }
+        },
+        confirmReturn: (orderId) => {
+            console.log("orderid:",orderId);
+            return new Promise(async (resolve, reject) => {
+
+                const url=MONGODB
+
+                mongoClient.connect(url, async function(err, client){
+                    if (err) throw err;
+              
+                    console.log("Connected to MongoDB database!");
+                  
+                    const session = client.startSession();
+                    const transactionOptions={
+                      readPreference:'primary',
+                      readConcern:{level:'local'},
+                      writeConcern:{w:'majority'}
+                  }
+
+                  try{
+                    const transactionResults= await session.withTransaction(async()=>{
+                        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: ObjectId(orderId) },{session})
+
+                        for (let i = 0; i < fullOrder.cart.length; i++) {
+                            // stock incrimenting 
+                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
+                        }
+                        
+                        let creditData={
+                            transactionId:ObjectId(),
+                            orderId:fullOrder._id,
+                            amount:fullOrder.totalAmount,
+                            amountCreditedOn:new Date().toDateString()
+                            
+                        }
+                        
+                        console.log("fullOrder:222",fullOrder.userId);
+                    let wallet=   await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                           $inc:{
+                                total:fullOrder.totalAmount
+                            },
+                        
+                        $push:{
+                            "transactions.credits":creditData
+                        }
+                        },{session})
+
+                        console.log(wallet);
+
+                        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+                                $set:{
+                                    status: 'return confirmed',
+                                    deliveryStatus: 'returned',
+                                    btnStatus: false,
+                                    returnOption:false,
+                                    returnplaced:false,
+                                    returnConfirmed:true,
+                                    returnedDate: new Date().toDateString()
+                                },
+                            })
+
+                       
+
+
+                        
+
+                    },transactionOptions)
+
+                    if(transactionResults){
+                        console.log(`transaction suceeded`);
+                        resolve()
+                    }
+                    else{
+                        console.log(`trnascaction failed`);
+                        reject()
+                    }
+                   
+                  }
+                  catch(e){
+                    console.log(e);
+                  }
+                  finally{
+                    session.endSession()
+                    client.close()
+                    console.log(`session closed`);
+                  }
+                })
+        //         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: ObjectId(orderId) })
+        //         console.log("fullOrder:",fullOrder);
+        //         for (let i = 0; i < fullOrder.cart.length; i++) {
+        //                  // stock incrimenting 
+        //               await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
+        //         }
+
+        //         let creditData={
+        //                 transactionId:ObjectId(),
+        //                orderId:fullOrder._id,
+        //                amount:fullOrder.totalAmount,
+        //                 amountCreditedOn:new Date().toDateString()
+            
+        //             }
+
+        //             await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+        //                 $inc:{
+        //                     total:fullOrder.totalAmount
+        //                 },
+                    
+        //             $push:{
+        //                 "transactions.credits":creditData
+        //             }
+        //             },{session})
+
+        // await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+        //     $inc:{
+        //         total:fullOrder.totalAmount
+        //     },
+        
+        // $push:{
+        //     "transactions.credits":creditData
+        // }
+
+
+        // })
+
+        
+        // let status = "return Confirmed"
+
+        // let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+        //     $set:{
+        //         status: 'return confirmed',
+        //         deliveryStatus: 'returned',
+        //         btnStatus: false,
+        //         returnOption:false,
+        //         returnplaced:false,
+        //         returnConfirmed:true,
+        //         returnedDate: new Date().toDateString()
+        //     },
+        // })
+        // if(order){
+        //     resolve(order)
+        // }else{
+        //     reject()
+        // }
+
+
+            })
+        },
+
     }
     
     

@@ -552,25 +552,25 @@ getTotalAmount:(userId)=>{
                 cart_product: { $arrayElemAt: ["$cart_product", 0] },
               },
             },
-            {
-              $set: {
-                final:{
-                    $switch:{
-                        branches:
-                        [{
-                            case:{$and:['$cart_product.offer',{$ne:['$cart_product.Price','']}]},
-                            then:'$cart_product.offer'
-                        },
-                        {
-                            case:{$and:['$cart_product.Price',{$ne:['$cart_product.offer','']}]},
-                            then:'$cart_product.Price'
-                        }
-                    ],
-                    default:''
-                    }
-                }
-              },
-            },
+            // {
+            //   $set: {
+            //     final:{
+            //         $switch:{
+            //             branches:
+            //             [{
+            //                 case:{$and:['$cart_product.offer',{$ne:['$cart_product.Price','']}]},
+            //                 then:'$cart_product.offer'
+            //             },
+            //             {
+            //                 case:{$and:['$cart_product.Price',{$ne:['$cart_product.offer','']}]},
+            //                 then:'$cart_product.Price'
+            //             }
+            //         ],
+            //         default:''
+            //         }
+            //     }
+            //   },
+            // },
             {
               $group: {
                 _id: null,
@@ -578,7 +578,7 @@ getTotalAmount:(userId)=>{
                   $sum: {
                     $multiply: [
                       { $toInt: "$quantity" },
-                      { $toInt: "$final" },
+                      { $toInt: "$cart_product.Price"},
                     ],
                   },
                 },
@@ -1049,39 +1049,40 @@ returnOrderSubmit:(orderId)=>{
 
     return new Promise(async(resolve,reject)=>{
         // full Order details with all Product
-        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
-        for(let i =0;i<fullOrder.cart.length;i++){
-            // stock incrimenting 
-          await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
-        }
-        let creditData={
-            transactionId:ObjectId(),
-           orderId:fullOrder._id,
-           amount:fullOrder.totalAmount,
-            amountCreditedOn:new Date().toDateString()
+        // let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+        // for(let i =0;i<fullOrder.cart.length;i++){
+        //     // stock incrimenting 
+        //   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
+        // }
+        // let creditData={
+        //     transactionId:ObjectId(),
+        //    orderId:fullOrder._id,
+        //    amount:fullOrder.totalAmount,
+        //     amountCreditedOn:new Date().toDateString()
 
-        }
+        // }
 
 
-        await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
-            $inc:{
-                total:fullOrder.totalAmount
-            },
+        // await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+        //     $inc:{
+        //         total:fullOrder.totalAmount
+        //     },
         
-        $push:{
-            "transactions.credits":creditData
-        }
-        })
+        // $push:{
+        //     "transactions.credits":creditData
+        // }
+        // })
         // updating status of return
+        let status = "return applied"
+
         let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
             $set:{
-                status: 'returned',
-                deliveryStatus: 'returned',
+                status: status,
                 btnStatus: false,
+                returnplaced:true,
                 returnOption:false,
-                returnedDate: new Date().toDateString()
             },
-        },{multi:true})
+        })
         if(order){
             resolve(order)
         }else{

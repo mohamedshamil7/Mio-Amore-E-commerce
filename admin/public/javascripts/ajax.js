@@ -247,3 +247,25 @@ function sales(value){
 
 
  
+ function delivwerStatuschange(id){
+  alert(id)
+  let s = document.getElementById("select").value
+ alert(s)
+
+ $.ajax({
+  url:"http://localhost:8001/admin/delivery-status",
+  data:{
+    id,
+    status:s
+  },
+  method:"post",
+  success:(response)=>{
+    if(response.status){
+      alert("true")
+      location.reload()
+    }else{alert("falese")}
+  }
+ })
+ }
+
+

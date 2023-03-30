@@ -617,9 +617,9 @@ if(data.length!==0){
   deliveryStatus: (req, res) => {
     console.log(req.body);
     adminHelper
-      .deliveryStatusChange(req.params.id, req.body.status)
+      .deliveryStatusChange(req.body.id, req.body.status)
       .then(() => {
-        res.redirect(req.get("referer"));
+        res.json({status:true})
       })
       .catch(() => {
         console.log("error in updating deliveryStatus");
@@ -823,5 +823,14 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       if(del){
         res.json({status:true})
       }
+  },
+  confrimReturn:async(req,res)=>{
+    console.log("this is the req.params",req.params.id);
+    let confirm = await adminHelper.confirmReturn(req.params.id).then(()=>{
+
+      res.redirect(req.get("referer"));
+    }).catch(()=>{
+      console.log("error in confirm return");
+    })
   }
 };
