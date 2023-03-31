@@ -832,5 +832,42 @@ await adminHelper.updateBanner3(req.body).then(()=>{
     }).catch(()=>{
       console.log("error in confirm return");
     })
-  }
+  },
+
+
+    
+  scheduleOrder:(req,res)=>{
+    console.log("?>>>>>>>>>.",req.params.id);
+    adminHelper
+      .viewSingleOrder(req.params.id)
+      .then((products) => {
+        // products.cart.Orderid=
+        let cart = products.cart;
+        cart.Orderid = products._id.toString();
+        console.log(cart);
+
+        let address = products.deleviryDetails.town;
+        Orderid = products._id.toString();
+        res.render('adminView/scheduleOrder',{admin:true,cart,address,products})
+      })
+      .catch(() => {
+        let e = "No orders";
+      });
+    },
+
+    deliveryDateSubmit:(req,res)=>{
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>x");
+      console.log(req.body);
+      if(new Date(req.body.deliveryDate) <= new Date()){
+        return res.json({err:"deliveryDate should be greater than todays Date"})
+      }else{
+        adminHelper.deliveryDateSubmit(req.body).then((response)=>{
+
+          res.json({status:true})
+        })
+      }
+    }
+
+
+
 };

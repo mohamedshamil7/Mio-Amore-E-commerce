@@ -52,7 +52,9 @@ const {
   banner2Add,
   banner3Add,
   delBanner,
-  confrimReturn
+  confrimReturn,
+  scheduleOrder,
+  deliveryDateSubmit
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -116,7 +118,11 @@ router.post('/addcouponsubmit',nocache,autherization,addCoupenSubmit)
 router.get('/generatecode', autherization, codeGenerator);
 router.post('/deletecoupon', autherization, deletecoupon);
 
+router.post('/deliveryDateSubmit', autherization, deliveryDateSubmit);
+
 router.get("/banners",nocache,autherization,bannerPage)
+
+router.get("/scheduleOrder/:id",nocache,autherization,scheduleOrder)
 
 router.post("/banner1-submit",autherization,upload1,banner1Add)
 router.post("/banner2-submit",autherization,upload2,banner2Add)

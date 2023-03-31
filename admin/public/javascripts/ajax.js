@@ -269,3 +269,34 @@ function sales(value){
  }
 
 
+ function scheduleorder(orderId){
+  alert(orderId)
+  let date = document.getElementById('deliverydate').value
+  alert(date)
+    $.ajax({
+    url:"http://localhost:8001/admin/deliveryDateSubmit",
+    data:{orderId:orderId, deliveryDate:date},
+    method:"post",
+    success:(response)=>{
+      if(response.err){
+        alert(response.err)
+        document.getElementById('DateError').innerHTML = response.err
+      }else{
+        // alert("something coming")
+        Swal.fire({
+          icon: 'success',
+          title: 'order Scheduled',
+          showConfirmButton: false,
+          timer: 1000
+        })
+        setTimeout(()=>{
+          location.href('http://localhost:8001/admin/allorders')
+      },1000)
+        
+      }
+    }
+  })
+ }
+
+ 
+

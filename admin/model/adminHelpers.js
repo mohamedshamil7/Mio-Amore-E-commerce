@@ -398,7 +398,7 @@ module.exports={
                     },
                     {
                         $project:{
-                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1,returnplaced:1,
+                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1,returnplaced:1,deliveryScheduled:1,
                         }
                     }
                 ]).toArray()
@@ -787,66 +787,30 @@ module.exports={
                     console.log(`session closed`);
                   }
                 })
-        //         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: ObjectId(orderId) })
-        //         console.log("fullOrder:",fullOrder);
-        //         for (let i = 0; i < fullOrder.cart.length; i++) {
-        //                  // stock incrimenting 
-        //               await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}})
-        //         }
-
-        //         let creditData={
-        //                 transactionId:ObjectId(),
-        //                orderId:fullOrder._id,
-        //                amount:fullOrder.totalAmount,
-        //                 amountCreditedOn:new Date().toDateString()
-            
-        //             }
-
-        //             await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
-        //                 $inc:{
-        //                     total:fullOrder.totalAmount
-        //                 },
-                    
-        //             $push:{
-        //                 "transactions.credits":creditData
-        //             }
-        //             },{session})
-
-        // await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
-        //     $inc:{
-        //         total:fullOrder.totalAmount
-        //     },
         
-        // $push:{
-        //     "transactions.credits":creditData
-        // }
-
-
-        // })
-
-        
-        // let status = "return Confirmed"
-
-        // let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
-        //     $set:{
-        //         status: 'return confirmed',
-        //         deliveryStatus: 'returned',
-        //         btnStatus: false,
-        //         returnOption:false,
-        //         returnplaced:false,
-        //         returnConfirmed:true,
-        //         returnedDate: new Date().toDateString()
-        //     },
-        // })
-        // if(order){
-        //     resolve(order)
-        // }else{
-        //     reject()
-        // }
 
 
             })
         },
+
+        deliveryDateSubmit:(data)=>{
+            let id = data.orderId
+            let deliveyDate = data.deliveryDate
+            return new Promise(async(resolve,reject)=>{
+                let order = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(id)},{
+                    $set:{
+                        deliveryStatus:`your Order will be delivered by ${deliveyDate}`,
+                        deliveryScheduled:true
+                    }
+                })
+
+                if(order){
+                    resolve(order)
+                }else{
+                    reject()
+                }
+            })
+        }
 
     }
     
