@@ -290,7 +290,7 @@ function sales(value){
           timer: 1000
         })
         setTimeout(()=>{
-          location.href('http://localhost:8001/admin/allorders')
+          location.href='http://localhost:8001/admin/allorders'
       },1000)
         
       }

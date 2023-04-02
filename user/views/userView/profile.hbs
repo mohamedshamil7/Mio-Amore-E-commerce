@@ -210,8 +210,11 @@
 
                                             <div class="order-detail" style="display: inline-block ;">
                                                 <h5>Status : <span class="">{{this.status}}</span></h5>
-                                                
+                                               {{#if this.deliveryScheduled}} 
+                                                <h6>DeliveryStatus : <span class="">Your order will be deliverd by {{this.deliveryStatus}}</span></h6>
+                                                {{else}}
                                                 <h6>DeliveryStatus : <span class="">{{this.deliveryStatus}}</span></h6>
+                                                {{/if}}
                                                 <h6>Ordered on: <span>{{this.date}}</span></h6>
                                                 <h6>Total price: <span>{{this.totalAmount}}</span></h6>
                                                 {{#if this.deliveredDate}}

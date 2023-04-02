@@ -866,6 +866,14 @@ await adminHelper.updateBanner3(req.body).then(()=>{
           res.json({status:true})
         })
       }
+    },
+    confirmDelivery:(req,res)=>{
+      console.log(req.params.id);
+      adminHelper.confirmDelivery(req.params.id).then((response)=>{
+        res.redirect(req.get("referer"));
+      }).catch(()=>{
+        console.error("error in confirm delivery");
+      })
     }
 
 

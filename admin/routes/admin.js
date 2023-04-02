@@ -54,7 +54,8 @@ const {
   delBanner,
   confrimReturn,
   scheduleOrder,
-  deliveryDateSubmit
+  deliveryDateSubmit,
+  confirmDelivery
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -129,5 +130,6 @@ router.post("/banner2-submit",autherization,upload2,banner2Add)
 router.post("/banner3-submit",autherization,upload3,banner3Add)
 
 router.delete("/delBanner",nocache,autherization,delBanner)
+router.get("/confirmDelivery/:id",nocache,autherization,confirmDelivery)
 module.exports = router;
 

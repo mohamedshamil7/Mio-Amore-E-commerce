@@ -398,7 +398,7 @@ module.exports={
                     },
                     {
                         $project:{
-                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1,returnplaced:1,deliveryScheduled:1,
+                            'user.username':1,deleviryDetails:1,status:1,cart:1,totalAmount:1,paymentMethod:1, date:1, btnStatus:1,deliveryStatus:1,returnplaced:1,deliveryScheduled:1,deliveredDate:1,
                         }
                     }
                 ]).toArray()
@@ -799,7 +799,7 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
                 let order = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(id)},{
                     $set:{
-                        deliveryStatus:`your Order will be delivered by ${deliveyDate}`,
+                        deliveryStatus:deliveyDate,
                         deliveryScheduled:true
                     }
                 })
@@ -809,6 +809,29 @@ module.exports={
                 }else{
                     reject()
                 }
+            })
+        },
+        confirmDelivery:(orderId)=>{
+          let   returnOption = true;
+              let   cancelOption = false;
+                let deliveryDate = new Date().toDateString()
+            return new Promise(async(resolve,reject)=>{
+           let delivery =   await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+                    $set:{
+                        deliveryStatus:'Delivered',
+                        returnOption:returnOption,
+                        btnStatus: cancelOption,
+                        deliveredDate:deliveryDate
+                    },
+                       $unset:{
+                            deliveryScheduled:1
+                        }
+                    
+                })
+                if(delivery.modifiedCount==1){
+                    console.log(delivery);
+                    resolve(delivery)
+                }else{reject()}
             })
         }
 
