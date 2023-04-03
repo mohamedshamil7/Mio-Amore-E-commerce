@@ -188,25 +188,11 @@ function addBrand (){
   })
 }
 
-function sales(value){
-  alert(value)
-  $.ajax({
-    url:"/admin/sales",
-    data: {
-      data:value
-    },
-    method:'post',
-    success: () => {
-      // alert(";")
-      location.reload(); 
-    },
-  })
-}
 
 
 
 
- function couponDelete(id){
+function couponDelete(id){
   Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -218,62 +204,62 @@ function sales(value){
   }).then((result)=>{
     if (result.isConfirmed) {
       $.ajax({
-          url:' http://localhost:8001/admin/deletecoupon',
-          method:'post',
-          data:{
-            id
-          },
-          success:(response)=>{
-              if(response.status){
-
-                  
-                  Swal.fire({
-                      icon: 'success',
-                      title: 'Deleted',
-                      showConfirmButton: false,
-                      timer: 1000
-                    })
-                    setTimeout(()=>{
-                      location.reload()
-                  },1000)
-                  }
+        url:' http://localhost:8001/admin/deletecoupon',
+        method:'post',
+        data:{
+          id
+        },
+        success:(response)=>{
+          if(response.status){
+            
+            
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            setTimeout(()=>{
+              location.reload()
+            },1000)
           }
+        }
       })
-    
-  }
+      
+    }
   })
- }
+}
 
 
 
- 
- function delivwerStatuschange(id){
+
+function delivwerStatuschange(id){
   alert(id)
   let s = document.getElementById("select").value
- alert(s)
+  alert(s)
+  
+  $.ajax({
+    url:"http://localhost:8001/admin/delivery-status",
+    data:{
+      id,
+      status:s
+    },
+    method:"post",
+    success:(response)=>{
+      if(response.status){
+        alert("true")
+        location.reload()
+      }else{alert("falese")}
+    }
+  })
+}
 
- $.ajax({
-  url:"http://localhost:8001/admin/delivery-status",
-  data:{
-    id,
-    status:s
-  },
-  method:"post",
-  success:(response)=>{
-    if(response.status){
-      alert("true")
-      location.reload()
-    }else{alert("falese")}
-  }
- })
- }
 
-
- function scheduleorder(orderId){
+function scheduleorder(orderId){
   alert(orderId)
   let date = document.getElementById('deliverydate').value
   alert(date)
-    $.ajax({
+  $.ajax({
     url:"http://localhost:8001/admin/deliveryDateSubmit",
     data:{orderId:orderId, deliveryDate:date},
     method:"post",
@@ -291,12 +277,25 @@ function sales(value){
         })
         setTimeout(()=>{
           location.href='http://localhost:8001/admin/allorders'
-      },1000)
+        },1000)
         
       }
     }
   })
- }
+}
 
- 
 
+
+
+// $.ajax({
+//   url:"/admin/sales",
+//   data: {
+//     data:value
+//   },
+//   method:'post',
+//   success: (resp) => {
+//     alert(resp)
+//     alert(";")
+//     location.reload(); 
+//   },
+// })

@@ -33,20 +33,45 @@
                     <li><a class="dropdown-item" onclick="return sales('weekly')">Last week</a></li>
                      <li><a class="dropdown-item" onclick="return sales('monthly')" >This Month</a></li>
 
-                    <li><a class="dropdown-item"  onclick="return sales('yearly')">Last Year</a></li>
+                    <li><a class="dropdown-item"  onclick="return sales('yearly')">This Year</a></li>
                   </ul>
                 </div>
 
-                <div class="card-body">
-                  <h5 class="card-title">Sales <span>| {{salesTitle}}</span></h5>
+                <div class="card-body" id="salesToday">
+                  <h5 class="card-title">Sales <span>| Today</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-cart"></i>
                     </div>
                     <div class="ps-3">
-                      {{#if report}}
-                      <h6>{{report}}</h6>
+                      {{#if salesToday}}
+                      <h6>{{salesToday}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+              
+
+
+
+
+              <!--- weekly-->
+
+               <div class="card-body" id="salesWeekly" style="display: none;">
+                  <h5 class="card-title">Sales <span>| this Week</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      {{#if salesweek}}
+                      <h6>{{salesweek}}</h6>
                       {{else}}
                       <p>No Report</p>
                       {{/if}}
@@ -56,6 +81,52 @@
                   </div>
                 </div>
 
+
+              <!--- Monthly-->
+
+               <div class="card-body" id="salesMonthly" style="display: none;">
+                  <h5 class="card-title">Sales <span>| this Month</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      {{#if salesMonth}}
+                      <h6>{{salesMonth}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+              <!--- Yearly-->
+
+               <div class="card-body" id="salesYearly" style="display: none;">
+                  <h5 class="card-title">Sales <span>| this Year</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-cart"></i>
+                    </div>
+                    <div class="ps-3">
+                      {{#if saleYear}}
+                      <h6>{{saleYear}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+
               </div>
             </div><!-- End Sales Card -->
 
@@ -64,32 +135,99 @@
               <div class="card info-card revenue-card">
 
                 <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  <a class="icon dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" ><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                        <li><a class="dropdown-item" onclick="return revenue('daily')">Today</a></li>
+                    <li><a class="dropdown-item" onclick="return revenue('weekly')">Last week</a></li>
+                     <li><a class="dropdown-item" onclick="return revenue('monthly')" >This Month</a></li>
+                    <li><a class="dropdown-item"  onclick="return revenue('yearly')">This Year</a></li>
                   </ul>
                 </div>
-
-                <div class="card-body">
-                  <h5 class="card-title">Revenue <span>| This Month</span></h5>
+               <!-- Revenue Today -->
+                <div class="card-body" id="revenueToday">
+                  <h5 class="card-title">Revenue <span>| today</span></h5>
 
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-currency-dollar"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>$3,264</h6>
-                      <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
+                     {{#if dailyRevenue}}
+                      <h6>{{dailyRevenue}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
 
                     </div>
                   </div>
                 </div>
+
+
+                 <!-- Revenue week -->
+                <div class="card-body" id="revenueWeekly"  style="display: none;">
+                  <h5 class="card-title">Revenue <span>| this Week</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="ps-3">
+                     {{#if weeklyRevenue}}
+                      <h6>{{weeklyRevenue}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+
+                 <!-- Revenue month -->
+                <div class="card-body" id="revenueMonthly"  style="display: none;">
+                  <h5 class="card-title">Revenue <span>| this Month</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="ps-3">
+                     {{#if monthlyRevenue}}
+                      <h6>{{monthlyRevenue}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+
+                 <!-- Revenue year -->
+                <div class="card-body" id="revenueYearly" style="display: none;">
+                  <h5 class="card-title">Revenue <span>| this Year</span></h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-currency-dollar"></i>
+                    </div>
+                    <div class="ps-3">
+                     {{#if yearlyRevenue}}
+                      <h6>{{yearlyRevenue}}</h6>
+                      {{else}}
+                      <p>No Report</p>
+                      {{/if}}
+                      {{!-- <span class="text-success small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span> --}}
+
+                    </div>
+                  </div>
+                </div>
+
+
 
               </div>
             </div><!-- End Revenue Card -->
@@ -112,7 +250,7 @@
                   </ul>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" >
                   <h5 class="card-title">Customers <span>| This Year</span></h5>
 
                   <div class="d-flex align-items-center">
@@ -603,3 +741,61 @@
 
 
 </body>
+
+
+<script>
+
+  function sales(value){
+
+  let saletoday = document.getElementById('salesToday')
+  let saleWeekly = document.getElementById('salesWeekly')
+  let saleMonthly = document.getElementById('salesMonthly')
+  let saleYearly = document.getElementById('salesYearly')
+  if(value == 'weekly'){
+    saletoday.style.display = 'none'
+    saleWeekly.style.display = 'block'
+    saleMonthly.style.display = 'none'
+    saleYearly.style.display = 'none'
+  }else if( value =='monthly'){
+      saletoday.style.display = 'none'
+    saleWeekly.style.display = 'none'
+    saleMonthly.style.display = 'block'
+    saleYearly.style.display = 'none'
+  }else if(value == 'yearly'){
+    saletoday.style.display = 'none'
+    saleWeekly.style.display = 'none'
+    saleMonthly.style.display = 'none'
+    saleYearly.style.display = 'block'
+  }else if( value =='daily'){
+    saletoday.style.display = 'block'
+    saleWeekly.style.display = 'none'
+    saleMonthly.style.display = ' none'
+    saleYearly.style .display = 'none'
+  }
+}
+
+function revenue(value){
+  let revenueToday = document.getElementById('revenueToday')
+  let revenueWeekly = document.getElementById('revenueWeekly')
+  let revenueMonthly = document.getElementById('revenueMonthly')
+  let revenueYearly = document.getElementById('revenueYearly')
+if(value == 'weekly'){
+    revenueToday.style.display = 'none'
+    revenueWeekly.style.display = 'block'
+    revenueMonthly.style.display = 'none'
+    revenueYearly.style.display = 'none'
+  }else if(value == 'monthly'){
+     revenueToday.style.display = 'none'
+    revenueWeekly.style.display = 'none'
+    revenueMonthly.style.display = 'block'
+    revenueYearly.style.display = 'none' 
+  }else if(value == 'yearly'){
+     revenueToday.style.display = 'none'
+    revenueWeekly.style.display = 'none'
+    revenueMonthly.style.display = 'none'
+    revenueYearly.style.display = 'block' 
+  }
+
+}
+
+</script>

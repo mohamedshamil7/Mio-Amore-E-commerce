@@ -105,9 +105,9 @@ module.exports={
                     {fullDate:{$lte:new Date ()}},
                     {fullDate:{$gte: new Date(new Date().getDate()-30)}}
                 ]
-            })
+            }).toArray()
             console.log(order,"mothly");
-            // resolve(order)
+            resolve(order)
         })
     },
     getyearlyorder:()=>{
@@ -117,9 +117,97 @@ module.exports={
                     {fullDate:{$lte:new Date()}},
                     {fullDate:{$gte:new Date(new Date().getFullYear()-1)}}
                 ]
-            })
+            }).toArray()
             resolve(order)
         })
+    },
+
+
+    getDailyRevenue:()=>{
+        const currentDate = new Date().toDateString();
+        return new Promise(async (resolve, reject) => {
+          const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+            {
+              $match: { date: currentDate },
+            },
+            {
+              $group: {
+                _id: null,
+                total: { $sum: '$totalAmount' },
+              },
+            },
+          ]).toArray();
+          console.log(sales);
+          if (sales.length !== 0) {
+            resolve(sales[0].total);
+          } else {
+            resolve(0)
+          }
+
+        });
+    },
+
+    getWeeklyRevenue:()=>{
+        return new Promise(async (resolve, reject) => {
+            const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+              {
+                $match: { fullDate: { $gte: new Date(new Date().getDate() - 7) } },
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: { $sum: '$totalAmount' },
+                },
+              },
+            ]).toArray();
+            if (sales.length !== 0) {
+                resolve(sales[0].total);
+              } else {
+                resolve(0)
+              }
+          });
+    },
+    getMonthlyRevenue:()=>{
+        return new Promise(async (resolve, reject) => {
+            const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+              {
+                $match: { fullDate: { $gte: new Date(new Date().getDate() - 30) } },
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: { $sum: '$totalAmount' },
+                },
+              },
+            ]).toArray();
+            if (sales.length !== 0) {
+                resolve(sales[0].total);
+              } else {
+                resolve(0)
+              }
+          
+          });
+    },
+
+    getYearlyRevenue:()=>{
+        return new Promise(async (resolve, reject) => {
+            const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+              {
+                $match: { fullDate: { $gte: new Date(new Date().getFullYear- 1) } },
+              },
+              {
+                $group: {
+                  _id: null,
+                  total: { $sum: '$totalAmount' },
+                },
+              },
+            ]).toArray();
+            if (sales.length !== 0) {
+                resolve(sales[0].total);
+              } else {
+                resolve(0)
+              }
+          });
     },
 
 

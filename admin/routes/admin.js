@@ -67,7 +67,7 @@ const{
 /* GET home page. */
 router.get('/',renderadminLogin);
 
-router.post('/sales',adminLoginRoute,salesReport)
+router.post('/sales',autherization,salesReport)
 router.post('/login-submit',nocache,adminLoginRoute,redirectAdminDash)
 
 router.get("/adminDash",nocache,autherization,renderadminDash)

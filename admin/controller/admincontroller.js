@@ -32,7 +32,6 @@ const tokenVerify = (request) => {
   return decode;
 };
 
-let salesStatus = false;
 
 
 
@@ -58,15 +57,16 @@ const getImgUrl= async(imgName)=>{
     Bucket:bucketname,
     Key:imgName
   }
-
+  
   const command = new GetObjectCommand(getObjectParams);
   const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
   // console.log(url);
   return url
-
+  
 }
 
 
+let salesStatus = false;
 
 module.exports = {
   nocache: (req, res, next) => {
@@ -81,30 +81,35 @@ module.exports = {
   },
 
   salesReport: async (req, res) => {
+    console.log("entered >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
     let salesTitle = null;
-    console.log(req.body, "///");
+    console.log(req.body, "///.......>>>");
     let reports = null;
-    let report;
-    if (req.body.data === "daily") {
-      (salesTitle = "Today"), (reports = await adminHelper.getDailyOrder());
-      report = reports.length;
-    } else if (req.body.data === "weekly") {
-      (salesTitle = "Weekly"), (this.salesStatus = true);
-      reports = await adminHelper.getWeeklyorder();
-      report = reports.length;
-    } else if (req.body.data === "monthly") {
-      (salesTitle = "Monthly"), (this.salesStatus = true);
-      reports = await adminHelper.getMonthlyorder();
-      report = report.length;
-    } else if (req.body.data === "yearly") {
-      (salesTitle = "Yearly"), (this.salesStatus = true);
-      reports = await adminHelper.getyearlyorder();
-      report = report.length;
-    }
-    console.log(salesTitle);
-    console.log(reports);
 
-    res.render("adminView/adminDash", { admin: true, report, salesTitle });
+    if (req.body.data === "daily") {
+
+      salesTitle = "Today", 
+      reports = await adminHelper.getDailyOrder();
+
+    } else if (req.body.data == "weekly") {
+      salesTitle = "Weekly",
+       salesStatus = true;
+      reports = await adminHelper.getWeeklyorder();
+    } else if (req.body.data === "monthly") {
+      salesTitle = "Monthly", 
+      salesStatus = true;
+      reports = await adminHelper.getMonthlyorder();
+
+    } 
+    // else if (req.body.data === "yearly") {
+    //   (salesTitle = "Yearly"), (this.salesStatus = true);
+    //   reports = await adminHelper.getyearlyorder();
+    //   report = report.length;
+    // }
+    console.log(salesTitle);
+    console.log(reports.length);
+
+    res.render("adminView/adminDash", { admin: true, reports:reports.length, salesTitle });
   },
 
   adminLoginRoute: (req, res, next) => {
@@ -147,6 +152,7 @@ module.exports = {
           const decode = tokenVerify(req);
           console.log(decode, "+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
           console.log(decode.value.insertedId);
+          console.log("next going to work");
           next();
         } else {
           res.render("adminView/adminlogin");
@@ -161,12 +167,17 @@ module.exports = {
     res.redirect("/admin/adminDash");
   },
   renderadminDash: async (req, res) => {
-    if (!this.salesStatus) {
-      salesTitle = "Today adminDash call";
-      reports = await adminHelper.getDailyOrder();
-      report = reports.length;
-    }
-    res.render("adminView/adminDash", { admin: true, report, salesTitle });
+    let salesToday = await adminHelper.getDailyOrder()
+    let salesweek = await adminHelper.getWeeklyorder()
+    let salesMonth = await adminHelper.getMonthlyorder()
+    let saleYear = await adminHelper.getyearlyorder()
+    let dailyRevenue = await adminHelper.getDailyRevenue()
+    let weeklyRevenue = await adminHelper.getWeeklyRevenue()
+    let monthlyRevenue = await adminHelper.getMonthlyRevenue()
+    let yearlyRevenue = await adminHelper.getYearlyRevenue()
+
+
+    res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue});
   },
 
   AllUsersPage: (req, res) => {
