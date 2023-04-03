@@ -150,9 +150,14 @@ module.exports={
     getWeeklyRevenue:()=>{
         return new Promise(async (resolve, reject) => {
             const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-              {
-                $match: { fullDate: { $gte: new Date(new Date().getDate() - 7) } },
-              },
+                {
+                    $match: {
+                        $and: [
+                          { fullDate: { $lte: new Date() } },
+                          { fullDate: { $gte: new Date(new Date().setDate(new Date().getDate() - 7)) } }
+                        ]
+                      }
+                  },
               {
                 $group: {
                   _id: null,
@@ -168,10 +173,16 @@ module.exports={
           });
     },
     getMonthlyRevenue:()=>{
+        console.log('monthly called');
         return new Promise(async (resolve, reject) => {
             const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
               {
-                $match: { fullDate: { $gte: new Date(new Date().getDate() - 30) } },
+                $match: {
+                    $and: [
+                      { fullDate: { $lte: new Date() } },
+                      { fullDate: { $gte: new Date(new Date().setDate(new Date().getDate() - 30)) } }
+                    ]
+                  }
               },
               {
                 $group: {
@@ -190,10 +201,16 @@ module.exports={
     },
 
     getYearlyRevenue:()=>{
+        console.log('yearly called');
         return new Promise(async (resolve, reject) => {
             const sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
               {
-                $match: { fullDate: { $gte: new Date(new Date().getFullYear- 1) } },
+                $match: {
+                    $and: [
+                      { fullDate: { $lte: new Date() } },
+                      { fullDate: { $gte: new Date(new Date().setFullYear(new Date().getDate() - 365)) } }
+                    ]
+                  }
               },
               {
                 $group: {
@@ -208,6 +225,18 @@ module.exports={
                 resolve(0)
               }
           });
+    },
+
+    getchartCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let data={}
+            data.COD = await db.get().collection(collection.ORDER_COLLECTION).find({paymentMethod:"COD"}).count()
+            data.wallet = await db.get().collection(collection.ORDER_COLLECTION).find({paymentMethod:"wallet"}).count()
+            data.razorPay = await db.get().collection(collection.ORDER_COLLECTION).find({paymentMethod:"razorPay"}).count()
+            data.paypal = await db.get().collection(collection.ORDER_COLLECTION).find({paymentMethod:"paypal"}).count()
+            // data.paypal = await db.get().collection(collection.ORDER_COLLECTION).find({paymentMethod:"paypal"}).count()
+            resolve(data)
+        })
     },
 
 

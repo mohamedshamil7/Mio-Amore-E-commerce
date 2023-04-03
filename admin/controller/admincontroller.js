@@ -7,6 +7,7 @@ require("dotenv").config();
 const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = require("@aws-sdk/client-s3");
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { log } = require("console");
 
 
 const MY_SECRET = process.env.MY_SECRET;
@@ -175,9 +176,15 @@ module.exports = {
     let weeklyRevenue = await adminHelper.getWeeklyRevenue()
     let monthlyRevenue = await adminHelper.getMonthlyRevenue()
     let yearlyRevenue = await adminHelper.getYearlyRevenue()
+    let totalUserCount = await adminHelper.getAllUsers()
+    let chartcount = await adminHelper.getchartCount()
+console.log(chartcount);
+    console.log(`today:${dailyRevenue}`);
+    console.log(`week:${weeklyRevenue}`);
+    console.log(`,monty:${monthlyRevenue}`);
+    console.log(`uyear:${yearlyRevenue}`);
 
-
-    res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue});
+      res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue,totalUserCount:totalUserCount.length,chartcount});
   },
 
   AllUsersPage: (req, res) => {
