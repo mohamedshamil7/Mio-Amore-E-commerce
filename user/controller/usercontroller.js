@@ -30,6 +30,7 @@ paypal.configure({
 
 const { stringify } = require("querystring");
 const e = require("express");
+const { log } = require("console");
 
 
 const bucketname = process.env.BUCKET_NAME
@@ -1578,6 +1579,14 @@ module.exports = {
     console.log(req.body.id);
     userHelpers.delAddress(req.body.id,decode.value.insertedId).then(()=>{
       res.json({status:true})
+    })
+  },
+  search:(req,res)=>{
+    userHelpers.searchProduct(req.body.data).then((products)=>{
+      res.json(products)
+    }).catch(()=>{
+      console.log("product not found");
+      res.json(false)
     })
   }
 };

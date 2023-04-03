@@ -18,6 +18,7 @@ require("dotenv").config();
 const razorPay= require("razorpay");
 const { stringify } = require("querystring");
 const { stat } = require("fs");
+const { log } = require("console");
 const Key_ID=process.env.RAZORPAY_KEY_ID
 const KEY_SECRET=process.env.RAZORPAY_KEY_SECRET
 var instance =new razorPay({
@@ -1388,6 +1389,17 @@ getAllCoupens:()=>{
        }else{
         reject()
        }
+    })
+},
+searchProduct:(data)=>{
+    return new Promise(async(resolve,reject)=>{
+        const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({ $text: { $search: data } }).toArray()
+        if(product.length!=0){
+            console.log(product);
+            // resolve(product)
+        }else{
+            reject()
+        }
     })
 }
 
