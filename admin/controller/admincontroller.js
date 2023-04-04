@@ -8,6 +8,11 @@ const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = re
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { log } = require("console");
+// const PDFDocument = require('pdfkit');
+// const easyinvoice = require('easyinvoice');
+// const pdfjsLib = require('pdfjs-dist');
+// const fs = require('fs');
+
 
 
 const MY_SECRET = process.env.MY_SECRET;
@@ -892,8 +897,15 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       }).catch(()=>{
         console.error("error in confirm delivery");
       })
-    }
+    },
+    invoice:async(req,res)=>{
+      let orderDetails
+      await adminHelper.viewSingleOrder(req.params.id).then((details)=>{
+        orderDetails = details
+      })
 
+      console.log(orderDetails.cart);
+      res.render("adminView/invoice",{admin:true, orderDetails, date:new Date().toLocaleString()})
 
-
-};
+}
+}
