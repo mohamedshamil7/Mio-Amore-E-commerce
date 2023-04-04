@@ -226,3 +226,15 @@ function deleteAdd(id){
         }
       })
 }
+
+
+// function viewOrder(orderId){
+//     alert(orderId)
+//     $.ajax({
+//         url:,
+//         method:'post',
+//         data:{
+//            orderId
+//         }
+//     })
+// }

@@ -225,6 +225,8 @@
                                                 {{/if}}
                                             </div>
                                         </div>
+
+                   <a href="http://localhost:8001/user/viewOrderDetails/{{this._id}}"> <button  style=" margin-top: 30px;" class="btn  btn-success ">View Details</button> </a> 
                                         {{#if this.btnStatus}}
                     <button  onclick="cancelOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> 
                                                    
@@ -245,7 +247,7 @@
                                                 <a href="product-left-thumbnail.html">
                                                     <h3>{{this.cart_product.ProductName}}</h3>
                                                 </a>
-                                                <p class="text-content">{{this.cart_product.Description}}</p>
+                                                {{!-- <p class="text-content">{{this.cart_product.Description}}</p> --}}
                                                 <ul class="product-size">
                                                     <li>
                                                         <div class="size-box">

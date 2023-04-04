@@ -1035,6 +1035,7 @@ cancelOrderSubmit:(orderId)=>{
                 status: 'Cancelled',
                 deliveryStatus: 'Cancelled',
                 btnStatus: false,
+                orderCancelled:true
             },
         })
         if(order){
@@ -1398,6 +1399,20 @@ searchProduct:(data)=>{
             console.log(product);
             // resolve(product)
         }else{
+            reject()
+        }
+    })
+},
+getsingleorderDetails:(orderId)=>{
+    console.log(orderId);
+    return new Promise(async(resolve,reject)=>{
+        const data = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+
+        if(data){
+            // console.log(data);
+            resolve(data)
+        }else{
+            console.log("rejected");
             reject()
         }
     })

@@ -1,0 +1,238 @@
+<!-- Order Detail Section Start -->
+    <section class="order-detail">
+        <div class="container-fluid-lg">
+            <div class="row g-sm-4 g-3">
+                <div class="col-xxl-3 col-xl-4 col-lg-6">
+                    {{#each orderData.cart}}
+                    <div class="order-image" >
+                        <img src="{{this.cart_product.urlImage1}}" class="img-fluid blur-up lazyload" alt="">
+                    </div>
+                    {{/each}}
+                </div>
+
+                <div class="col-xxl-9 col-xl-8 col-lg-6">
+                    <div class="row g-sm-4 g-3">
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i data-feather="map-pin" class="text-content"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Shipping Address</h5>
+                                    <h6 class="theme-color"><span style="margin-top: 2%;"> Name :  </span> {{orderData.deleviryDetails.fullName}}</h6> 
+                                    <h6 class="theme-color"> <span style="margin-top: 2%;"> House/flat no :  </span>{{orderData.deleviryDetails.houseNo}}</h6> 
+                                    <h6 class="theme-color"> <span style="margin-top: 2%;"> add :  </span>{{orderData.deleviryDetails.useradd}}</h6> 
+                                    <h6 class="theme-color"><span style="margin-top: 2%;"> PIN Code :  </span>{{orderData.deleviryDetails.pin}}</h6> 
+                                    <h6 class="theme-color"> <span style="margin-top: 2%;"> City :  </span>  {{orderData.deleviryDetails.town}}</h6> 
+                                    <h6 class="theme-color"><span style="margin-top: 2%;"> Phone :  </span>   {{orderData.deleviryDetails.mobile}}</h6> 
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i data-feather="info" class="text-content"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Payment Method</h5>
+                                        <h4>{{orderData.paymentMethod}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if orderData.orderCancelled}}
+                         <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">       
+                                    <i class="text-content" data-feather="calendar"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Delivery Date</h5>
+                                    <h4>Order was Cancelled</h4>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">       
+                                    <i class="text-content" data-feather="calendar"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Delivery Date</h5>
+                                    {{#if orderData.deliveredDate}}
+                                    <h4>Delivered on :{{orderData.deliveredDate}}</h4>
+                                    {{else}}
+                                    {{#if orderData.scheduledDate}}
+                                    <h4>Delivered by :{{orderData.scheduledDate}}</h4>
+                                    {{else}}
+
+                                    <h4>Order waiting to  dispach</h4>
+                                    {{/if}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i class="text-content" data-feather="crosshair"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">From</h5>
+                                    <h4>STR. Smardan 9, Bucuresti, romania.</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i class="text-content" data-feather="map-pin"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Destination</h5>
+                                    <h4>Flokagata 24, 105 Reykjavik, Iceland</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i class="text-content" data-feather="calendar"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Estimated Time</h5>
+                                    <h4>7 Frb, 05:05pm</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 overflow-hidden">
+                            <ol class="progtrckr">
+                                <li class="progtrckr-done">
+                                    <h5>Order Placed</h5>
+                                    {{!-- <h6>05:43 AM</h6> --}}
+                                </li>
+                                
+                                <li class="progtrckr-done">
+                                    <h5>Order Processed</h5>
+                                    {{!-- <h6>Processing</h6> --}}
+                                </li>
+                                {{#if orderData.orderCancelled}}
+                                 <li class="progtrckr-">
+                                    <h5>order Cancelled</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                {{else}}
+                                {{#if orderData.deliveredDate }}  
+                                <li class="progtrckr-done">
+                                    <h5>Delivery Scheduled</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                  <li class="progtrckr-done">
+                                    <h5>Shipped</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                <li class="progtrckr-done">
+                                    <h5>Delivered</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                {{#if orderData.returnConfirmed}}
+                                <li class="progtrckr-done">
+                                    <h5 style="color: red;">Returned</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                {{/if}}
+                                {{else}}
+                                {{#if orderData.scheduledDate}}
+                                <li class="progtrckr-done">
+                                    <h5>Delivery Scheduled</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                  <li class="progtrckr-done">
+                                    <h5>Shipped</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                <li class="progtrckr-todo">
+                                    <h5>Delivered</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                {{else}}
+                                  <li class="progtrckr-todo">
+                                    <h5>Delivery Scheduled</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                  <li class="progtrckr-todo">
+                                    <h5>Shipped</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                <li class="progtrckr-todo">
+                                    <h5>Delivered</h5>
+                                    {{!-- <h6>Pending</h6> --}}
+                                </li>
+                                
+                                {{/if}}
+                                {{/if}}
+                                {{/if}}
+
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Order Detail Section End -->
+
+    <!-- Order Table Section Start -->
+    <section class="order-table-section section-b-space">
+        <div class="container-fluid-lg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table order-tab-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each orderData.cart}}
+                                <tr>
+                                    <td> <img src="{{this.cart_product.urlImage1}}" width="50" alt=""> </td>
+                                    <td>
+                                        <a href="/user/product/{{this.cart_product._id}}"> {{this.cart_product.ProductName}}</a></td>
+                                    <td>{{this.quantity}}</td>
+                                    <td>{{this.cart_product.Price}}</td>
+                                    {{#if this.deliveredDate}}
+                                    <td><button class="btn" type="button"> write a review? </button></td>
+                                    {{/if}}
+                                </tr>
+                                {{/each}}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Order Table Section End -->

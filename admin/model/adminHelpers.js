@@ -917,7 +917,8 @@ module.exports={
                 let order = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(id)},{
                     $set:{
                         deliveryStatus:deliveyDate,
-                        deliveryScheduled:true
+                        deliveryScheduled:true,
+                        scheduledDate:deliveyDate
                     }
                 })
 

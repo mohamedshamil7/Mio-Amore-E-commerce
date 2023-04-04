@@ -47,7 +47,8 @@ const {
   filterCategory,
   checkCoupen,
   delAddress,
-  search
+  search,
+  viewOrderDetails
 
 } = require("../controller/usercontroller");
 
@@ -120,6 +121,7 @@ router.post("/changeCategory",nocache,filterCategory)
 router.post("/checkCoupen",nocache,checkCoupen)
 router.post("/search",nocache,search)
 router.delete("/deleteAdd",nocache,delAddress)
+router.get('/viewOrderDetails/:id',nocache,viewOrderDetails)
 
 module.exports = router;
 

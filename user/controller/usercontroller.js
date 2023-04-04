@@ -1588,6 +1588,36 @@ module.exports = {
       console.log("product not found");
       res.json(false)
     })
+  },
+  viewOrderDetails:async(req,res)=>{
+
+  let data 
+   await userHelpers.getsingleorderDetails(req.params.id).then((dat)=>{
+    data = dat
+  })
+    
+
+  async function processImages(Data) {
+    for (let i = 0; i < Data.cart.length; i++) {
+        if(Data.deliveredDate){
+          Data.cart[i].deliveredDate = Data.deliveredDate
+        }
+        if (Data.cart[i].cart_product.Image1) {
+
+          Data.cart[i].cart_product.urlImage1 = await getImgUrl(
+            Data.cart[i].cart_product.Image1
+          );
+        }
+        // console.log("image 1 :", Data.cart[i].Image1);
+        // console.log("Data[i].urlImage1:", Data.cart[i].urlImage1);
+      
+    }
+    console.log("Data:", Data);
+    return Data;
+  }
+
+  let orderData = await processImages(data);
+  res.render('userView/viewOrderDetails',{userpar:true,orderData})
   }
 };
 
