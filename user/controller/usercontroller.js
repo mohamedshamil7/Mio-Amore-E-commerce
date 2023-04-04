@@ -379,7 +379,7 @@ module.exports = {
       .viewProduct(prodId)
       .then((response) => {
         datas = response;
-        console.log(`data:?????????//// ${data.inStock}`);
+        // console.log(`data:?????????//// ${data.inStock}`);
       })
       .catch((err) => {
         console.log(err);
@@ -1618,6 +1618,35 @@ module.exports = {
 
   let orderData = await processImages(data);
   res.render('userView/viewOrderDetails',{userpar:true,orderData})
+  },
+
+  addReview:async(req,res)=>{
+    console.log(req.params.id)
+    let dat
+    await userHelpers.viewProduct(req.params.id).then((data)=>{
+      dat= data
+    })
+    async function processImages(Data) {
+      console.log(Data);
+      if (Data.Image1) {
+        Data.urlImage1 = await getImgUrl(Data.Image1);
+        // console.log("Data[i].urlImage1:", Data.urlImage1);
+      }
+      if (Data.Image2) {
+        Data.urlImage2 = await getImgUrl(Data.Image2);
+      }
+      if (Data.Image3) {
+        Data.urlImage3 = await getImgUrl(Data.Image3);
+      }
+      if (Data.Image4) {
+        Data.urlImage4 = await getImgUrl(Data.Image4);
+      }
+
+      console.log("Data:", Data);
+      return Data;
+    }
+    let data = await processImages(dat);
+    res.render("userView/review",{userpar:true,data})
   }
 };
 

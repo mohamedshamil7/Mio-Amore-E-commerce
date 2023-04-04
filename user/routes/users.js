@@ -48,7 +48,8 @@ const {
   checkCoupen,
   delAddress,
   search,
-  viewOrderDetails
+  viewOrderDetails,
+  addReview
 
 } = require("../controller/usercontroller");
 
@@ -122,6 +123,7 @@ router.post("/checkCoupen",nocache,checkCoupen)
 router.post("/search",nocache,search)
 router.delete("/deleteAdd",nocache,delAddress)
 router.get('/viewOrderDetails/:id',nocache,viewOrderDetails)
+router.get('/addReview/:id',nocache,addReview)
 
 module.exports = router;
 

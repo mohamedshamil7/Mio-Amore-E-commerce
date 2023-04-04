@@ -228,13 +228,13 @@ function deleteAdd(id){
 }
 
 
-// function viewOrder(orderId){
-//     alert(orderId)
+// function addReview(prodId,){
 //     $.ajax({
-//         url:,
-//         method:'post',
+//         url:"http://localhost:8001/user/addReview",
+//         method:'get',
 //         data:{
-//            orderId
-//         }
+//             prodId
+//         },
+
 //     })
 // }

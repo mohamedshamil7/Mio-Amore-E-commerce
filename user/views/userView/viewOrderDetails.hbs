@@ -223,7 +223,8 @@
                                     <td>{{this.quantity}}</td>
                                     <td>{{this.cart_product.Price}}</td>
                                     {{#if this.deliveredDate}}
-                                    <td><button class="btn" type="button"> write a review? </button></td>
+                                    <td>
+                                        <a href="/user/addReview/{{this.cart_product._id}}"><button class="btn" type="button"> write a review? </button></td></a>
                                     {{/if}}
                                 </tr>
                                 {{/each}}
