@@ -1405,17 +1405,49 @@ searchProduct:(data)=>{
 },
 getsingleorderDetails:(orderId)=>{
     console.log(orderId);
+
     return new Promise(async(resolve,reject)=>{
         const data = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
 
         if(data){
-            // console.log(data);
+            console.log(data);
             resolve(data)
         }else{
             console.log("rejected");
             reject()
         }
     })
+},
+
+addReview:(userId,prodId,star,review)=>{
+ let data={
+    userId:ObjectId(userId) ,
+    productId: ObjectId(prodId) ,
+    rating:star,
+    review : review
+ }
+    return new Promise(async(resolve,reject)=>{
+        let rev=await db.get().collection(collection.REVIEW_COLLECTION).insertOne(data)
+        if(rev.insertedId){
+            resolve(rev)
+        }else{
+            reject()
+        }
+    })
+},
+
+checkReview:(userId, prodId)=>{
+    console.log(userId,"userId");
+    console.log(prodId,"prodis");
+    return new Promise(async(resolve,reject)=>{
+        let data = await db.get().collection(collection.REVIEW_COLLECTION).findOne({ $and: [{ productId: ObjectId(prodId) }, { userId: ObjectId(userId) }] });
+        if(data){
+            reject()
+        }else{
+            resolve()
+        }
+    })
+    
 }
 
 

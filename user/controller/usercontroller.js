@@ -1620,34 +1620,51 @@ module.exports = {
   res.render('userView/viewOrderDetails',{userpar:true,orderData})
   },
 
-  addReview:async(req,res)=>{
+  renderReviewPage:async(req,res)=>{
+    let decode = tokenVerify(req)
     console.log(req.params.id)
     let dat
-    await userHelpers.viewProduct(req.params.id).then((data)=>{
-      dat= data
-    })
-    async function processImages(Data) {
-      console.log(Data);
-      if (Data.Image1) {
-        Data.urlImage1 = await getImgUrl(Data.Image1);
-        // console.log("Data[i].urlImage1:", Data.urlImage1);
-      }
-      if (Data.Image2) {
-        Data.urlImage2 = await getImgUrl(Data.Image2);
-      }
-      if (Data.Image3) {
-        Data.urlImage3 = await getImgUrl(Data.Image3);
-      }
-      if (Data.Image4) {
-        Data.urlImage4 = await getImgUrl(Data.Image4);
-      }
+    await userHelpers.checkReview(decode.value.insertedId, req.params.id).then(async()=>{
+      console.log("new review by user");
 
-      console.log("Data:", Data);
-      return Data;
-    }
-    let data = await processImages(dat);
-    res.render("userView/review",{userpar:true,data})
+      await userHelpers.viewProduct(req.params.id).then((data)=>{
+        dat= data
+      })
+      async function processImages(Data) {
+        console.log(Data);
+        if (Data.Image1) {
+          Data.urlImage1 = await getImgUrl(Data.Image1);
+          // console.log("Data[i].urlImage1:", Data.urlImage1);
+        }
+        
+  
+        // console.log("Data:", Data);
+        return Data;
+      }
+      let data = await processImages(dat);
+      res.render("userView/review",{userpar:true,data})
+
+    }).catch(()=>{
+
+      res.redirect(req.get("referer"));
+    })
+   
+  },
+
+
+  addReview:async(req,res)=>{
+      let decode = tokenVerify(req)
+      let data
+      console.log("//..mmnnbbvv,,,,", req.body.prodId);
+      await userHelpers.addReview(decode.value.insertedId, req.body.prodId ,req.body.star, req.body.rev).then((response)=>{
+        res.json({status:true})
+      }).catch(()=>{
+        res.json(false)
+      })
+
+
   }
+
 };
 
 
