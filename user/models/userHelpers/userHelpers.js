@@ -1423,8 +1423,9 @@ addReview:(userId,prodId,star,review)=>{
  let data={
     userId:ObjectId(userId) ,
     productId: ObjectId(prodId) ,
-    rating:star,
-    review : review
+    rating:Number(star),
+    review : review,
+    date:new Date().toDateString()
  }
     return new Promise(async(resolve,reject)=>{
         let rev=await db.get().collection(collection.REVIEW_COLLECTION).insertOne(data)
@@ -1448,6 +1449,39 @@ checkReview:(userId, prodId)=>{
         }
     })
     
+},
+getAllReviews:(prodId)=>{
+    return new Promise(async(resolve,reject)=>{
+
+        let reviews = await db.get().collection(collection.REVIEW_COLLECTION).aggregate([
+            {
+                $match:{
+                    productId:ObjectId(prodId)
+                }
+            },
+                
+                    {
+                        $lookup:{
+                            from:collection.USER_COLLECTION,
+                            localField:"userId",
+                            foreignField:"_id",
+                            as:"users"
+                        }
+                    },
+                    {
+                        $unwind:"$users"
+                    },
+                    {
+                        $project:{rating:1,review:1,date:1, "users.username": 1}
+                    }
+        ]).toArray()
+      if(reviews){
+        console.log("this are the reviews :",reviews);
+        resolve(reviews)
+      }else{
+        reject()
+      }
+    })
 }
 
 

@@ -31,6 +31,7 @@ paypal.configure({
 const { stringify } = require("querystring");
 const e = require("express");
 const { log } = require("console");
+const { response } = require("../app");
 
 
 const bucketname = process.env.BUCKET_NAME
@@ -375,6 +376,7 @@ module.exports = {
     let normalCoupens
     let datas = null;
     let wishlist;
+    let reviews
     await userHelpers
       .viewProduct(prodId)
       .then((response) => {
@@ -384,6 +386,22 @@ module.exports = {
       .catch((err) => {
         console.log(err);
       });
+
+      await userHelpers.getAllReviews(prodId).then((response)=>{
+        reviews = response
+        let avg=0
+        let sum=0
+        for(let i=0;i<reviews?.length;i++){
+          sum = Number( sum+(reviews[i].rating))
+        }
+        avg = sum/(reviews.length)
+        console.log(sum,"//");
+        console.log(avg,"lll");
+        datas.averageRating = avg
+      })
+      console.log("datasss after avg",datas);
+      
+
     await userHelpers
       .inWishlist(user, prodId)
       .then((response) => {
@@ -427,7 +445,9 @@ module.exports = {
       count,
       total,
       walletTotal: walletData.total,
-      normalCoupens
+      normalCoupens,
+      reviews,
+      revCount:reviews?.length
     });
   },
   imageRoute: (req, res) => {
@@ -773,7 +793,7 @@ module.exports = {
         // console.log(response);
         orderDatas = response;
       });
-    console.log("orderDatas", orderDatas[0].cart);
+    console.log("orderDatas", orderDatas[0]?.cart);
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
         for (let j = 0; j < Data[i].cart.length; j++) {

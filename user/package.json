@@ -23,6 +23,7 @@
     "firebase": "^9.15.0",
     "firebase-admin": "^11.5.0",
     "firebaseui": "^6.0.2",
+    "handlebars-helpers": "^0.10.0",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",

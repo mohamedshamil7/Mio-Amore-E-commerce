@@ -89,28 +89,28 @@
 
                                     <h3 class="theme-color price">₹{{data.Price}} <del class="text-content">₹{{data.MRP}}</del><span
                                             class="offer theme-color">({{data.offer}}% off)</span> </h3>
-
+                                            <input type="text " value="{{data.averageRating}}" id="avgRating" hidden>
                                             {{!-- class="offer theme-color">(8% off)</span></h3> --}}
-                                    {{!-- <div class="product-rating custom-rate">
+                                    <div class="product-rating custom-rate">
                                         <ul class="rating">
                                             <li>
-                                                <i data-feather="star" class="fill"></i>
+                                                <i data-feather="star" id="star1" ></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" class="fill"></i>
+                                                <i data-feather="star"id="star2" ></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" class="fill"></i>
+                                                <i data-feather="star" id="star3" ></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" class="fill"></i>
+                                                <i data-feather="star" id="star4" ></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star"></i>
+                                                <i data-feather="star" id="star5" ></i>
                                             </li>
                                         </ul>
-                                        <span class="review">23 Customer Review</span>
-                                    </div> --}}
+                                        <span class="review">{{revCount}} customer reviews</span>
+                                    </div>
                                 </div>
 
                                 <div class="procuct-contain">
@@ -296,6 +296,210 @@
                                 </div>
                             </div>
                         </div>
+
+             <div class="col-12">
+                            <div class="product-section-box">
+                                <ul class="nav nav-tabs custom-nav" id="myTab" role="tablist">
+                                   
+
+                                   
+
+                                    <li class="nav-item" role="presentation">
+                                        <button  class="nav-link" id="review-tab" data-bs-toggle="tab"
+                                            data-bs-target="#review" type="button" role="tab" aria-controls="review"
+                                            aria-selected="false">Reviews</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content custom-tab" id="myTabContent">
+                                    
+
+                                    
+
+                                    
+
+                                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                                        <div class="review-box">
+                                            <div class="row g-4">
+                                                <div class="col-xl-6">
+                                                    
+
+                                                    
+
+                                                    
+                                                </div>
+
+                                                
+
+                                                <div class="col-12">
+                                                    <div class="review-title">
+                                                        <h4 class="fw-500">Customer questions & answers</h4>
+                                                    </div>
+
+                                                    <div class="review-people">
+                                                        <ul class="review-list">
+                                                            {{#each reviews}}
+                                                            <li  >
+                                                                <div class="people-box">
+                                                                    {{!-- <div>
+                                                                        <div class="people-image">
+                                                                            <img src="../assets/images/review/1.jpg"
+                                                                                class="img-fluid blur-up lazyload"
+                                                                                alt="">
+                                                                        </div>
+                                                                    </div> --}}
+
+                                                                    <div class="people-comment">
+                                                                        <a class="name"
+                                                                            href="javascript:void(0)">{{this.users.username}}</a>
+                                                                        <div class="date-time">
+                                                                            <h6 class="text-content">{{this.date}}</h6>
+
+                                                                            <div  class="product-rating">
+                                                                                <input type="text" id="userRating" value="{{this.rating}}" hidden >
+                                                                                <ul class="rating">
+                                                                                {{#eq this.rating 1}}
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" class="fill"></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    {{/eq}}
+
+                                                                                     {{#eq this.rating 2}}
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                           <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                          <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                          <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    
+                                                                                    {{/eq}}
+                                                                                         {{#eq this.rating 3}}
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                   <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                          <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                          <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    {{/eq}}
+
+                                                                                        {{#eq this.rating 4}}
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                   <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                          <li>
+                                                                                        <i data-feather="star"
+                                                                                           id="us1" ></i>
+                                                                                    </li>
+                                                                                    {{/eq}}
+
+                                                                                                  {{#eq this.rating 5}}
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                   <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    <li>
+                                                                                        <i data-feather="star"
+                                                                                            class="fill"></i>
+                                                                                    </li>
+                                                                                    {{/eq}}
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="reply">
+                                                                            <p>{{this.review}}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+
+                                                           
+                                                                    {{/each}}
+                                                            
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -405,6 +609,8 @@
                 
             </div>
         </div>
+
+        
     </section>
     <!-- Product Left Sidebar End -->
 
@@ -415,6 +621,58 @@
 
 <script>
     
+    let avrRating = document.getElementById("avgRating").value
+    if(avrRating ==0){
+
+    }else if(avrRating == 1){
+        let s1 = document.getElementById('star1').classList.add("fill");
+    }else if(avrRating == 2){
+        let s1 = document.getElementById('star1').classList.add("fill");
+        let s2 = document.getElementById('star2').classList.add("fill");
+    }else if(avrRating == 3){
+        let s1 = document.getElementById('star1').classList.add("fill");
+        let s2 = document.getElementById('star2').classList.add("fill");
+        let s3 = document.getElementById('star3').classList.add("fill");
+    }else if(avrRating == 4){
+        let s1 = document.getElementById('star1').classList.add("fill");
+        let s2 = document.getElementById('star2').classList.add("fill");
+        let s3 = document.getElementById('star3').classList.add("fill");
+        let s4 = document.getElementById('star4').classList.add("fill");
+    }else if(avrRating == 5){
+        let s1 = document.getElementById('star1').classList.add("fill");
+        let s2 = document.getElementById('star2').classList.add("fill");
+        let s3 = document.getElementById('star3').classList.add("fill");
+        let s4 = document.getElementById('star4').classList.add("fill");
+        let s5 = document.getElementById('star5').classList.add("fill");
+    }
+
+
+  let userRating = document.getElementById('userRating').value
+
+        if(userRating ==1){
+             let us1 = document.getElementById('us1').classList.add("fill");
+        }else if(userRating ==2){
+             let us1 = document.getElementById('us1').classList.add("fill");
+             let us2 = document.getElementById('us2').classList.add("fill");
+        }else if(userRating ==3){
+             let us1 = document.getElementById('us1').classList.add("fill");
+             let us2 = document.getElementById('us2').classList.add("fill");
+             let us3 = document.getElementById('us3').classList.add("fill");
+        }else if(userRating ==4){
+             let us1 = document.getElementById('us1').classList.add("fill");
+             let us2 = document.getElementById('us2').classList.add("fill");
+             let us3 = document.getElementById('us3').classList.add("fill");
+             let us4 = document.getElementById('us4').classList.add("fill");
+        }else if(userRating ==5){
+             let us1 = document.getElementById('us1').classList.add("fill");
+             let us2 = document.getElementById('us2').classList.add("fill");
+             let us3 = document.getElementById('us3').classList.add("fill");
+             let us4 = document.getElementById('us4').classList.add("fill");
+             let us5 = document.getElementById('us5').classList.add("fill");
+        }
+
+      
+
     var options = {
         width: 400, // required
         zoomWidth: 400,

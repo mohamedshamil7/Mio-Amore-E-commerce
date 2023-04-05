@@ -8,6 +8,7 @@ var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
 var cors= require('cors')
 const Handlebars = require('handlebars')
+const helpers=require("handlebars-helpers")();
 
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
@@ -33,7 +34,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',handlebars: allowInsecurePrototypeAccess(Handlebars),layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views'}))
+app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',handlebars: allowInsecurePrototypeAccess(Handlebars),layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views',helpers:helpers}))
+
+Handlebars.registerHelper( "when",function(operand_1, operator, operand_2, options) {
+  var operators = {
+   'eq': function(l,r) { return l == r; },
+   'noteq': function(l,r) { return l != r; },
+   'gt': function(l,r) { return Number(l) > Number(r); },
+   'or': function(l,r) { return l || r; },
+   'and': function(l,r) { return l && r; },
+   '%': function(l,r) { return (l % r) === 0; }
+  }
+  , result = operators[operator](operand_1,operand_2);
+
+  if (result) return options.fn(this);
+  else  return options.inverse(this);
+});
+
+
+// Handlebars.registerHelper("eq", function(a, b, options) {
+//   return a == b ? options.fn(this) : options.inverse(this);
+// });
+
 
 db.connect((err)=>{
   if(err) console.log(' Connection error '+err);
