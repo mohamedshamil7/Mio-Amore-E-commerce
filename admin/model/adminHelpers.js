@@ -5,8 +5,9 @@ var bcrypt=require('bcrypt')
 const Collections = require('../../dbconnections/Collections')
 const { resolve } = require('path')
 const { reject, promiseProps } = require('firebase-tools/lib/utils')
-const {S3Client, GetObjectCommand  } = require("@aws-sdk/client-s3");
+const {S3Client, GetObjectCommand, DeleteBucketCorsCommand  } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { log } = require('console')
 
 const mongoClient=require('mongodb').MongoClient
 
@@ -950,6 +951,28 @@ module.exports={
                     console.log(delivery);
                     resolve(delivery)
                 }else{reject()}
+            })
+        },
+
+        getAllSales:()=>{
+            return new Promise (async(resolve,reject)=>{
+    let Sales = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+                    {
+                        $match:{$or:[{deliveryStatus:"Delivered"},{returnConfirmed:true}]}
+                    },
+                ]).toArray()
+                console.log(Sales);
+                resolve(Sales)
+            })
+        },
+        filterSale:(startdate,endDate)=>{
+            return new Promise(async(resolve,reject)=>{
+                const sales = await db.get().collection(collection.ORDER_COLLECTION).find({$or:[{deliveryStatus:"Delivered"},{returnConfirmed:true}],$and:[{ fullDate: { $lte: new Date(endDate) } },{ fullDate: { $gte: new Date(startdate) } }]}).toArray()
+                if(sales){
+                    resolve(sales)
+                }else{
+                    reject()
+                }
             })
         }
 

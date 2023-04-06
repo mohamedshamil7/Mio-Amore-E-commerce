@@ -916,6 +916,21 @@ renderbillLabel:async(req,res)=>{
       })
       console.log(orderDetails);
   res.render('adminView/shippinglabel',{ orderDetails, date:new Date().toLocaleString()})
+},
+
+renderSalesReport:async(req,res)=>{
+  let sales
+  await adminHelper.getAllSales().then((response)=>{
+    sales = response
+  })
+
+  
+  res.render("adminView/salesReport",{admin:true, sales})
+},
+salesFilter:(req,res)=>{
+  adminHelper.filterSale(req.body.startDate,req.body.endDate).then((sales)=>{
+    res.render("adminView/salesReport",{admin:true, sales})
+  })
 }
 
 }
