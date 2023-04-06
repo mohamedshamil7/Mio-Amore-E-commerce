@@ -17,6 +17,7 @@
     "express-session": "^1.17.3",
     "file-upload": "^0.0.0",
     "firebase": "^9.15.0",
+    "handlebars-helpers": "^0.10.0",
     "hbs": "^4.2.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.0",

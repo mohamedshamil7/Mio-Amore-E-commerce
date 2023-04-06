@@ -898,6 +898,7 @@ await adminHelper.updateBanner3(req.body).then(()=>{
         console.error("error in confirm delivery");
       })
     },
+
     invoice:async(req,res)=>{
       let orderDetails
       await adminHelper.viewSingleOrder(req.params.id).then((details)=>{
@@ -907,5 +908,14 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       console.log(orderDetails.cart);
       res.render("adminView/invoice",{admin:true, orderDetails, date:new Date().toLocaleString()})
 
+},
+renderbillLabel:async(req,res)=>{
+  let orderDetails
+      await adminHelper.viewSingleOrder(req.params.id).then((details)=>{
+        orderDetails = details
+      })
+      console.log(orderDetails);
+  res.render('adminView/shippinglabel',{ orderDetails, date:new Date().toLocaleString()})
 }
+
 }

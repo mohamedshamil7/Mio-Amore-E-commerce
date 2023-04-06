@@ -56,7 +56,8 @@ const {
   scheduleOrder,
   deliveryDateSubmit,
   confirmDelivery,
-  invoice
+  invoice,
+  renderbillLabel
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -133,5 +134,6 @@ router.post("/banner3-submit",autherization,upload3,banner3Add)
 router.delete("/delBanner",nocache,autherization,delBanner)
 router.get("/confirmDelivery/:id",nocache,autherization,confirmDelivery)
 router.get("/invoice/:id",nocache,autherization,invoice)
+router.get("/billLabel/:id",nocache,autherization,renderbillLabel)
 module.exports = router;
 

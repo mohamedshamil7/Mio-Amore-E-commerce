@@ -8,6 +8,7 @@ const hbs = require('express-handlebars');
 var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
 var session =require('express-session') 
+const helpers=require("handlebars-helpers")();
 
 
 var app = express();
@@ -19,7 +20,7 @@ var db=require('../dbconnections/dbConnection')
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views/'}))
+app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views/',helpers:helpers}))
 
 app.use(session({secret: "key",cookie:{maxAge:60000*5},resave:false,saveUninitialized:false }))
 app.use(logger('dev'));

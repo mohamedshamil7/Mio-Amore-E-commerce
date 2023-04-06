@@ -47,6 +47,7 @@
                      {{#if this.deliveredDate}}
                      <p class="badge bg-success">Delivered  on {{this.deliveredDate}}</p> <br>
                    <a href=" /admin/invoice/{{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
+                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success ">download Billing label</button> </a> 
 
                      {{else}}
                    <a href=" /admin/scheduleOrder/{{this._id}}"><button type="button"  class="btn btn-secondary">schedule Order</button> </a> 

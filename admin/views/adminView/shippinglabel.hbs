@@ -1,0 +1,202 @@
+<div id="label">
+    <title>Voxo | Invoice template </title>
+
+    <!--Google font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/font-awesome.css">
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
+
+    <!-- Theme css -->
+    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+
+
+
+    <body class="bg-light">
+        <section class="theme-invoice-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xxl-6 col-xl-8 mx-auto my-3">
+                        <div class="invoice-wrapper">
+                            <div class="invoice-header">
+                                <div class="header-left">
+                                    <div class="upper-icon">
+                                        <img src="label-css/assets/images/logo.svg" class="img-fluid" alt="">
+                                    </div>
+
+                                    <div class="header-address">
+                                        <div class="address-left">
+                                            <ul>
+                                                <li>Delivery Address: </li>
+
+                                                <li>{{orderDetails.deleviryDetails.fullName}}</li>
+                                                <li>{{ orderDetails.deleviryDetails.useradd}}</li>
+                                                <li> {{orderDetails.deleviryDetails.town}},
+                                                    {{orderDetails.deleviryDetails.pin}}</li>
+                                                <li> Mobile: {{orderDetails.deleviryDetails.mobile}}</li>
+                                            </ul>
+                                        </div>
+
+                                        <div class="address-right">
+                                            <ul>
+                                                <li class="text-content" style="color: black; font-weight: 700; "><span
+                                                        class="" style="color: black; font-weight: 700;"> Issue Date
+                                                        :</span> {{date}}</li>
+                                                <li class="text-content" style="color: black; font-weight: 700;"><span
+                                                        class="" style="color: black; font-weight: 700;"> Delivery date
+                                                        :</span>{{orderDetails.scheduledDate}}</li>
+                                                {{#eq orderDetails.paymentMethod "COD"}}
+                                                <li class="text-content" style="color: black; font-weight: 700;"><span
+                                                        class="" style="color: black; font-weight: 700;"> COLLECT CASH:
+                                                    </span>{{orderDetails.totalAmount}}</li>
+                                                {{else}}
+                                                <li class="text-content" style="color: black; font-weight: 700;"><span
+                                                        class="" style="color: black; font-weight: 700;"> Prepaid
+                                                    </span>(Don't Collect Cash)</li>
+                                                {{/eq}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="header-right">
+                                    <h3> Label</h3>
+                                </div>
+                            </div>
+                            <div class="invoice-body">
+                                <div class="table-responsive">
+                                    <table class="table table-product mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-start">Item detail</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Qty</th>
+                                                {{!-- <th>Price</th> --}}
+                                                {{!-- <th>Amout</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each orderDetails.cart}}
+                                            <tr>
+                                                <td class="text-start">{{this.cart_product.ProductName}}</td>
+                                                <td class="text-content"></td>
+                                                <td class="text-content"></td>
+                                                <td class="text-content"></td>
+                                                <td class="text-content">{{this.quantity}}</td>
+                                                {{!-- <td class="text-content">$60.00</td> --}}
+                                                {{!-- <td>$156.00</td> --}}
+                                            </tr>
+                                            {{/each}}
+                                        </tbody>
+                                        {{!-- <tfoot>
+                                            <tr>
+                                                <td colspan="2"></td>
+                                                <td colspan="2">GRAND TOTAL</td>
+                                                <td>$325.00</td>
+                                            </tr>
+                                        </tfoot> --}}
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="invoice-footer">
+
+                                <div class="support-box">
+                                    <ul>
+                                        <li>
+                                            <div class="support-detail">
+                                                <div class="support-icon">
+                                                    <i class="fa-solid fa-phone"></i>
+                                                </div>
+                                                <div class="support-content">
+                                                    <ul>
+                                                        <li>+91 1234567890</li>
+                                                        <li>+91 1234567890</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="support-detail">
+                                                <div class="support-icon">
+                                                    <i class="fa-solid fa-earth-americas"></i>
+                                                </div>
+                                                <div class="support-content">
+                                                    <ul>
+                                                        <li>support@MioAmore.com</li>
+                                                        <li>www.MioAmore.com</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="support-detail">
+                                                <div class="support-icon">
+                                                    <i class="fa-solid fa-location-dot"></i>
+                                                </div>
+                                                <div class="support-content">
+                                                    <ul>
+                                                        <li>MioAmore Store</li>
+                                                        <li>Address : kochi, IL</li>
+                                                        <li> 89th street , Suite 69,</li>
+                                                        <li>Kerala India-2768283</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    </div>
+                        <div class="row pad-top-botm">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <hr>
+                                <button type="button" id="download-button" class="btn btn-success btn-lg"> Download
+                                    PDF</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<!-- PDF AND EXCEL -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script>
+    const button = document.getElementById('download-button');
+    function generatePDF() {
+        // Choose the element that your content will be rendered to.
+        const element = document.getElementById('label');
+        // Choose the element and save the PDF for your user.
+        html2pdf().from(element).save();
+    }
+    button.addEventListener('click', generatePDF);
+    function export_data() {
+        let data = document.getElementById('label');
+        var fp = XLSX.utils.table_to_book(data, { sheet: 'arjun' });
+        XLSX.write(fp, {
+            bookType: 'xlsx',
+            type: 'base64'
+        });
+        XLSX.writeFile(fp, 'test.xlsx');
+    }
+</script>
