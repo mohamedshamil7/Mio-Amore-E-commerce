@@ -78,10 +78,35 @@
                   </tr>
                 </thead>
                 <tbody>
-                <td></td>
-                <td>{{this.Size}}</td>
-                <td>{{this.Size}}</td>
+                <td> Parent Product </td>
+                  <td>{{product.Size}}</td>
+                <td>{{product.Color}}</td>
+                <td>{{product.Price}}</td>
+                <td>{{product.Stock}}</td>
                 </tbody>
+               </table>
+
+
+               <table class="table table-striped mt-3">
+                <thead>
+                  <tr>
+                    <th scope="col">Variation</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Color</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                  </tr>
+                </thead>
+                            {{#each Variations}}
+                <tbody>
+
+                <td>{{this.Variations.Data.id}}</td>
+                <td>{{this.Variations.Data.Size}}</td>
+                <td>{{this.Variations.Data.color}}</td>
+                <td>{{this.Variations.Data.Price}}</td>
+                <td>{{this.Variations.Data.Stock}}</td>
+                </tbody>
+                    {{/each}}
                </table>
         </div>
     </div>

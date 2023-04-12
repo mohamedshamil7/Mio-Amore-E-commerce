@@ -936,9 +936,19 @@ salesFilter:(req,res)=>{
 
 
 addVariations:(req,res)=>{
+  console.log("///????????????>>>>>>>>>>>>>>>>>");
   adminHelper.getEditProduct(req.body.id).then((product)=>{
-      console.log(product);
-    res.render('adminView/Variations',{product})
+    
+    
+    // let Variations = [...product.Variations]
+    adminHelper.getAllVariations(req.body.id).then((Variations)=>{
+      console.log("....",Variations);
+       res.render('adminView/VariationsPage',{product,Variations})
+      }).catch(()=>{
+        
+        res.render('adminView/VariationsPage',{product})
+    })
+
     })
 },
 addVarient_submit:(req,res)=>{

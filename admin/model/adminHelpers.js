@@ -460,6 +460,8 @@ module.exports={
                     Image2:id?.Image2,
                     Image3:id?.Image3,
                     Image4:id?.Image4,
+                    Size:id?.Size,
+                    Color:id?.Color 
 
 
                 }
@@ -1010,6 +1012,33 @@ module.exports={
             console.log("NO size already there  and new color inserted");
             resolve(ins)
            }
+            })
+        },
+
+
+        getAllVariations:(prodId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
+                    {
+                        $match:{
+                            _id:ObjectId(prodId)
+                        }
+                    },
+                    {
+                        $unwind: "$Variations"
+                    },
+                    {
+                        '$unwind': {
+                          'path': '$Variations.Data'
+                        }
+                    }
+                ]).toArray()
+                console.log(vari);
+                if(vari){
+                    resolve(vari)
+                }else{
+                    reject()
+                }
             })
         }
 
