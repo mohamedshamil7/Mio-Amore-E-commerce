@@ -21,6 +21,7 @@
                     
                     <th scope="col">Mf Date</th>
                     <th>Stock</th>
+                    <th></th>
                     <th>Availability</th>
                     <th scope="col">Action</th>
                   </tr>
@@ -37,6 +38,16 @@
 
                     <td>
                      {{this.Stock}}
+                    </td>
+                    <td>
+
+                      <a href=""><form action="/admin/addVariations" method="post">
+                            <input type="text" name="id" value="{{this._id}}" hidden >
+                            <button type="submit" class="btn btn-primary">Add Variations
+                            </button>
+                            </form></a> 
+
+
                     </td>
                     <td>
                       {{#if this.Availability}}

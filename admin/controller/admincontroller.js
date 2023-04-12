@@ -931,6 +931,24 @@ salesFilter:(req,res)=>{
   adminHelper.filterSale(req.body.startDate,req.body.endDate).then((sales)=>{
     res.render("adminView/salesReport",{admin:true, sales})
   })
+},
+
+
+
+addVariations:(req,res)=>{
+  adminHelper.getEditProduct(req.body.id).then((product)=>{
+      console.log(product);
+    res.render('adminView/Variations',{product})
+    })
+},
+addVarient_submit:(req,res)=>{
+  console.log("//",req.body)
+
+  adminHelper.AddVariation(req.body).then((data)=>{
+    res.json(data)
+  })
 }
+
+
 
 }

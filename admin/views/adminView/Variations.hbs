@@ -1,0 +1,123 @@
+<section class="page-align" id="footer">
+    <div class="container-fluid " id="mydata">
+        <div class="row">
+          <h2 class="mb-5 mt-0">Add New Product</h2>
+
+             <!-- General Form Elements -->
+              <form action="/admin/addVarient-submit" method="post"  >
+                <div class="row mb-3">
+                    <input type="text" name="prodId" id="prodId" value="{{product._id}}" hidden>
+                  <label for="inputText" class="col-sm-2 col-form-label">Product Name</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="ProductName" value="{{product.ProductName}}" class="form-control" readonly>
+
+                
+
+                  </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label">Size</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="Size" id="Size"  class="form-control">
+                  </div>
+                </div>
+
+
+                <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
+                  <div class="col-sm-4">
+                    <input type="text" name="Color" id="Color"  class="form-control">
+                  </div>
+                </div>
+
+                
+                <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label">Selling Price</label>
+                  <div class="col-sm-4">
+                    <input type="number" id="Price" name="Price" class="form-control">
+                  </div>
+                </div>
+
+
+                <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
+                  <div class="col-sm-4">
+                    <input type="number" name="Stock" id="Stock" class="form-control">
+                  </div>
+                 </div>
+
+
+                 {{!-- <div class="row mb-3">
+                  {{!-- <label for="inputNumber"  class="col-sm-2 col-form-label">Colors Added :</label> --}}
+                  <div class="col-sm-4">
+
+                  </div>
+                </div> --}}
+
+                <div class="row mb-3">
+                  {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
+                  <div class="col-sm-4 col-form-label">
+                    <button type="button" onclick="AddVarient()" class="btn btn-primary">Add Varient</button>
+                  </div>
+                </div>
+
+              </form><!-- End General Form Elements -->
+
+
+               <table class="table table-striped mt-3">
+                <thead>
+                  <tr>
+                    <th scope="col">Variation</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Color</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <td></td>
+                <td>{{this.Size}}</td>
+                <td>{{this.Size}}</td>
+                </tbody>
+               </table>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    function AddVarient(){
+        let prodId = document.getElementById('prodId').value
+        let Size = document.getElementById('Size').value
+        let Color = document.getElementById('Color').value
+        let Price = document.getElementById('Price').value
+        let Stock = document.getElementById('Stock').value
+
+        $.ajax({
+            url:"http://localhost:8001/admin/addVarient-submit",
+            data:{
+                prodId,
+                Size,
+                Color,
+                Price,
+                Stock
+            },
+            method:"post",
+            success:(response)=>{
+                  Swal.fire({
+              icon: 'success',
+              title: 'Added',
+              showConfirmButton: false,
+              timer: 1000
+            })
+            setTimeout(()=>{
+              location.reload()
+            },1000)
+            }
+        })
+    }
+</script>
+

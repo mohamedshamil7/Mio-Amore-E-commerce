@@ -59,7 +59,9 @@ const {
   invoice,
   renderbillLabel,
   renderSalesReport,
-  salesFilter
+  salesFilter,
+  addVariations,
+  addVarient_submit
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -139,5 +141,9 @@ router.get("/invoice/:id",nocache,autherization,invoice)
 router.get("/billLabel/:id",nocache,autherization,renderbillLabel)
 router.get("/Sales",nocache,autherization,renderSalesReport)
 router.post("/sale-filter",nocache,autherization,salesFilter)
+
+router.post("/addVariations",nocache,autherization,addVariations)
+
+router.post("/addVarient-submit",nocache,autherization,addVarient_submit)
 module.exports = router;
 

@@ -380,6 +380,7 @@ module.exports={
         Data.Availability=true
         Data.Price = Number(Data.Price)
         Data.offer = Number(Data.offer)
+        Data.Variations = []
         return new Promise(async(resolve,reject)=>{
             let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).insertOne(Data)
             if(data){
@@ -974,6 +975,42 @@ module.exports={
                     reject()
                 }
             })
+        },
+
+
+
+
+        AddVariation:(data)=>{
+            console.log(data.prodId);
+            let  dataToInsert={
+                id:ObjectId(),
+                color:data.Color,
+                Price:data.Price,
+                Stock:data.Stock,
+                Size:data.Size
+            }
+            return new Promise(async(resolve,reject)=>{
+           const product =   await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(data.prodId), "Variations.Size": data.Size },)
+                console.log(product);
+           if(product !=null){
+
+         console.log("entereeddddddd");
+                // Size: " " exists, push data into it
+           const ins=   await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId), "Variations.Size": data.Size },
+                  { $push: { "Variations.$.Data": dataToInsert } }, )
+                console.log(ins,":ins");
+                console.log("Variation size already there  and nee color inserted");
+                resolve(ins)
+           }else{
+             let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
+             $push:{Variations:{Size:data.Size, Data:[dataToInsert]}}
+
+            })
+            console.log(ins,":ins") ;
+            console.log("NO size already there  and new color inserted");
+            resolve(ins)
+           }
+            })
         }
 
     }
@@ -982,4 +1019,3 @@ module.exports={
   
 
 
-    ///cart:{$elemMatch:{'item':ObjectId(prodId)}}
