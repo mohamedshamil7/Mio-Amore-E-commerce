@@ -25,26 +25,24 @@
 
                                                         <li class="text-content"><span class="text-title">Sold
                                                                 By:</span> {{this.cart_product.Company}}</li>
-                                                          
-                                                        {{!-- <li class="text-content"><span
-                                                                class="text-title">Quantity</span> - 500 g</li> --}}
-
                                                         <li>
+                                                                 <h5 class="text-content d-inline-block">Size :</h5> <span>{{this.cart_product.Size}} </span> <br>
+                                                                  <h5 class="text-content d-inline-block">Color :</h5> <span>{{this.cart_product.Color}} </span> 
+                                                        </li>
+
                                                             <h5 class="text-content d-inline-block">Price :</h5>
-                                                            {{#if this.cart_product.offer}}
+
                                                             <span>{{this.cart_product.Price}} </span> <del>{{this.cart_product.MRP}}</del>
 
-                                                            {{else}}
-                                                            <span>{{this.cart_product.Price}}</span>
-                                                            {{/if}}
-                                                            
+                                                           
+                                                           
                                                             {{!-- <span class="text-content">$45.68</span> --}}
                                                              {{#if this.cart_product.inStock }}
                                                                  {{else}}
                                                                      <span class="" style="color: red;"> Product is Currently unAvailable</span>
                                             {{!-- <h6 class="theme-color">You Save : $20.68</h6> --}}
                                               {{/if}}
-                                                        </li>
+                                          
                                                         
                                                           {{!-- {{/each}} --}}
 
@@ -97,14 +95,15 @@
                                             <div class="quantity-price">
                                                 <div class="cart_qty">
                                                     <div class="input-group">
+
                                                         <button type="button" class="btn qty-left-minus"
-                                                            data-type="minus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',-1,{{this.quantity}})">
+                                                            data-type="minus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',-1,'{{this.quantity}}','{{this.varientId}}')">
                                                             <i class="fa fa-minus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                         <input class="form-control input-number qty-input" type="text"
                                                             name="quantity" id="{{this.cart_product._id}}" value={{this.quantity}}>
                                                         <button type="button" class="btn qty-right-plus"
-                                                            data-type="plus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',1,{{this.quantity}})">
+                                                            data-type="plus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',1,'{{this.quantity}}','{{this.varientId}}')">
                                                             <i class="fa fa-plus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                     </div>
@@ -181,7 +180,7 @@
                         <ul class="summery-total">
                             <li class="list-total border-top-0">
                                 <h4>Total (INR)</h4>
-                                <h4 class="price theme-color"> ₹ {{total}}</h4>
+                                <h4 class="price theme-color"> ₹{{total}}</h4>
                             </li>
                         </ul>
 

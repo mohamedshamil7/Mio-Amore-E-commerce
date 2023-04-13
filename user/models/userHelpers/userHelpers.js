@@ -320,23 +320,32 @@ findbynumber:(userphone)=>{
     })
 },
 
-addToCart:(userId,prodId)=>{
-    const prodObj = {
-        item: ObjectId(prodId),
-        quantity: 1,
-      };
+addToCart:(userId,prodId,varientId)=>{
+    console.log(userId,":userId");
+    console.log(prodId,":pro");
+    console.log(varientId,":var");
+
+
+
+         prodObj = {
+            item: ObjectId(prodId),
+            varientId:ObjectId(varientId),
+            quantity: 1,
+          };
+
+
     return new Promise(async(resolve,reject)=>{
         let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)}) 
         console.log(userCart);
         if(userCart){
             // const proExist = userCart.books.findIndex((book) => book.item == proId);
            const  cart= userCart.product.findIndex(product=>{
-                return product.item==prodId
+                return product.varientId==varientId
             })
             console.log(cart);
 
             if(cart !==-1){
-                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId),'product.item':ObjectId(prodId)},{
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId),'product.varientId':ObjectId(varientId)},{
                     $inc:{'product.$.quantity':1}
                 }).then(()=>{
                     resolve()
@@ -367,6 +376,7 @@ addToCart:(userId,prodId)=>{
 
 
 getcart:(userId)=>{
+    let total =0
     return new Promise(async(resolve,reject)=>{
       let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
     //   console.log("check cart erere",cart);
@@ -382,7 +392,9 @@ getcart:(userId)=>{
             },{
                 $project:{
                     item:'$product.item',
-                    quantity:'$product.quantity'
+                    quantity:'$product.quantity',
+                    varientId:'$product.varientId'
+
                 }
             },
             {
@@ -395,27 +407,107 @@ getcart:(userId)=>{
             },
             {
                 $project:{
-                    item:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
+                    item:1,varientId:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
                 }
-            }
+            },
+            // {
+            //     $project:{
+            //         item:1,varientId:1,quantity:1,"cart_product.Variations":1,product:'$cart_product'}
+            //  },
+            //  {
+            //     $unwind:'$cart_product.Variations'
+            //  },
+            //  {
+            //     $project:{
+            //         item:1,varientId:1,quantity:1,"cart_product.Variations":1,product:1}
+            //  },
+            //  {
+            //     $group:{
+            //         _id:{vari:'$cart_product.Variations',item:'$item',varientId:'$varientId',quantity:'$quantity',product:'$product'}
+            //     }
+            //  },
+            //  {
+            //     $unwind:'$_id.vari'
+            //  },
+            //  {
+            //     $group:{
+            //         _id:{'vari':_id.vari}
+            //     }
+            //  }
+            
+       
+           
+
+            // {
+            //     $unwind:'$cart_product.Variations.Data'
+            // }
 
         ]).toArray()
         if(cartItems){
             let outofStock= false
             console.log("workingggg");
+         
+            console.log(cartItems);
             for(let i=0;i<cartItems.length;i++){
                 console.log(cartItems.length);
+                if(cartItems[i].item.equals(cartItems[i].varientId)){
+                    console.log("same");
+                }else{
+                    console.log(cartItems[i].item,"prod id");
+                    console.log(cartItems[i].varientId,"var id");
+                    console.log("enterd else");
+                  let vari=  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
+                        {
+                            $match:{
+                                _id:ObjectId(cartItems[i].item)
+                            }
+                        },
+                        {
+                            $project:{
+                                Variations:1
+                            }
+                        },
+                        {
+                            $unwind:"$Variations"
+                        },
+
+                        {
+                            $group:{
+                                _id:'$Variations'
+                            }
+                        },
+                        {
+                            $unwind:'$_id.Data'
+                        },
+                        {
+                            $match:{
+                                '_id.Data.id':ObjectId (cartItems[i].varientId)
+                            }
+                        }
+                    ]).toArray()
+                    console.log(vari[0]._id.Data);
+                    cartItems[i].cart_product.Color = vari[0]._id.Data.color,
+                    cartItems[i].cart_product.Size = vari[0]._id.Data.Size
+                    cartItems[i].cart_product.Price = vari[0]._id.Data.Price
+
+                }
+              
                 console.log(cartItems[i].cart_product.inStock,"<<<<<<<<<");
                 if(cartItems[i].cart_product.inStock==false){
                     console.log("hereeeere");
                     outofStock=true
                 }
+                console.log(typeof (cartItems[i].quantity),"qunatity" );
+                console.log(typeof (cartItems[i].cart_product.Price) , "Price");
+             total =  total+(cartItems[i].quantity * cartItems[i].cart_product.Price)   
             }
             console.log(outofStock);
             console.log(cartItems);
+            console.log(total,"total>>>>>>>>>>>>>>>");
             let obj={
                 cartItems:cartItems,
-                outofStock:outofStock
+                outofStock:outofStock,
+                total:total
             }
             console.log("helper obj",obj);
             resolve(obj)
@@ -494,15 +586,15 @@ changeProductQuantity:(data)=>{
             return reject()
         }else{
             if(count== -1 && quantity== 1 ){
-                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
                     $pull:{
-                        product:{item:ObjectId(data.product)}
+                        product:{varientId:ObjectId(data.varientId)}
                     }
                 }).then(()=>{
                     resolve({prodDelete:true})
                 })
             }else{
-                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.item':ObjectId(data.product)}]},{
+                await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
                     $inc:{'product.$.quantity':count}  
                 }).then(()=>{
                     resolve(true)
@@ -1481,6 +1573,35 @@ getAllReviews:(prodId)=>{
       }else{
         reject()
       }
+    })
+},
+
+
+
+
+getAllVariations:(prodId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
+            {
+                $match:{
+                    _id:ObjectId(prodId)
+                }
+            },
+            {
+                $unwind: "$Variations"
+            },
+            {
+                '$unwind': {
+                  'path': '$Variations.Data'
+                }
+            }
+        ]).toArray()
+        console.log(vari);
+        if(vari){
+            resolve(vari)
+        }else{
+            reject()
+        }
     })
 }
 

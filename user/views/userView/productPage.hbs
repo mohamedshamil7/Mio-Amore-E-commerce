@@ -82,31 +82,32 @@
                         <div class="col-xl-6 wow fadeInUp">
                             <div class="right-box-contain">
 
-                                <h6 class="offer-top">{{data.offer}}% Off</h6>
+                                <h6 class="offer-top" id="offer">{{data.offer}}% Off</h6>
                                 <h2 class="name">{{data.ProductName}}</h2>
                                 <div class="price-rating">
 
 
-                                    <h3 class="theme-color price">₹{{data.Price}} <del class="text-content">₹{{data.MRP}}</del><span
-                                            class="offer theme-color">({{data.offer}}% off)</span> </h3>
+                                    <h3 class="theme-color price" id="Price">₹{{data.Price}}</h3> <del class="text-content"  >₹{{data.MRP}}</del>
+                                    <span     class="offer theme-color">({{data.offer}}% off)</span> 
+                                            <input type="text" id="MRP" value="{{data.MRP}}" hidden>
                                             <input type="text " value="{{data.averageRating}}" id="avgRating" hidden>
                                             {{!-- class="offer theme-color">(8% off)</span></h3> --}}
                                     <div class="product-rating custom-rate">
                                         <ul class="rating">
                                             <li>
-                                                <i data-feather="star" id="star1" ></i>
+                                                <i data-feather="star" id="star1"></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star"id="star2" ></i>
+                                                <i data-feather="star"id="star2"></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" id="star3" ></i>
+                                                <i data-feather="star" id="star3"></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" id="star4" ></i>
+                                                <i data-feather="star" id="star4"></i>
                                             </li>
                                             <li>
-                                                <i data-feather="star" id="star5" ></i>
+                                                <i data-feather="star" id="star5"></i>
                                             </li>
                                         </ul>
                                         <span class="review">{{revCount}} customer reviews</span>
@@ -120,69 +121,47 @@
                                     </p>
                                 </div>
 
-                                {{!-- <div class="product-packege">
+                                <div class="product-packege">
                                     <div class="product-title">
-                                        <h4>Weight</h4>
+                                        <h4>Size</h4>
                                     </div>
+                                        <h4 id="Varient_error" style="color: red;"></h4>
                                     <ul class="select-packege">
                                         <li>
-                                            <a href="javascript:void(0)" class="active">1/2 KG</a>
+<style>
+    .select-packege li a.active button{
+        color:white
+    }
+</style>
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick="  Variation('{{data.Price}}','{{data.Size}}','{{data.Color}}','{{data._id}}')" >Size : {{data.Size}}  Color :{{data.Color}}</button> </a>
                                         </li>
-                                        <li>
-                                            <a href="javascript:void(0)">1 KG</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)">1.5 KG</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)">Red Roses</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void(0)">With Pink Roses</a>
-                                        </li>
-                                    </ul>
-                                </div> --}}
+                                        {{#each Variations}}
 
-                                {{!-- <div class="time deal-timer product-deal-timer mx-md-0 mx-auto" id="clockdiv-1"
-                                    data-hours="1" data-minutes="2" data-seconds="3">
-                                    <div class="product-title">
-                                        <h4>Hurry up! Sales Ends In</h4>
-                                    </div>
-                                    <ul>
                                         <li>
-                                            <div class="counter d-block">
-                                                <div class="days d-block">
-                                                    <h5></h5>
-                                                </div>
-                                                <h6>Days</h6>
-                                            </div>
+                                            {{!-- <form action="http://localhost:8001/user/VariationSelect"> --}}
+                                                {{!-- <input type="text" name="variationId"  value="{{this.Variations.Data.id}}" hidden> --}}
+                                                {{!-- <input type="text" name="prodId"  value="{{data._id}}" hidden> --}}
+                                            {{!-- <a > <button type="submit" style="border: none; background: none;" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a> --}}
+                                            
+                                            {{!-- </form> --}}
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
                                         </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="hours d-block">
-                                                    <h5></h5>
-                                                </div>
-                                                <h6>Hours</h6>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="minutes d-block">
-                                                    <h5></h5>
-                                                </div>
-                                                <h6>Min</h6>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="counter d-block">
-                                                <div class="seconds d-block">
-                                                    <h5></h5>
-                                                </div>
-                                                <h6>Sec</h6>
-                                            </div>
-                                        </li>
+                                      
+                                        {{/each}}
                                     </ul>
-                                </div> --}}
+                                </div>
+
+                                 <div class="pickup-box">
+
+                                        <div class="product-info">
+                                            <ul class="product-info-list product-info-list-2">
+                                                <li id="proSize" >Size : {{data.Size}} </a></li>
+                                                <li id="proColor" >Color : {{data.Color}} </a></li>
+
+
+                                            </ul>
+                                        </div>
+                                    </div>
 
 
 
@@ -620,6 +599,7 @@
 <script src="https://cdn.jsdelivr.net/npm/js-image-zoom/js-image-zoom.min.js"></script>
 
 <script>
+    let id
     
     let avrRating = document.getElementById("avgRating").value
     if(avrRating ==0){
@@ -673,6 +653,7 @@
 
       
 
+
     var options = {
         width: 400, // required
         zoomWidth: 400,
@@ -685,5 +666,46 @@
      new ImageZoom(document.getElementById('img2'), options)
          new ImageZoom(document.getElementById('img3'), options)
      new ImageZoom(document.getElementById('img4'), options)
+
+    function Variation(varientPrice,varientSize,varientColor,ids){
+        id = ids
+
+    let Price = document.getElementById('Price').innerHTML =` ₹ ${varientPrice}`
+    let proSize = document.getElementById('proSize').innerHTML= `Size : ${varientSize}`
+    let proColor = document.getElementById('proColor').innerHTML= `Color : ${varientColor}`
+    let MRP = document.getElementById('MRP').value
+     let offer = document.getElementById('offer') 
+     let offer1 = document.getElementById('offer1') 
+     let of= parseInt(((MRP-varientPrice)/MRP)*100)
+
+     offer.innerHTML= `${of}% Off`
+     {{!-- offer1.innerHTML= `(${of}% off)` --}}
+ }
+
+
+ function addToCart(prodId){
+    if(id){
+        $.ajax({
+        url:' http://localhost:8001/user/addToCart',
+        data:{
+            prodId,
+           varient:id
+        },
+        method:'post',
+        success:(response)=>{
+            if(response.status){
+                let count=$('#cartCount').html()
+                count=parseInt(count)+1
+                $('#cartCount').html(count)
+            }
+            // alert(response)  
+        }
+     })
+    }else{
+            let error = document.getElementById('Varient_error').innerHTML=' Please Select one Varient'
+    }
+   
+};
+
 
 </script>

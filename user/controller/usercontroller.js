@@ -377,6 +377,7 @@ module.exports = {
     let datas = null;
     let wishlist;
     let reviews
+    let Variations
     await userHelpers
       .viewProduct(prodId)
       .then((response) => {
@@ -386,6 +387,11 @@ module.exports = {
       .catch((err) => {
         console.log(err);
       });
+      await userHelpers.getAllVariations(prodId).then((data)=>{
+        Variations = data
+      }).catch(()=>{
+        console.log("error in fetching variations");
+      })
 
       await userHelpers.getAllReviews(prodId).then((response)=>{
         reviews = response
@@ -447,9 +453,34 @@ module.exports = {
       walletTotal: walletData.total,
       normalCoupens,
       reviews,
-      revCount:reviews?.length
+      revCount:reviews?.length,
+      Variations
     });
   },
+
+  VariationSelect:async(req,res)=>{
+    let decode = tokenVerify(req);
+    let cart = await cartProd(req);
+    let products = cart.cartItems;
+    let outofStock = cart.outofStock;
+    let count = await CartCount(req);
+    let total = await TotalAmount(req);
+    let user = decode.value.insertedId;
+    let walletData = await wallet(req);
+    let prodId = req.body.prodId;
+    let VarientId = req.body.variationId
+    let normalCoupens
+    let datas = null;
+    let wishlist;
+    let reviews
+    let Variations
+
+    await userHelpers.getVarient(prodId,VarientId)
+
+
+  },
+
+
   imageRoute: (req, res) => {
     let decode = tokenVerify(req);
     let id = req.params.id;
@@ -551,10 +582,10 @@ module.exports = {
 
   addToCart: (req, res) => {
     console.log("api called");
-    console.log(req.params.id);
+    console.log(req.body.prodId);
     let decode = tokenVerify(req);
     userHelpers
-      .addToCart(decode.value.insertedId, req.params.id)
+      .addToCart(decode.value.insertedId, req.body.prodId, req.body.varient )
       .then(() => {
         res.json({ status: true });
       })
@@ -565,7 +596,7 @@ module.exports = {
 
   getCart: async (req, res) => {
     let decode = tokenVerify(req);
-    let total = await TotalAmount(req);
+    let total 
     let count = await CartCount(req);
     let walletData = await wallet(req);
     console.log(total);
@@ -576,6 +607,7 @@ module.exports = {
       console.log(obj.outofStock);
       product = obj.cartItems;
       outofStock = obj.outofStock;
+      total = obj.total
     });
     // console.log(products);
     async function processImages(Data) {
@@ -641,16 +673,12 @@ module.exports = {
     // let outofStock= cart.outofStock
     let walletData = await wallet(req);
     let count = await CartCount(req);
-    let total = await TotalAmount(req);
     let product;
     let outofStock;
     let Address = await userHelpers.getAddress(decode.value.insertedId);
+    let total 
     // let inStock= await checkinStock(req)
-    let isWallet;
-    if (walletData.total >= total) {
-      console.log("/////is");
-      isWallet = true;
-    }
+    
 
     let user = decode.value.username;
     let userID = ObjectId(decode.value.insertedId);
@@ -660,7 +688,14 @@ module.exports = {
     await userHelpers.getcart(decode.value.insertedId).then((obj) => {
       product = obj.cartItems;
       outofStock = obj.outofStock;
+      total = obj.total
     });
+
+    let isWallet;
+    if (walletData.total >= total) {
+      console.log("/////is");
+      isWallet = true;
+    }
     async function processImages(Data) {
       for (let i = 0; i < Data?.length; i++) {
         if (Data[i].cart_product.Image1) {
@@ -772,6 +807,9 @@ module.exports = {
       categories,
     });
   },
+
+
+
   renderProfilePage: async (req, res) => {
     let decode = tokenVerify(req);
     let cart = await cartProd(req);
@@ -841,7 +879,7 @@ module.exports = {
 
 
 
-    let total = await TotalAmount(req);
+    let total = cart.total
     if(req.body?.offerPrice){
       total = Number(req.body.offerPrice)
     }
@@ -1534,8 +1572,9 @@ module.exports = {
   },
 
   checkCoupen: async (req, res) => {
-    let Total = await TotalAmount(req);
     let decode= await tokenVerify(req)
+    let cart = await cartProd(decode.value.insertedId)
+    let Total = cart.total
     let offerPrice;
     console.log(req.body.code);
     let coupenData;

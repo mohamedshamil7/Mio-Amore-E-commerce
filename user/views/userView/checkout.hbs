@@ -300,11 +300,11 @@
                                     <img  src="{{this.cart_product.urlImage1}} "
                                         class="img-fluid blur-up lazyloaded checkout-image" alt="">
                                     <h4>{{this.cart_product.ProductName}} <span>{{this.quantity}}</span></h4>
-                                    {{#if this.cart_product.offer }}
-                                    <h4 class="price">{{this.cart_product.offer}}   </h4> <span><del>{{this.cart_product.Price}}</del></span>
-                                    {{else}}
-                                    <h4 class="price">{{this.cart_product.Price}}   </h4> 
-                                    {{/if}}
+
+                                    <h4 class="price">{{this.cart_product.Price}}   </h4> <span><del>{{this.cart_product.MRP}}</del></span>
+
+
+
 
                                 </li>
                                  {{/each}}

@@ -50,7 +50,8 @@ const {
   search,
   viewOrderDetails,
   renderReviewPage,
-  addReview
+  addReview,
+  VariationSelect
 
 } = require("../controller/usercontroller");
 
@@ -84,7 +85,7 @@ router.get("/addToWishlist/:id",addToWishlist)
 
 router.post('/phone-submit',findbynumber)
 
-router.get('/addToCart/:id',addToCart)
+router.post('/addToCart',addToCart)
 
 router.get('/usercart',nocache,autherization,getCart)
 
@@ -126,6 +127,8 @@ router.delete("/deleteAdd",nocache,delAddress)
 router.get('/viewOrderDetails/:id',nocache,viewOrderDetails)
 router.get('/gotoReview/:id',nocache,renderReviewPage)
 router.post('/addReview',nocache,addReview)
+
+router.get('/VariationSelect',nocache,VariationSelect)
 
 module.exports = router;
 

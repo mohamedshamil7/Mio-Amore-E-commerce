@@ -4,20 +4,7 @@
 
 
 
-function addToCart(prodId){
-    $.ajax({
-        url:' http://localhost:8001/user/addToCart/'+prodId,
-        method:'get',
-        success:(response)=>{
-            if(response.status){
-                let count=$('#cartCount').html()
-                count=parseInt(count)+1
-                $('#cartCount').html(count)
-            }
-            // alert(response)  
-        }
-    })
-};
+
 
 
 // function wishlistCheck(prodId){
@@ -28,7 +15,7 @@ function addToCart(prodId){
 //     })
 // }
 
-function quantityChange(cartId,prodId,count,quantity){
+function quantityChange(cartId,prodId,count,quantity,varientId){
     
     count= parseInt(count) 
     quantity=parseInt(quantity)
@@ -39,7 +26,8 @@ function quantityChange(cartId,prodId,count,quantity){
             cart:cartId,
             product:prodId,
             count:count,
-            quantity:quantity
+            quantity:quantity,
+            varientId
         },
         method:'post',
         success:(response)=>{
@@ -230,7 +218,7 @@ function deleteAdd(id){
 
 // function addReview(prodId,){
 //     $.ajax({
-//         url:"http://localhost:8001/user/addReview",
+//         url:":8001/user/addReview",http://localhost
 //         method:'get',
 //         data:{
 //             prodId
