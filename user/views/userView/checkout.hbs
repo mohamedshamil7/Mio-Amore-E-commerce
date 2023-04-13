@@ -359,12 +359,26 @@
                             </div>
 
                             <ul class="offer-detail">
-                                <li>
-                                    <p>Combo: BB Royal Almond/Badam Californian, Extra Bold 100 gm...</p>
-                                </li>
-                                <li>
-                                    <p>combo: Royal Cashew Californian, Extra Bold 100 gm + BB Royal Honey 500 gm</p>
-                                </li>
+                                {{#each normalCoupens}}
+                                    <li>
+                                        <div class="offer-product">
+                                            <div class="offer-detail">
+                                                <div>
+                                                    <h6 class="price theme-color"> {{this.name}}</h6>
+                                                    <h6 class="price theme-color">use the code : {{this.code}}</h6>
+                                                    </a>
+                                                    {{#if this.percentage}}
+                                                    <span>{{this.percentage}}% off !!!</span>
+                                                    {{else}}
+                                                    <span>flat {{this.amount}} rupees off !!!</span>
+                                                    {{/if}}
+                                                        <h6 class="name">* minimum Purchase of rupees :{{this.minLimit}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    
+                                    {{/each}}
                             </ul>
                         </div>
 
@@ -479,7 +493,7 @@
            
                      if(response.status=="razorpay") {
                         console.log(response)
-                        razorpayPayment(response.response)
+                        razorpayPayment(response.response,response.orderId)
                     }
                     else if(response.status=='paypal'){
                         window.location = response.forwardLink
@@ -499,7 +513,7 @@
             })
         })
 
-        function razorpayPayment(order) {
+        function razorpayPayment(order, orderid) {
            
             var options = {
                 "key": "rzp_test_Sy2vxgrKq0I75D", // Enter the Key ID generated from the Dashboard
@@ -510,7 +524,7 @@
                 "image": "http://localhost:4000/images/logopng.png",
                 "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                 "handler": function (response) {
-                    verifyPayment(response, order)
+                    verifyPayment(response, order,orderid)
                 },
                 "prefill": {
                     "name": "Mio Amore",
@@ -538,14 +552,14 @@
         }
 
 
-        function verifyPayment(payment,order){
+        function verifyPayment(payment,order,orderId){
             console.log("entered verify")
             console.log(payment)
             console.log(order.receipt)
             $.ajax({
                 url:'http://localhost:8001/user/placeOrder',
                 data:{
-                    payment,order
+                    payment,order, orderId
                 },
                 method:"post",
                 success:(response=>{

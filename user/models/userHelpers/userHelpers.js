@@ -1252,8 +1252,11 @@ debitFromWallet:(orderId,total,user)=>{
                             statuss= "placed"
                         }
                     } else if(payment_method ==="razorPay"){
+
+                        console.log(` pay meth ${payment_method}`);
                         console.log(`razor pay trans ${transactionId}`);
                         if(transactionId!==null){
+                            console.log("transiaction id is not null");
                             statuss= "placed"
                         }
                     }
@@ -1262,7 +1265,7 @@ debitFromWallet:(orderId,total,user)=>{
                             statuss= "placed"
                         }
                     }
-        
+                            console.log(statuss,"statussus");
                     const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(order)},{
                         $set:{
                             status:statuss,
@@ -1270,6 +1273,7 @@ debitFromWallet:(orderId,total,user)=>{
                             transactionId:transactionId,
                         }
                     },{session})
+                    console.log(orderUpdation);
         
         
         console.log(`status i s ${statuss}`);

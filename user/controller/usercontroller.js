@@ -677,8 +677,11 @@ module.exports = {
     let outofStock;
     let Address = await userHelpers.getAddress(decode.value.insertedId);
     let total 
+    let normalCoupens
     // let inStock= await checkinStock(req)
-    
+    await userHelpers.getAllCoupens().then((coupens)=>{
+      normalCoupens = coupens.normal
+    })
 
     let user = decode.value.username;
     let userID = ObjectId(decode.value.insertedId);
@@ -724,6 +727,7 @@ module.exports = {
       outofStock,
       walletTotal: walletData.total,
       isWallet,
+      normalCoupens
     });
   },
 
@@ -957,7 +961,7 @@ module.exports = {
           await userHelpers
             .generateRazorPay(orderId, total)
             .then((response) => {
-              res.json({ status: "razorpay", response });
+              res.json({ status: "razorpay", response , orderId});
             });
         } else if (req.body.PaymentOption === "paypal") {
           var create_payment_json = {
@@ -967,7 +971,7 @@ module.exports = {
               payment_method: "paypal",
             },
             redirect_urls: {
-              return_url: `http://localhost:8001/user/placeOrder/paypal`,
+              return_url: `http://localhost:8001/user/placeOrder/${orderId}`,
               // "return_url": "http://localhost:8001/user/o",
               cancel_url: "http://cancel.url",
             },
@@ -1012,6 +1016,7 @@ module.exports = {
         console.log(`payrer id  :${payerId}`);
         console.log(`payrermet  id  :${paymentId}`);
         console.log(`data is coming${req.params.data}`);
+        globalorderId = req.params.data
         // console.log(data);
       } else {
         payment_method = "razorPay";
@@ -1020,6 +1025,8 @@ module.exports = {
         await userHelpers
           .verifyPayment(req.body)
           .then(() => {
+            globalorderId = req.body.orderId
+
             PaymentStatus = "true";
             razorpaycomplete = true;
             transactionId = req.body["order[receipt]"];
@@ -1039,6 +1046,7 @@ module.exports = {
       console.log(e, "this is theerroro ");
     } finally {
       const orderId = getOrderid();
+      console.log(orderId,"orderId");
       // console.log(`${transactionId} is the transaction id wallet`);
       console.log(`payment_method is ${payment_method} 333`);
       if (
@@ -1075,8 +1083,8 @@ module.exports = {
               res.json({ status: true });
               
             }else if(payment_method ==="paypal"){
-              console.log("codedededeeeee");
-              res.render("userView/orderSuccess");
+              // console.log("codedededeeeee");
+              // res.render("userView/orderSuccess");
               
               res.redirect("/user/orderSuccess");
             }
@@ -1572,8 +1580,8 @@ module.exports = {
   },
 
   checkCoupen: async (req, res) => {
-    let decode= await tokenVerify(req)
-    let cart = await cartProd(decode.value.insertedId)
+    let decode, cart= await Promise.all([tokenVerify(req), cartProd(req)]) 
+    // let cart = await
     let Total = cart.total
     let offerPrice;
     console.log(req.body.code);
