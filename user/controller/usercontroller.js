@@ -46,7 +46,7 @@ const MY_SECRET =process.env.MY_SECRET;
 
 const createToken =   (user) => {
   console.log("jwt user",user);
-  return jwt.sign({ value: user }, MY_SECRET, { expiresIn: "30m" });
+  return jwt.sign({ value: user }, MY_SECRET, { expiresIn: '2d' });
 };
 const tokenVerify = (request) => {
   console.log("this is that token from cookie",request.cookies.token);

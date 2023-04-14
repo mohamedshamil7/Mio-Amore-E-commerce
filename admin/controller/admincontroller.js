@@ -29,7 +29,7 @@ const accessSecret = process.env.ACCES_KEY_SECRET
 const createToken = (admin) => {
   console.log("jwt user", admin);
   // return jwt.sign({ value: admin }, MY_SECRET, { expiresIn: "30m" });
-  return jwt.sign({ value: admin }, MY_SECRET, { expiresIn: "30m" });
+  return jwt.sign({ value: admin }, MY_SECRET,{ expiresIn: '2d' });
 };
 
 const tokenVerify = (request) => {
