@@ -183,13 +183,14 @@ module.exports = {
     let yearlyRevenue = await adminHelper.getYearlyRevenue()
     let totalUserCount = await adminHelper.getAllUsers()
     let chartcount = await adminHelper.getchartCount()
+    let OrdersCount = await adminHelper.getOrdersCount()
 console.log(chartcount);
     console.log(`today:${dailyRevenue}`);
     console.log(`week:${weeklyRevenue}`);
     console.log(`,monty:${monthlyRevenue}`);
     console.log(`uyear:${yearlyRevenue}`);
 
-      res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue,totalUserCount:totalUserCount.length,chartcount});
+      res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue,totalUserCount:totalUserCount.length,chartcount, OrdersCount});
   },
 
   AllUsersPage: (req, res) => {
@@ -879,7 +880,7 @@ await adminHelper.updateBanner3(req.body).then(()=>{
     },
 
     deliveryDateSubmit:(req,res)=>{
-      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>x");
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>x");
       console.log(req.body);
       if(new Date(req.body.deliveryDate) <= new Date()){
         return res.json({err:"deliveryDate should be greater than todays Date"})

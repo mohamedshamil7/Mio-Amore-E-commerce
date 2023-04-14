@@ -239,6 +239,16 @@ module.exports={
             resolve(data)
         })
     },
+    getOrdersCount:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let data={}
+            data.placed = await db.get().collection(collection.ORDER_COLLECTION).find({status:"placed"}).count()
+            data.cancelled = await db.get().collection(collection.ORDER_COLLECTION).find({status:"Cancelled"}).count()
+            data.returned = await db.get().collection(collection.ORDER_COLLECTION).find({ $or:[{status:"return confirmed"},{status:"return applied"}]}).count()
+            data.delivered = await db.get().collection(collection.ORDER_COLLECTION).find({status:"Delivered"}).count()
+            resolve(data)
+        })
+    },
 
 
 
@@ -545,29 +555,34 @@ module.exports={
                       { $inc: { Stock: fullOrder.cart[i].quantity } }
                     );
                 }
-                let creditData={
-                    transactionId:ObjectId(),
-                   orderId:fullOrder._id,
-                   amount:fullOrder.totalAmount,
-                    amountCreditedOn:new Date().toDateString()
-        
-        
-        
-                }
-                 await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
-                        $inc:{
-                            total:fullOrder.totalAmount
-                        },
-                    
-                    $push:{
-                        "transactions.credits":creditData
+
+                if(fullOrder.paymentMethod !=="COD"){
+                    let creditData={
+                        transactionId:ObjectId(),
+                       orderId:fullOrder._id,
+                       amount:fullOrder.totalAmount,
+                        amountCreditedOn:new Date().toDateString()
+            
+            
+            
                     }
-                })
+                     await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                            $inc:{
+                                total:fullOrder.totalAmount
+                            },
+                        
+                        $push:{
+                            "transactions.credits":creditData
+                        }
+                    })
+                }
+              
               let order=  await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
                     $set:{
-                        status:"Cancelled",
+                        status: 'Cancelled',
                         deliveryStatus: 'Cancelled',
-                        btnStatus:false
+                        btnStatus: false,
+                        orderCancelled:true
                     }
                 })
                 if(order){

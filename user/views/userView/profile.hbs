@@ -344,8 +344,8 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td>locality :</td>
-                                                                <td>{{this.locality}}</td>
+                                                                <td>landmark :</td>
+                                                                <td>{{this.landmark}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Address :</td>
@@ -353,7 +353,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td> district :</td>
-                                                                <td>{{this.district}}</td>
+                                                                <td>{{this.town}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -364,8 +364,8 @@
                                                 {{!-- <button c type="button"lass="btn btn-sm add-button w-100" data-bs-toggle="modal"
                                                     data-bs-target="#editAddress">
                                                    </button> --}}
-                                                     <button type="button" class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
-                                                     data-bs-toggle="modal" data-bs-target="#edit-address"><i data-feather="edit"></i>  Edit</button>
+                                                     {{!-- <button type="button" class="btn theme-bg-color text-white btn-sm fw-bold mt-lg-0 mt-3"
+                                                     data-bs-toggle="modal" data-bs-target="#add-addresss"><i data-feather="edit"></i>  Edit</button> --}}
 
                                                 <button onclick="return deleteAdd('{{this.id}}')" class="btn btn-sm add-button w-100" data-bs-toggle="modal"
                                                     data-bs-target="#removeProfile"><i data-feather="trash-2"></i>
@@ -640,7 +640,7 @@
                                     <label for="floatingSelect">Address Type</label>
                                 </div>
                             <div class="form-floating mb-4 theme-form-floating">
-                                <input type="text" class="form-control" id="fname" name="fullName"
+                                <input type="text" class="form-control" id="fname"  name="fullName"
                                     placeholder="Enter Full Name" oninput="validateName()">
                                 <label for="fname">Full Name</label>
                                 <span id="name-error" style="color: red;"></span>
@@ -699,7 +699,7 @@
         </div>
     </div>
     <!-- edit Address start -->
-     <div class="modal fade theme-modal" id="edit-address" tabindex="-1" aria-labelledby="exampleModalLabel"
+     <div class="modal fade theme-modal" id="add-ad" tabindex="2" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
             <div class="modal-content">
@@ -711,7 +711,7 @@
                 </div>
                 <div class="modal-body">
                     {{!--http://localhost:8001/user/addAddress --}}
-                    <form action="" id="address_Prof_form" method="post">
+                    <form action="" id="address_Prof_forms" method="post">
                         <div>
                                 <div class="form-floating theme-form-floating">
                                     <select name="Address-Type" class="form-select" id="floatingSelect">

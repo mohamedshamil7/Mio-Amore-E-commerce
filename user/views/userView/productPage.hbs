@@ -669,6 +669,7 @@
 
     function Variation(varientPrice,varientSize,varientColor,ids){
         id = ids
+        let error = document.getElementById('Varient_error').innerHTML=''
 
     let Price = document.getElementById('Price').innerHTML =` ₹ ${varientPrice}`
     let proSize = document.getElementById('proSize').innerHTML= `Size : ${varientSize}`
@@ -704,6 +705,7 @@
      })
     }else{
             let error = document.getElementById('Varient_error').innerHTML=' Please Select one Varient'
+            return ;
     }
    
 };
