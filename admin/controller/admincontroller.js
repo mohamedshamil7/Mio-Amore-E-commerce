@@ -944,10 +944,10 @@ addVariations:(req,res)=>{
     // let Variations = [...product.Variations]
     adminHelper.getAllVariations(req.body.id).then((Variations)=>{
       console.log("....",Variations);
-       res.render('adminView/VariationsPage',{product,Variations})
+       res.render('adminView/VariationsPage',{product,Variations,admin:true})
       }).catch(()=>{
         
-        res.render('adminView/VariationsPage',{product})
+        res.render('adminView/VariationsPage',{product,admin:true})
     })
 
     })

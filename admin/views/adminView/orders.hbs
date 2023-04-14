@@ -41,14 +41,14 @@
                    <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a> 
                    <a href=" /admin/invoice/{{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
                    {{!-- <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a>  --}}
-                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success ">download Billing label</button> </a> 
+                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success  mt-4">download Billing label</button> </a> 
 
                     {{else}}
                      <p class="badge bg-secondary">{{this.deliveryStatus}}</p> <br>
                      {{#if this.deliveredDate}}
                      <p class="badge bg-success">Delivered  on {{this.deliveredDate}}</p> <br>
                    <a href=" /admin/invoice/{{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
-                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success ">download Billing label</button> </a> 
+                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success mt-4">download Billing label</button> </a> 
 
                      {{else}}
                    <a href=" /admin/scheduleOrder/{{this._id}}"><button type="button"  class="btn btn-secondary">schedule Order</button> </a> 

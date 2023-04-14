@@ -42,12 +42,12 @@
                 </div>
 
 
-                <div class="row mb-3">
+                {{!-- <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
                   <div class="col-sm-4">
                     <input type="number" name="Stock" id="Stock" class="form-control">
                   </div>
-                 </div>
+                 </div> --}}
 
 
                  {{!-- <div class="row mb-3">
@@ -74,7 +74,7 @@
                     <th scope="col">Size</th>
                     <th scope="col">Color</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
+                    {{!-- <th scope="col">Quantity</th> --}}
                   </tr>
                 </thead>
                 <tbody>
@@ -82,7 +82,7 @@
                   <td>{{product.Size}}</td>
                 <td>{{product.Color}}</td>
                 <td>{{product.Price}}</td>
-                <td>{{product.Stock}}</td>
+                {{!-- <td>{{product.Stock}}</td> --}}
                 </tbody>
                </table>
 
@@ -94,7 +94,7 @@
                     <th scope="col">Size</th>
                     <th scope="col">Color</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Quantity</th>
+                    {{!-- <th scope="col">Quantity</th> --}}
                   </tr>
                 </thead>
                             {{#each Variations}}
@@ -104,7 +104,7 @@
                 <td>{{this.Variations.Data.Size}}</td>
                 <td>{{this.Variations.Data.color}}</td>
                 <td>{{this.Variations.Data.Price}}</td>
-                <td>{{this.Variations.Data.Stock}}</td>
+                {{!-- <td>{{this.Variations.Data.Stock}}</td> --}}
                 </tbody>
                     {{/each}}
                </table>
@@ -119,7 +119,7 @@
         let Size = document.getElementById('Size').value
         let Color = document.getElementById('Color').value
         let Price = document.getElementById('Price').value
-        let Stock = document.getElementById('Stock').value
+        {{!-- let Stock = document.getElementById('Stock').value --}}
 
         $.ajax({
             url:"http://localhost:8001/admin/addVarient-submit",
@@ -128,7 +128,7 @@
                 Size,
                 Color,
                 Price,
-                Stock
+
             },
             method:"post",
             success:(response)=>{
