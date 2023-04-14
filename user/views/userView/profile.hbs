@@ -119,8 +119,8 @@
                                                 <img src="../assets/images/svg/order.svg" class="blur-up lazyload"
                                                     alt="">
                                                 <div class="totle-detail">
-                                                    <h5>Total Order</h5>
-                                                    <h3>3658</h3>
+                                                    <h5>Total Orders </h5>
+                                                    <h3>{{totalOrders}}</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -132,13 +132,13 @@
                                                 <img src="../assets/images/svg/pending.svg" class="blur-up lazyload"
                                                     alt="">
                                                 <div class="totle-detail">
-                                                    <h5>Total Pending Order</h5>
-                                                    <h3>254</h3>
+                                                    <h5>Wallet Amount</h5>
+                                                    <h3>{{walletTotal}}</h3>
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="col-xxl-4 col-lg-6 col-md-4 col-sm-6">
+                                        {{!-- <div class="col-xxl-4 col-lg-6 col-md-4 col-sm-6">
                                             <div class="totle-contain">
                                                 <img src="../assets/images/svg/wishlist.svg"
                                                     class="img-1 blur-up lazyload" alt="">
@@ -149,7 +149,7 @@
                                                     <h3>32158</h3>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
 
@@ -167,7 +167,7 @@
                                         <div class="dashboard-detail">
                                             <h6 class="text-content">{{data.username}}</h6>
                                             <h6 class="text-content">{{data.email}}</h6>
-                                            <a href="javascript:void(0)">Change Password</a>
+                                            {{!-- <a href="javascript:void(0)">Change Password</a> --}}
                                         </div>
                                     </div>
 

@@ -24,11 +24,11 @@
     <table class="table table-bordered border-primary mt-5">
         <thead>
             <tr>
-                <th>Image</th>
+                {{!-- <th>Image</th> --}}
                 <th scope="col">Product</th>
-                <th scope="col">Address</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
+                <th scope="col">Address</th>
                 <th scope="col">Shipping Status</th>
 
             </tr>
@@ -36,25 +36,38 @@
         <tbody>
             {{#each products.cart}}
             <tr>
-            <td scope="row"><img style="width: 50px;" src="../images/product-images/{{this.cart_product.Image1}}" alt="no"></td>           
+            {{!-- <td scope="row"><img style="width: 50px;" src="../images/product-images/{{this.cart_product.Image1}}" alt="no"></td>            --}}
                  <td>{{this.cart_product.ProductName}}</td>
-                <td>{{products.deleviryDetails.town}}
-                    {{!-- {{Orders.address}} --}}
-                </td>
+           
                 <td>{{this.quantity}}</td>
                 <td>₹{{this.cart_product.Price}}</td>
                         {{/each}}
-                 <td>
-                    <h6 class="badge badge-info">{{products.deliveryStatus}}</h6><br>
+
+
+                        <td>
+                    {{products.deleviryDetails.fullName}} <br>
+                    {{products.deleviryDetails.mobile}} <br>
+                    {{products.deleviryDetails.houseNo}} <br>
+                    {{products.deleviryDetails.useradd}} <br>
+                    {{products.deleviryDetails.pin}} <br>
+                    {{products.deleviryDetails.landmark}} <br>
+                    {{products.deleviryDetails.town}} <br>
+
+                    {{!-- {{Orders.address}} --}}
+
+                    </td>
+                    <td>
+                    <h6 class="badge bg-info">{{products.deliveryStatus}}</h6><br>
 
                         {{!-- <select class="shipping" name="status"  >
                             <option value="Preparing">Order Confirmed</option>
                             <option value="Shipped">Shipped</option>
                             <option value="Delivered">Delivered</option>
                         </select> --}}
-                    <p class="badge badge-secondary">{{products.status}}</p> <br>
+                    <p class="badge bg-secondary">{{products.status}}</p> <br>
+                    </td>
 
-                </td>
+                
             </tr>
         </tbody>
     </table>

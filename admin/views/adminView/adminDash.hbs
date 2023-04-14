@@ -425,7 +425,7 @@
             </div><!-- End Recent Sales --> --}}
 
             <!-- Top Selling -->
-            <div class="col-12">
+            {{!-- <div class="col-12">
               <div class="card top-selling overflow-auto">
 
                 <div class="filter">
@@ -496,7 +496,7 @@
                 </div>
 
               </div>
-            </div><!-- End Top Selling -->
+            </div><!-- End Top Selling --> --}}
               <div class="col-12">
             <div class="card">
               <h5 class="card-title ml-20">payment-method <span>| All</span></h5>
@@ -800,6 +800,11 @@ if(value == 'weekly'){
     revenueWeekly.style.display = 'none'
     revenueMonthly.style.display = 'none'
     revenueYearly.style.display = 'block' 
+  } else if( value == 'daily'){
+     revenueToday.style.display = 'block'
+    revenueWeekly.style.display = 'none'
+    revenueMonthly.style.display = 'none'
+    revenueYearly.style.display = 'none' 
   }
 
 }

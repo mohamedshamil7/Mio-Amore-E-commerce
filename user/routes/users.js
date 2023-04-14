@@ -104,7 +104,7 @@ router.get('/placeOrder/:data',nocache,placeOrder)
 
 router.post('/verifyPayment',verifyPayment)
 
-router.get('/orderSuccess',nocache,orderSuccess)
+router.get('/orderSuccess',nocache,autherization,orderSuccess)
 router.get("/profile",nocache,autherization,renderProfilePage)
 
 router.get("/loginwithOtpPage",nocache,loginWtihOtpPage),
@@ -114,21 +114,21 @@ router.post("/otpVerification",nocache,otpVerification),
 router.get("/googleSignUp/:userData",nocache,googleSignupData,redirectHome)
 router.get("/googleLogin/:userData",nocache,googleLoginData,redirectHome)
 router.get("/otpverified/:num",nocache,otpverified,redirectHome)
-router.post("/cancelOrder",nocache,cancelOrderSubmit)
-router.post("/returnOrder",nocache,returnOrderSubmit)
-router.get("/wallet",nocache,getWalletPage)
-router.get("/renderShop",nocache,renderShop)
+router.post("/cancelOrder",nocache,autherization,cancelOrderSubmit)
+router.post("/returnOrder",nocache,autherization,returnOrderSubmit)
+router.get("/wallet",nocache,autherization,getWalletPage)
+router.get("/renderShop",nocache,autherization,renderShop)
 
-router.post("/sort",nocache,sortShop)
-router.post("/changeCategory",nocache,filterCategory)
-router.post("/checkCoupen",nocache,checkCoupen)
+router.post("/sort",nocache,autherization,sortShop)
+router.post("/changeCategory",nocache,autherization,filterCategory)
+router.post("/checkCoupen",nocache,autherization,checkCoupen)
 router.post("/search",nocache,search)
 router.delete("/deleteAdd",nocache,delAddress)
-router.get('/viewOrderDetails/:id',nocache,viewOrderDetails)
-router.get('/gotoReview/:id',nocache,renderReviewPage)
-router.post('/addReview',nocache,addReview)
+router.get('/viewOrderDetails/:id',nocache,autherization,viewOrderDetails)
+router.get('/gotoReview/:id',nocache,autherization,renderReviewPage)
+router.post('/addReview',nocache,autherization,addReview)
 
-router.get('/VariationSelect',nocache,VariationSelect)
+router.get('/VariationSelect',nocache,autherization,VariationSelect)
 
 module.exports = router;
 

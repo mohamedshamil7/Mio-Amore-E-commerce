@@ -639,7 +639,7 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
                
                     let data={
-                        type:coupen.type,
+                        type:"normal",
                         name:coupen.name,
                         code:coupen.code,
                         redeemType:coupen.redeemType,
@@ -940,6 +940,7 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
            let delivery =   await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
                     $set:{
+                        status:"Delivered",
                         deliveryStatus:'Delivered',
                         returnOption:returnOption,
                         btnStatus: cancelOption,

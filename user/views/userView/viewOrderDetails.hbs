@@ -68,10 +68,13 @@
                                 <div class="order-details-name">
                                     <h5 class="text-content">Delivery Date</h5>
                                     {{#if orderData.deliveredDate}}
-                                    <h4>Delivered on :{{orderData.deliveredDate}}</h4>
+                                    <h4> Order was Delivered on: {{orderData.deliveredDate}}</h4>
+                                    {{#if orderData.returnedDate}}
+                                    <h4> Order was Returned on: {{orderData.returnedDate}}</h4>
+                                    {{/if}}
                                     {{else}}
                                     {{#if orderData.scheduledDate}}
-                                    <h4>Delivered by :{{orderData.scheduledDate}}</h4>
+                                    <h4> Order will be Delivered by :{{orderData.scheduledDate}}</h4>
                                     {{else}}
 
                                     <h4>Order waiting to  dispach</h4>
@@ -82,7 +85,7 @@
                         </div>
                         {{/if}}
 
-                        <div class="col-xl-4 col-sm-6">
+                        {{!-- <div class="col-xl-4 col-sm-6">
                             <div class="order-details-contain">
                                 <div class="order-tracking-icon">
                                     <i class="text-content" data-feather="crosshair"></i>
@@ -90,12 +93,12 @@
 
                                 <div class="order-details-name">
                                     <h5 class="text-content">From</h5>
-                                    <h4>STR. Smardan 9, Bucuresti, romania.</h4>
+                                    <h4> </h4>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-xl-4 col-sm-6">
+                        {{!-- <div class="col-xl-4 col-sm-6">
                             <div class="order-details-contain">
                                 <div class="order-tracking-icon">
                                     <i class="text-content" data-feather="map-pin"></i>
@@ -106,9 +109,9 @@
                                     <h4>Flokagata 24, 105 Reykjavik, Iceland</h4>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
-                        <div class="col-xl-4 col-sm-6">
+                        {{!-- <div class="col-xl-4 col-sm-6">
                             <div class="order-details-contain">
                                 <div class="order-tracking-icon">
                                     <i class="text-content" data-feather="calendar"></i>
@@ -119,7 +122,7 @@
                                     <h4>7 Frb, 05:05pm</h4>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-12 overflow-hidden">
                             <ol class="progtrckr">
@@ -209,6 +212,8 @@
                                 <tr>
                                     <th>Image</th>
                                     <th>Name</th>
+                                    <th>Size</th>
+                                    <th>color</th>
                                     <th>Quantity</th>
                                     <th>Price</th>
                                     <th></th>
@@ -220,6 +225,8 @@
                                     <td> <img src="{{this.cart_product.urlImage1}}" width="50" alt=""> </td>
                                     <td>
                                         <a href="/user/product/{{this.cart_product._id}}"> {{this.cart_product.ProductName}}</a></td>
+                                        <td>{{this.cart_product.Size}}</td>
+                                        <td>{{this.cart_product.Color}}</td>
                                     <td>{{this.quantity}}</td>
                                     <td>{{this.cart_product.Price}}</td>
                                     {{#if this.deliveredDate}}

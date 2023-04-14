@@ -601,7 +601,7 @@ if(data.length!==0){
   allorders: (req, res) => {
     adminHelper.getAllorders().then((orders) => {
       console.log(orders);
-      res.render("adminView/orders", { admin: true, orders });
+      res.render("adminView/orders", { admin: true, orders, dataTable:true });
     });
   },
 
@@ -629,7 +629,7 @@ if(data.length!==0){
 
         let address = products.deleviryDetails.town;
         Orderid = products._id.toString();
-        res.render("adminView/viewOrderProduct", { admin: true, products });
+        res.render("adminView/viewOrderProduct", { admin: true, products , dataTable:true });
       })
       .catch(() => {
         let e = "No orders";

@@ -14,7 +14,7 @@
                 <th scope="col">Status</th>
                 <th scope="col">DeliveryStatus</th>
                 <th>View</th>
-                    <th>Return</th>
+                <th>Return</th>
             </tr>
         </thead>
         <tbody>
@@ -41,6 +41,7 @@
                    <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a> 
                    <a href=" /admin/invoice/{{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
                    {{!-- <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a>  --}}
+                   <a href=" /admin/billLabel/{{this._id}}" ><button type="button"  class="btn btn-success ">download Billing label</button> </a> 
 
                     {{else}}
                      <p class="badge bg-secondary">{{this.deliveryStatus}}</p> <br>
@@ -63,7 +64,8 @@
                 <td><a href="/admin/view-order-product/{{this._id}}"><button type="button" class="btn btn-secondary">ViewProducts</button></a></td>
                 {{#if this.returnplaced }}
                  <td><a href="/admin/returnConfirm/{{this._id}}"><button type="button" class="btn btn-secondary">Confirm Return?</button></a>
-                 
+                 {{else}}
+                 <td></td>
                  {{/if}}
                  {{#if this.returnConfirmed}}
                  <h5>Order returned</h5>
@@ -87,38 +89,20 @@
 
 
 
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
-  <script>
-      $(document).ready(function () {
-        $('#orders').DataTable({
-            responsive: true,
-            dom: 'Pfrtip'
-        });
-      });
-  
-  
-  
-  </script> 
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
 
 
-  <!---///onclick="changeDeliveryStatus('{{this._id}}','shipped')"-->
+<script>
 
-  {{!-- <script> --}}
-    {{!-- let status= null
-    function change(){
-        let c = document.getElementById("Shipped")
-        console.log(c)
-    }
-    function log(id){
-        console.log(id)
-    }
-    function stat(id,stat){
-        console.log(id)
-        console.log(stat)
-    }
-  </script> --}}
+  $(document).ready( function () {
+    $('#orders').DataTable();
+} );
+</script>
+
+
+
 
 
 

@@ -503,7 +503,7 @@ module.exports = {
       });
     console.log("dataaas", datas);
     async function processImages(Data) {
-      for (let i = 0; i < Data.length; i++) {
+      for (let i = 0; i < Data?.length; i++) {
         if (Data[i].Product.Image1) {
           console.log("image 1 :", Data[i].Product.Image1);
           Data[i].Product.urlImage1 = await getImgUrl(Data[i].Product.Image1);
@@ -815,7 +815,7 @@ module.exports = {
 
 
   renderProfilePage: async (req, res) => {
-    let decode = tokenVerify(req);
+    let decode = await  tokenVerify(req);
     let cart = await cartProd(req);
     let products = cart.cartItems;
     let outofStock = cart.outofStock;
@@ -824,6 +824,7 @@ module.exports = {
     let walletData = await wallet(req);
     let data;
     let orderDatas;
+    let totalOrders = 0
     // console.log(decode.value.insertedId);
     await userHelpers.getUserData(decode.value.insertedId).then((response) => {
       console.log("/////?", response);
@@ -835,6 +836,7 @@ module.exports = {
         // console.log(response);
         orderDatas = response;
       });
+      totalOrders = orderDatas.length
     console.log("orderDatas", orderDatas[0]?.cart);
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
@@ -864,6 +866,7 @@ module.exports = {
       data,
       orderData,
       walletTotal: walletData.total,
+      totalOrders
     });
   },
 
@@ -1095,139 +1098,10 @@ module.exports = {
       }
     }
 
-    //     userHelpers. placeOrder  (req.body,products,total).then((orderId)=>{
-    //       /*
-    //       console.log("//////////////////////////////////////////////////////",orderId);
-    //       function destruct(products) {
-    //         let data =[]
-    //         for(let i=0;i<products.length;i++){
-    //           let obj ={}
-    //           obj.prod= products[i].item
-    //           obj.quantity= products[i].quantity
-    //           data.push(obj)
-    //         }
-    //         return data
-    //       }
-    //       */
-
-    //       if(req.body.PaymentOption==='COD'){
-
-    //         console.log(cart);
-
-    //         let ids = destruct(products)
-    //         console.log(ids,"ids");
-
-    //         console.log(`this is the idss :: ${ids}`);
-    //         userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-    //         .then(()=>{
-    //           res.json({status:"COD"})
-
-    //         }).catch(()=>{
-    //           console.log("error occured while removing from cart after order");
-    //         })
-
-    //       }
-    //       else if(req.body.PaymentOption === 'wallet'){
-    //         userHelpers.debitFromWallet(orderId,total,decode.value.insertedId).then((response)=>{
-    //           let ids  = destruct(products)
-    //           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-    //             // console.log("this.response",response);
-    //             res.json({status:"wallet",response})
-
-    //           })
-    //         })
-    //       }
-
-    //       else if(req.body.PaymentOption=='razorPay'){
-    //         console.log("entered");
-    //         userHelpers.generateRazorPay(orderId,total).then((response)=>{
-    //           let ids  = destruct(products)
-    //           userHelpers.removeCartAfterOrder(ids,decode.value.insertedId).then(()=>{
-    //             // console.log("this.response",response);
-    //             res.json({status:"razorpay",response})
-
-    //           })
-
-    //         })
-
-    //       }
-    //       else if(req.body.PaymentOption=='paypal'){
-    //         console.log("?????????????????/");
-
-    //         console.log(usdtotal);
-    //             var create_payment_json = {
-    //       "id":`${orderId}`,
-    //       "intent": "AUTHORIZE",
-    //       "payer": {
-    //           "payment_method": "paypal"
-    //       },
-    //       "redirect_urls": {
-    //           "return_url": "http://localhost:8001/user/orderSuccess",
-    //           // "return_url": "http://localhost:8001/user/o",
-    //           "cancel_url": "http://cancel.url"
-    //       },
-    //       "transactions": [{
-    //           "amount": {
-    //               "currency": "USD",
-    //               "total": usdtotal
-    //           },
-    //           "description": "This is the payment description."
-    //       }]
-    //   };
-    //   paypal.payment.create(create_payment_json, function (error, payment) {
-    //     if (error) {
-    //         console.log(error.response);
-    //         throw error;
-    //     } else {
-    //         for (var i = 0; i < payment.links.length; i++) {
-    //         //Redirect user to this endpoint for redirect url
-    //             if (payment.links[i].rel ==='approval_url') {
-    //               // console.log(payment.links[i].href);
-    //               // res.redirect(`${payment.links[i].href}`)
-    //               let ids = destruct(products)
-    //               res.json({status:"paypal",forwardLink: payment.links[i].href});
-    //               userHelpers.removeCartAfterOrder(ids,decode.value.insertedId)
-    //             }
-    //         }
-    //         changePaymentStatus(orderId)
-    //     }
-    // });
-
-    //       }
-    //       else{
-    //         res.send("nothind")
-    //       }
-    //     })
+    
   },
 
-  // paypalSucces: (req, res) => {
-  //   console.log("woeking");
-  //   console.log(req.query);
-  //   const payerId = req.query.PayerID;
-  //   const paymentId = req.query.paymentId;
-
-  //   const execute_payment_json = {
-  //     "payer_id": payerId,
-  //     "transactions": [{
-  //       "amount": {
-  //         "currency": "USD",
-  //         "total": "25.00"
-  //       }
-  //     }]
-  //   }
-  //   paypal.payment.execute(paymentId,execute_payment_json,function(err,paymemt){
-  //     if (error) {
-  //       console.log(error.response);
-  //       throw error;
-  //     }else {
-  //       console.log("//////");
-  //       console.log(JSON.stringify(payment));
-
-  //       // res.redirect('http://localhost:8001/user/orderSuccess');
-  //     }
-  //   })
-  // },
-
+  
   verifyPayment: (req, res) => {
     console.log(req.body);
     userHelpers
@@ -1570,11 +1444,11 @@ module.exports = {
       userpar: true,
       data,
       user: decode.value.username,
+      count,
+      walletTotal: walletData.total,
       products,
       outofStock,
-      count,
       total,
-      walletTotal: walletData.total,
       categories,
     });
   },
@@ -1656,7 +1530,14 @@ module.exports = {
       res.json(false)
     })
   },
+
+
+
+
   viewOrderDetails:async(req,res)=>{
+    let decode = await tokenVerify(req)
+    let count = await  CartCount(req)
+    let  walletData = await wallet(req)
 
   let data 
    await userHelpers.getsingleorderDetails(req.params.id).then((dat)=>{
@@ -1684,11 +1565,13 @@ module.exports = {
   }
 
   let orderData = await processImages(data);
-  res.render('userView/viewOrderDetails',{userpar:true,orderData})
+  res.render('userView/viewOrderDetails',{userpar:true,orderData,    user: decode.value.username,  count,    walletTotal: walletData.total, })
   },
 
   renderReviewPage:async(req,res)=>{
-    let decode = tokenVerify(req)
+    let decode = await tokenVerify(req)
+    let count = await  CartCount(req)
+    let  walletData = await wallet(req)
     console.log(req.params.id)
     let dat
     await userHelpers.checkReview(decode.value.insertedId, req.params.id).then(async()=>{
@@ -1709,7 +1592,7 @@ module.exports = {
         return Data;
       }
       let data = await processImages(dat);
-      res.render("userView/review",{userpar:true,data})
+      res.render("userView/review",{userpar:true,data ,user: decode.value.username,  count,    walletTotal: walletData.total,  })
 
     }).catch(()=>{
 
