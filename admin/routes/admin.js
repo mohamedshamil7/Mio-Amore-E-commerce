@@ -61,7 +61,8 @@ const {
   renderSalesReport,
   salesFilter,
   addVariations,
-  addVarient_submit
+  addVarient_submit,
+  variationDelete
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -145,5 +146,6 @@ router.post("/sale-filter",nocache,autherization,salesFilter)
 router.post("/addVariations",nocache,autherization,addVariations)
 
 router.post("/addVarient-submit",nocache,autherization,addVarient_submit)
+router.delete("/variationDelete",nocache,autherization,variationDelete)
 module.exports = router;
 

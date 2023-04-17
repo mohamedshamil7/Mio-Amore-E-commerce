@@ -630,6 +630,7 @@ module.exports = {
     res.render("userView/cart", {
       products,
       userpar: true,
+      user:decode.value.username,
       total,
       outofStock,
       count,
@@ -1454,8 +1455,8 @@ module.exports = {
   },
 
   checkCoupen: async (req, res) => {
-    let decode, cart= await Promise.all([tokenVerify(req), cartProd(req)]) 
-    // let cart = await
+    let decode = await tokenVerify(req)
+    let cart = await cartProd(req)
     let Total = cart.total
     let offerPrice;
     console.log(req.body.code);

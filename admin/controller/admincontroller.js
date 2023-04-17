@@ -957,7 +957,19 @@ addVarient_submit:(req,res)=>{
 
   adminHelper.AddVariation(req.body).then((data)=>{
     res.json(data)
+  }).catch(()=>{
+    console.log("error occured during Variation add Submit");
   })
+},
+
+variationDelete:(req,res)=>{
+
+  adminHelper.VariationDelete( req.body).then((response)=>{
+    res.json(response)
+  }).catch(()=>{
+    console.log("error occured during Varient deltetion");
+  })
+
 }
 
 

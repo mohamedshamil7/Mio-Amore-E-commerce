@@ -1006,7 +1006,8 @@ module.exports={
                 color:data.Color,
                 Price:data.Price,
                 Stock:data.Stock,
-                Size:data.Size
+                Size:data.Size,
+                inStock:true
             }
             return new Promise(async(resolve,reject)=>{
            const product =   await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(data.prodId), "Variations.Size": data.Size },)
@@ -1053,6 +1054,22 @@ module.exports={
                 console.log(vari);
                 if(vari){
                     resolve(vari)
+                }else{
+                    reject()
+                }
+            })
+        },
+
+        VariationDelete:(data)=>{
+            console.log(data.prodId);
+            console.log(data.varId);
+            return new Promise(async(resolve,reject)=>{
+                let del = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
+                    $pull:{"Variations.$[].Data":{id:ObjectId(data.varId)}}
+                })
+                if(del){
+                    console.log(del);
+                    resolve(del)
                 }else{
                     reject()
                 }
