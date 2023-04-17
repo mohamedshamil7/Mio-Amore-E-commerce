@@ -1023,7 +1023,7 @@ module.exports={
                 resolve(ins)
            }else{
              let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
-             $push:{Variations:{Size:data.Size, Data:[dataToInsert]}}
+             $push:{Variations:{ id:ObjectId(),Size:data.Size, Data:[dataToInsert]}}
 
             })
             console.log(ins,":ins") ;
@@ -1049,10 +1049,15 @@ module.exports={
                         '$unwind': {
                           'path': '$Variations.Data'
                         }
+                    },
+                    {
+                        $project:{
+                            _id:1, Variations:1
+                        }
                     }
                 ]).toArray()
                 console.log(vari);
-                if(vari){
+                if(vari){ 
                     resolve(vari)
                 }else{
                     reject()
@@ -1070,6 +1075,81 @@ module.exports={
                 if(del){
                     console.log(del);
                     resolve(del)
+                }else{
+                    reject()
+                }
+            })
+        },
+
+
+        getSingleVariation:(prodId, variationId)=>{
+            return new Promise(async(resolve,reject)=>{
+                let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
+                    {
+                        $match:{
+                            _id:ObjectId(prodId)
+                        }
+                    },
+                    {
+                        $unwind: "$Variations"
+                    },
+                    {
+                        '$unwind': {
+                          'path': '$Variations.Data'
+                        }
+                    },
+                    {
+                        $match:{
+                            "Variations.Data.id":ObjectId(variationId)
+                        }
+                    },
+                    {
+                        $group:{
+                            _id:'$Variations'
+                        }
+                    },
+                ]).toArray()
+                console.log(";;;;;;vari",vari,"/////");
+                if(vari){
+                    resolve(vari[0])
+                }else{
+                    reject()
+                }
+            })
+        },
+
+
+        editVariation_submit:(data)=>{
+            console.log(data.prodId);
+            console.log(data.varId,";;;");
+            console.log(data.dataId);
+            let stock 
+            data.Stock=Number(data.Stock)
+            if( data.Stock>0){
+                stock = true
+            }else{
+                stock = false
+            }
+            return new Promise(async(resolve,reject)=>{
+
+                let edit = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId),},{
+
+                    $set:{
+                        // "Variations.$.Data.Id":ObjectId(data.varId),
+                        'Variations.$[i].Data.$[j].color': data.Color,
+                        'Variations.$[i].Data.$[j].Price': Number(data.Price),
+                        'Variations.$[i].Data.$[j].Stock':data.Stock,
+                        'Variations.$[i].Data.$[j].inStock':stock,
+                        'Variations.$[i].Data.$[j].Size':data.Size,
+
+                    }
+                },{arrayFilters:[
+                    {'j.id':ObjectId(data.dataId)},{'i.id':ObjectId(data.varId)}
+                    ]}
+                )
+                if(edit){
+                    console.log(edit);
+                    resolve(edit)
                 }else{
                     reject()
                 }

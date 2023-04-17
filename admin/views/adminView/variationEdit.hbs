@@ -6,7 +6,7 @@
              <!-- General Form Elements -->
               <form action="/admin/addVarient-submit" method="post"  >
                 <div class="row mb-3">
-                    <input type="text" name="prodId" id="prodId" value="{{product._id}}" hidden>
+                    <input type="text" name="prodId" id="prodId" value="{{product._id}}" hidden >
                   <label for="inputText" class="col-sm-2 col-form-label">Product Name</label>
                   <div class="col-sm-4">
                     <input type="text" name="ProductName" value="{{product.ProductName}}" class="form-control" readonly>
@@ -21,7 +21,7 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Size</label>
                   <div class="col-sm-4">
-                    <input type="text" name="Size" id="Size"  class="form-control">
+                    <input type="text" name="Size" id="Size" value="{{variations._id.Data.Size}}"  class="form-control" readonly>
                   </div>
                 </div>
 
@@ -29,7 +29,7 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
                   <div class="col-sm-4">
-                    <input type="text" name="Color" id="Color"  class="form-control">
+                    <input type="text" name="Color" id="Color" value="{{variations._id.Data.color}}"  class="form-control">
                   </div>
                 </div>
 
@@ -37,7 +37,7 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Selling Price</label>
                   <div class="col-sm-4">
-                    <input type="number" id="Price" name="Price" class="form-control">
+                    <input type="number" id="Price" value="{{variations._id.Data.Price}}" name="Price" class="form-control">
                   </div>
                 </div>
 
@@ -45,7 +45,7 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
                   <div class="col-sm-4">
-                    <input type="number" name="Stock" id="Stock" class="form-control">
+                    <input type="number" name="Stock"  value="{{variations._id.Data.Stock}}" id="Stock" class="form-control">
                   </div>
                  </div>
 
@@ -58,9 +58,10 @@
                 </div> --}}
 
                 <div class="row mb-3">
-                  {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
+
+
                   <div class="col-sm-4 col-form-label">
-                    <button type="button" onclick="AddVarient()" class="btn btn-primary">Add Varient</button>
+                    <button type="button" onclick="EditVariation('{{variations._id.Data.id}}','{{variations._id.id}}')" class="btn btn-primary">Edit Varient</button>
                   </div>
                 </div>
 
@@ -95,21 +96,20 @@
                     <th scope="col">Color</th>
                     <th scope="col">Price</th>
                     <th scope="col">Quantity</th>
-                    <th scope="col">Action</th>
-                    <th scope="col">Action</th>
+
+
                   </tr>
                 </thead>
-                            {{#each Variations}}
+                            {{#each vars}}
                 <tbody>
-
 
                 <td>{{this.Variations.Data.id}}</td>
                 <td>{{this.Variations.Data.Size}}</td>
                 <td>{{this.Variations.Data.color}}</td>
                 <td>{{this.Variations.Data.Price}}</td>
                 <td>{{this.Variations.Data.Stock}}</td>
-                <td>  <a href="/admin/variationEdit?prodId={{this._id}}&dataId={{this.Variations.Data.id}}&varId={{this.Variations.id}}"> <button class="btn btn-secondary">Edit</button> </td> </a> 
-                <td>  <button   onclick="variationDelete('{{this.Variations.Data.id}}')" class="btn btn-danger">Delete</button> </td>
+
+
                 </tbody>
                     {{/each}}
                </table>
@@ -119,16 +119,19 @@
 
 
 <script>
-    function AddVarient(){
+    function EditVariation(dataId,varId){
         let prodId = document.getElementById('prodId').value
+        alert(prodId)
         let Size = document.getElementById('Size').value
         let Color = document.getElementById('Color').value
         let Price = document.getElementById('Price').value
         let Stock = document.getElementById('Stock').value
 
         $.ajax({
-            url:"http://localhost:8001/admin/addVarient-submit",
+            url:"http://localhost:8001/admin/editVariation-submit",
             data:{
+                dataId,
+                varId,
                 prodId,
                 Size,
                 Color,
@@ -139,58 +142,21 @@
             success:(response)=>{
                   Swal.fire({
               icon: 'success',
-              title: 'Added',
+              title: 'Edited',
               showConfirmButton: false,
               timer: 1000
             })
             setTimeout(()=>{
-              location.reload()
+                location.href=`/admin/addVariations?id=${prodId}`
             },1000)
             }
         })
     }
 
 
-  function variationDelete(variatioinId){
-     let prodId = document.getElementById('prodId').value
+  
 
-
-      $.ajax({
-            url:"http://localhost:8001/admin/variationDelete",
-            data:{
-                prodId,
-                varId:variatioinId
-            },
-            method:"delete",
-            success:(response)=>{
-                  Swal.fire({
-              icon: 'success',
-              title: 'Deleted',
-              showConfirmButton: false,
-              timer: 1000
-            })
-            setTimeout(()=>{
-              location.reload()
-            },1000)
-            }
-        })
-
-  }
-
-  function variationEdit(variatioinId){
-       let prodId = document.getElementById('prodId').value
-
-
-      $.ajax({
-            url:"http://localhost:8001/admin/variationEdit",
-            data:{
-                prodId,
-                varId:variatioinId
-            },
-            method:"post",
-        })
-
-  }
+  
 
 
 

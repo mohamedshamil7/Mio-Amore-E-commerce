@@ -1,13 +1,14 @@
 var path = require("path");
 const adminHelper = require("../model/adminHelpers");
 const voucher_codes = require('voucher-code-generator');
-const { resolve } = require("path");
+
+const { ObjectId } = require('mongodb')
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = require("@aws-sdk/client-s3");
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { log } = require("console");
+
 // const PDFDocument = require('pdfkit');
 // const easyinvoice = require('easyinvoice');
 // const pdfjsLib = require('pdfjs-dist');
@@ -938,11 +939,11 @@ salesFilter:(req,res)=>{
 
 addVariations:(req,res)=>{
   console.log("///????????????>>>>>>>>>>>>>>>>>");
-  adminHelper.getEditProduct(req.body.id).then((product)=>{
+  adminHelper.getEditProduct(req.query.id).then((product)=>{
     
     
     // let Variations = [...product.Variations]
-    adminHelper.getAllVariations(req.body.id).then((Variations)=>{
+    adminHelper.getAllVariations(req.query.id).then((Variations)=>{
       console.log("....",Variations);
        res.render('adminView/VariationsPage',{product,Variations,admin:true})
       }).catch(()=>{
@@ -970,6 +971,37 @@ variationDelete:(req,res)=>{
     console.log("error occured during Varient deltetion");
   })
 
+},
+
+variationEdit:(req,res)=>{
+  console.log(req.query.prodId);
+  console.log(req.query.varid);
+  adminHelper.getSingleVariation(req.query.prodId,req.query.dataId).then((variations)=>{
+    console.log("variations: ", variations);
+    adminHelper.getEditProduct(req.query.prodId).then((product)=>{
+      console.log("product: ", product);
+      adminHelper.getAllVariations(req.query.prodId).then((vars)=>{
+        console.log("all variations: ", vars);
+        res.render("adminView/variationEdit",{variations,admin:true,product,vars})
+      }).catch(()=>{
+        console.log("error occrued during get all Variations");
+      })
+
+    }).catch(()=>{
+      console.log("error ocuured during getting edit product");
+    })
+  }).catch(()=>{
+    console.log("error occured during get Singlr Variation");
+  })
+   
+  
+} ,
+editVariation_submit:(req,res)=>{
+  adminHelper.editVariation_submit(req.body).then((resp)=>{
+    res.json(resp)
+  }).catch(()=>{
+    console.log("error occured during variation editing");
+  })
 }
 
 

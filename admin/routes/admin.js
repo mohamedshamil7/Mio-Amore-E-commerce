@@ -62,7 +62,9 @@ const {
   salesFilter,
   addVariations,
   addVarient_submit,
-  variationDelete
+  variationDelete,
+  variationEdit,
+  editVariation_submit
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -143,9 +145,12 @@ router.get("/billLabel/:id",nocache,autherization,renderbillLabel)
 router.get("/Sales",nocache,autherization,renderSalesReport)
 router.post("/sale-filter",nocache,autherization,salesFilter)
 
-router.post("/addVariations",nocache,autherization,addVariations)
+router.get("/addVariations",nocache,autherization,addVariations)
 
-router.post("/addVarient-submit",nocache,autherization,addVarient_submit)
 router.delete("/variationDelete",nocache,autherization,variationDelete)
+router.post("/addVarient-submit",nocache,autherization,addVarient_submit)
+router.get("/variationEdit",nocache,autherization,variationEdit)
+
+router.post("/editVariation-submit",nocache,autherization,editVariation_submit)
 module.exports = router;
 
