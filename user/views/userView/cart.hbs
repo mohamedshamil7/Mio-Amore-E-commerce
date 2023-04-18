@@ -97,13 +97,13 @@
                                                     <div class="input-group">
 
                                                         <button type="button" class="btn qty-left-minus"
-                                                            data-type="minus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',-1,'{{this.quantity}}','{{this.varientId}}')">
+                                                            data-type="minus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',-1,'{{this.quantity}}','{{this.varientId}}','{{this.sizeId}}')">
                                                             <i class="fa fa-minus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                         <input class="form-control input-number qty-input" type="text"
                                                             name="quantity" id="{{this.cart_product._id}}" value={{this.quantity}}>
                                                         <button type="button" class="btn qty-right-plus"
-                                                            data-type="plus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',1,'{{this.quantity}}','{{this.varientId}}')">
+                                                            data-type="plus" data-field="" onclick="quantityChange('{{this._id}}','{{this.cart_product._id}}',1,'{{this.quantity}}','{{this.varientId}}','{{this.sizeId}}')">
                                                             <i class="fa fa-plus ms-0" aria-hidden="true"></i>
                                                         </button>
                                                     </div>

@@ -15,7 +15,7 @@
 //     })
 // }
 
-function quantityChange(cartId,prodId,count,quantity,varientId){
+function quantityChange(cartId,prodId,count,quantity,varientId,sizeId){
     
     count= parseInt(count) 
     quantity=parseInt(quantity)
@@ -27,7 +27,8 @@ function quantityChange(cartId,prodId,count,quantity,varientId){
             product:prodId,
             count:count,
             quantity:quantity,
-            varientId
+            varientId,
+            sizeId
         },
         method:'post',
         success:(response)=>{

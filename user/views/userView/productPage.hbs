@@ -133,7 +133,7 @@
         color:white
     }
 </style>
-                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick="  Variation('{{data.Price}}','{{data.Size}}','{{data.Color}}','{{data._id}}')" >Size : {{data.Size}}  Color :{{data.Color}}</button> </a>
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick="  Variation('{{data.Price}}','{{data.Size}}','{{data.Color}}','{{data._id}}','{{data.inStock}}','{{data._id}}')" >Size : {{data.Size}}  Color :{{data.Color}}</button> </a>
                                         </li>
                                         {{#each Variations}}
 
@@ -144,7 +144,8 @@
                                             {{!-- <a > <button type="submit" style="border: none; background: none;" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a> --}}
                                             
                                             {{!-- </form> --}}
-                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
+                                            {{!-- <h1>{{this.Variations.id}}</h1> --}}
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}','{{this.Variations.Data.inStock}}','{{this.Variations.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
                                         </li>
                                       
                                         {{/each}}
@@ -177,19 +178,17 @@
 
                                     </div>
                                     {{#if data.Availability}}
-                                    {{#if data.inStock}}
+
 
                                    {{!-- <a href="/user/addToCart/{{data._id}}">  <button 
                                         class="btn btn-md bg-dark cart-button text-white w-100">Add To Cart</button>
                                         </a> --}}
-                                        <button class="btn btn-md bg-dark cart-button text-white w-100" 
+                                        <button id="addToCartButton" class="btn btn-md bg-dark cart-button text-white w-100" 
                                         onclick="addToCart('{{data._id}}')">ADD TO CART </button>
 
+                                        <button id="addToCartUnavailable" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
                                         {{else}}
-                                        <button class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
-                                        {{/if}}
-                                        {{else}}
-                                        <button class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
+                                        <button  class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
                                         {{/if}}
 
                                 </div>
@@ -667,10 +666,27 @@
          new ImageZoom(document.getElementById('img3'), options)
      new ImageZoom(document.getElementById('img4'), options)
 
-    function Variation(varientPrice,varientSize,varientColor,ids){
-        id = ids
+
+
+
+
+
+    function Variation(varientPrice,varientSize,varientColor,ids,stock,sizeId){
+        id = {
+            varientId:ids,
+            sizeId
+        }
         let error = document.getElementById('Varient_error').innerHTML=''
 
+    if(stock == "true"){
+
+        let cartbtn = document.getElementById('addToCartButton').style.display = 'block'
+        let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'none'
+    }else{
+        alert("elseeeeee")
+        let cartbtn = document.getElementById('addToCartButton').style.display = 'none'
+        let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'block'
+    }
     let Price = document.getElementById('Price').innerHTML =` ₹ ${varientPrice}`
     let proSize = document.getElementById('proSize').innerHTML= `Size : ${varientSize}`
     let proColor = document.getElementById('proColor').innerHTML= `Color : ${varientColor}`
@@ -691,7 +707,8 @@
         url:' http://localhost:8001/user/addToCart',
         data:{
             prodId,
-           varient:id
+           varient:id.varientId,
+           sizeId:id.sizeId
         },
         method:'post',
         success:(response)=>{
@@ -701,6 +718,15 @@
                 $('#cartCount').html(count)
             }
             // alert(response)  
+        } ,
+        error:(xhr, thrownError)=>{
+            console.log("isdda")
+            Swal.fire({
+                icon: 'error',
+                title: 'Stock Unavailable',
+                text: 'Something went wrong!',
+               
+              })
         }
      })
     }else{

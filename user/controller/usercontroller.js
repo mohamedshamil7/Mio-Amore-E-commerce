@@ -585,7 +585,7 @@ module.exports = {
     console.log(req.body.prodId);
     let decode = tokenVerify(req);
     userHelpers
-      .addToCart(decode.value.insertedId, req.body.prodId, req.body.varient )
+      .addToCart(decode.value.insertedId,  req.body  )
       .then(() => {
         res.json({ status: true });
       })
