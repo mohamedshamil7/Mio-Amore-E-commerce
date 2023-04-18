@@ -643,13 +643,13 @@ module.exports = {
     let decode = tokenVerify(req);
     console.log(req.body.prodId, "this is te iddddd");
     userHelpers
-      .removeCart(decode.value.insertedId, req.body.prodId)
+      .removeCart(decode.value.insertedId, req.body.prodId, req.body.varientId)
       .then((response) => {
         console.log("this is the response", response);
         // res.redirect(req.get("referer"));
         res.json(response);
       })
-      .catch((error) => {
+      .catch(() => {
         console.log("failed to dlete from cart");
       });
   },
@@ -1065,13 +1065,16 @@ module.exports = {
           let data = [];
           for (let i = 0; i < products.length; i++) {
             let obj = {};
-            obj.prod = products[i].item;
+            obj.prodId = products[i].item;
             obj.quantity = products[i].quantity;
+            obj.varientId = products[i].varientId
+            obj.sizeId = products[i].sizeId
             data.push(obj);
           }
           return data;
         }
         let ids = destruct(products);
+        console.log("ids klasm;dfkmalskfdmas;", typeof ids[0].prodId);
         await userHelpers.placeOrderTrans(
             orderId,
             transactionId,
@@ -1081,6 +1084,7 @@ module.exports = {
             decode.value.insertedId
           )
           .then((resp) => {
+            console.log("then reps  hgvytfrwrartvbkhbytdythbujhb");
             console.log(resp);
             //  location.href="http://localhost:8001/user/orderSuccess"
             if (payment_method === "COD" || payment_method=="razorPay" || payment_method==="wallet") {
@@ -1094,6 +1098,7 @@ module.exports = {
             }
           })
           .catch((e) => {
+            console.log("ende mwonreee error adich");
             console.log(e);
           });
       }
@@ -1614,6 +1619,16 @@ module.exports = {
       })
 
 
+  },
+  check_quantity:async(req,res)=>{
+    console.log("....fkmslfnaoidncsddcnofinoindmckldnalnmc");
+    console.log(req.body);
+    let decode = await tokenVerify(req)
+    userHelpers.check_quantity(decode.value.insertedId , req.body).then((response)=>{
+      res.json({status:true})
+    }).catch((response)=>{
+      res.json({status:false})
+    })
   }
 
 };

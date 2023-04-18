@@ -61,7 +61,7 @@ function quantityChange(cartId,prodId,count,quantity,varientId,sizeId){
     })
 };
 
-function removeFromCart(prodId){
+function removeFromCart(prodId, varientId){
     // console.log(prodId)
     Swal.fire({
         title: 'Are you sure you want to delete this Product ?',
@@ -78,7 +78,8 @@ function removeFromCart(prodId){
                 url:"http://localhost:8001/user/removeCart",
                 method:'post',
                 data:{
-                prodId
+                prodId,
+                varientId
                 },
                 success:(response)=>{
 

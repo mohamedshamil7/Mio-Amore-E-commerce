@@ -409,37 +409,7 @@ getcart:(userId)=>{
                     item:1,varientId:1,sizeId:1,quantity:1,cart_product:{$arrayElemAt:['$cart_product',0]}
                 }
             },
-            // {
-            //     $project:{
-            //         item:1,varientId:1,quantity:1,"cart_product.Variations":1,product:'$cart_product'}
-            //  },
-            //  {
-            //     $unwind:'$cart_product.Variations'
-            //  },
-            //  {
-            //     $project:{
-            //         item:1,varientId:1,quantity:1,"cart_product.Variations":1,product:1}
-            //  },
-            //  {
-            //     $group:{
-            //         _id:{vari:'$cart_product.Variations',item:'$item',varientId:'$varientId',quantity:'$quantity',product:'$product'}
-            //     }
-            //  },
-            //  {
-            //     $unwind:'$_id.vari'
-            //  },
-            //  {
-            //     $group:{
-            //         _id:{'vari':_id.vari}
-            //     }
-            //  }
-            
-       
            
-
-            // {
-            //     $unwind:'$cart_product.Variations.Data'
-            // }
 
         ]).toArray()
         if(cartItems){
@@ -494,6 +464,8 @@ getcart:(userId)=>{
                     cartItems[i].cart_product.Color = vari[0].Variations.Data.color,
                     cartItems[i].cart_product.Size = vari[0].Variations.Data.Size
                     cartItems[i].cart_product.Price = vari[0].Variations.Data.Price
+                    cartItems[i].cart_product.inStock = vari[0].Variations.Data.inStock
+
 
                 }
               
@@ -545,7 +517,7 @@ getcart:(userId)=>{
     // })
 },
 
-removeCart:(userId,prodId)=>{
+removeCart:(userId,prodId,varientId)=>{
     console.log(userId);
     
     console.log("prodd>>>>>>>>>>>>>>>>>",prodId);
@@ -554,10 +526,12 @@ removeCart:(userId,prodId)=>{
         if(userCart){
             db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId)},{
                 $pull:{
-                    product:{item:ObjectId(prodId)}
+                    product:{varientId:ObjectId(varientId)}
                 }
             }) 
             resolve(userCart)
+        }else{
+            reject()
         }
     })
 },
@@ -1368,19 +1342,97 @@ debitFromWallet:(orderId,total,user)=>{
         console.log(`status i s ${statuss}`);
                     if(statuss ==="placed"){
                         for(let i = 0;i<ids.length;i++){
-                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prod)},{
+                            console.log(ids.length);
+                            let prodId = ids[i].prodId.toString()
+                            let varientId = ids[i].varientId.toString()
+                            let sizeId = ids[i].sizeId.toString()
+                            console.log(sizeId,">>>>> size udtrd");
+                            if(prodId == varientId){
+                                console.log("same");
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},{
                                     $inc: {Stock:-ids[i].quantity}, 
                                 
-                            },{session})   
+                                },{session})   
         
-                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prod)},[{
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},[{
                                  $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
                             
-                        }],{session})
-        
+                                 }],{session})
+                            }else{
+                                console.log("different");
+                              let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},{
+                                    $inc: {'Variations.$[i].Data.$[j].Stock':-ids[i].quantity}, 
+                                
+                            },{arrayFilters:[
+                                {'j.id':ObjectId(varientId)},{'i.id':ObjectId(sizeId)}
+                                ],session},
+                                ) 
+
+                                if(varint){
+                                    console.log("varient kjdnas",varint);
+                                }else{
+                                    console.log(varint);
+                                    console.log("noononononononononon");
+                                }
+                              let varei1= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(prodId)}, [
+                                {
+                                  $set: {
+                                    Variations: {
+                                      $map: {
+                                        input: '$Variations',
+                                        as: 'variation',
+                                        in: {
+                                          $mergeObjects: [
+                                            '$$variation',
+                                            {
+                                              Data: {
+                                                $map: {
+                                                  input: '$$variation.Data',
+                                                  as: 'data',
+                                                  in: {
+                                                    $cond: {
+                                                      if: { $eq: ['$$data.id',ObjectId(varientId)] },
+                                                      then: {
+                                                        $mergeObjects: [
+                                                          '$$data',
+                                                          {
+                                                            inStock: {
+                                                              $cond: {
+                                                                if: { $lt: ['$$data.Stock', 1] },
+                                                                then: false,
+                                                                else: true
+                                                              }
+                                                            }
+                                                          }
+                                                        ]
+                                                      },
+                                                      else: '$$data'
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              ],{session})
+                                
+                                if(varei1){
+                                    console.log("varie qwj ",varei1);
+                                }
+                            }
+                            
+                            
+                            
+                            
+                            
                         }
-        
-                      let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)},{session})
+                        
+                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                        let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)},{session})
                         console.log(`${deletecart.deletedCount} was /were deleted from cart collection `);
         
                     }else{
@@ -1414,6 +1466,7 @@ debitFromWallet:(orderId,total,user)=>{
                 }
             }
             catch(e){
+                console.log("entere catch ta");
                 console.log(`${e}    error`);
             }
             finally{
@@ -1696,6 +1749,43 @@ getAllVariations:(prodId)=>{
             reject()
         }
     })
+},
+
+check_quantity:(userId,data)=>{
+
+    return new Promise(async(resolve,reject)=>{
+        // let cart = await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        // if(cart){
+            //     console.log(cart);
+            // }
+
+            
+            
+            let cart = await db.get().collection(collection.CART_COLLECTION).aggregate([
+                {
+                    $match:{
+                        user:ObjectId(userId)
+                    }
+                },
+                {
+                    $unwind:"$product"
+                },
+                {
+                    $match:{
+                        "product.varientId":ObjectId(data.varientId)
+                    }
+                },
+                
+              
+                
+            ]).toArray()
+            if(cart.length!=0){
+                reject(false)
+            }else{
+                resolve(true)
+            }
+        
+        })
 }
 
 

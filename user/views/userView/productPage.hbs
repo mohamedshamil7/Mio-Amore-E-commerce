@@ -84,6 +84,7 @@
 
                                 <h6 class="offer-top" id="offer">{{data.offer}}% Off</h6>
                                 <h2 class="name">{{data.ProductName}}</h2>
+                                <input type="text" id="productId" value="{{data._id}}" hidden>
                                 <div class="price-rating">
 
 
@@ -133,7 +134,7 @@
         color:white
     }
 </style>
-                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick="  Variation('{{data.Price}}','{{data.Size}}','{{data.Color}}','{{data._id}}','{{data.inStock}}','{{data._id}}')" >Size : {{data.Size}}  Color :{{data.Color}}</button> </a>
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" return Variation('{{data.Price}}','{{data.Size}}','{{data.Color}}','{{data._id}}','{{data.inStock}}','{{data._id}}')" >Size : {{data.Size}}  Color :{{data.Color}}</button> </a>
                                         </li>
                                         {{#each Variations}}
 
@@ -145,7 +146,7 @@
                                             
                                             {{!-- </form> --}}
                                             {{!-- <h1>{{this.Variations.id}}</h1> --}}
-                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}','{{this.Variations.Data.inStock}}','{{this.Variations.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
+                                            <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" return Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}','{{this.Variations.Data.inStock}}','{{this.Variations.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
                                         </li>
                                       
                                         {{/each}}
@@ -185,6 +186,9 @@
                                         </a> --}}
                                         <button id="addToCartButton" class="btn btn-md bg-dark cart-button text-white w-100" 
                                         onclick="addToCart('{{data._id}}')">ADD TO CART </button>
+
+
+                                       <a href="/user/usercart"> <button id="goToCartButton" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" > Item in Cart.. Go to cart <i class="fa-solid fa-arrow-right icon"></i> </button> </a> 
 
                                         <button id="addToCartUnavailable" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
                                         {{else}}
@@ -599,6 +603,7 @@
 
 <script>
     let id
+    let productId = document.getElementById('productId').value
     
     let avrRating = document.getElementById("avgRating").value
     if(avrRating ==0){
@@ -679,13 +684,35 @@
         let error = document.getElementById('Varient_error').innerHTML=''
 
     if(stock == "true"){
+        $.ajax({
+                 url:"http://localhost:8001/user/check_quantity",
+                 method:"post",
+                 data:{
+                    varientId:id.varientId,
+                    sizeId:id.sizeId,
+                    productId
+                    
+                 },
+                 success(response){
 
-        let cartbtn = document.getElementById('addToCartButton').style.display = 'block'
-        let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'none'
+                    if(response.status == true){
+                    let cartbtn = document.getElementById('addToCartButton').style.display = 'block'
+                    let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'none'
+                      let gotoCart = document.getElementById('goToCartButton').style.display="none"
+
+                    }else {
+                    let cartbtn = document.getElementById('addToCartButton').style.display = 'none'
+                    let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'none'
+                    let gotoCart = document.getElementById('goToCartButton').style.display="block"
+
+
+                    }
+                 },
+        })
     }else{
-        alert("elseeeeee")
         let cartbtn = document.getElementById('addToCartButton').style.display = 'none'
         let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'block'
+         let gotoCart = document.getElementById('goToCartButton').style.display="none"
     }
     let Price = document.getElementById('Price').innerHTML =` ₹ ${varientPrice}`
     let proSize = document.getElementById('proSize').innerHTML= `Size : ${varientSize}`
@@ -716,6 +743,17 @@
                 let count=$('#cartCount').html()
                 count=parseInt(count)+1
                 $('#cartCount').html(count)
+                 Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart',
+                    showConfirmButton: false,
+                    timer: 1000
+                  })
+                    let cartbtn = document.getElementById('addToCartButton').style.display = 'none'
+                    let unAvailable = document.getElementById('addToCartUnavailable').style.display= 'none'
+                    let gotoCart = document.getElementById('goToCartButton').style.display="block"
+
+
             }
             // alert(response)  
         } ,

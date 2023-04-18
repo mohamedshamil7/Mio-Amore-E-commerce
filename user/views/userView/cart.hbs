@@ -125,7 +125,7 @@
                                             
                                           </form>  {{!-- <a class="save notifi-wishlist" href="javascript:void(0)">Save for later</a> --}}
                                             {{!-- <a class="remove " onclick="return confirm(`Are you sure want to delete {{this.cart_product.ProductName}}  from your cart ?` )" href="/user/removeCart/{{this.cart_product._id}}">Remove</a> --}}
-                                            <button type="button" class="btn btn-danger" onclick="removeFromCart('{{this.cart_product._id}}')"> Remove</button>
+                                            <button type="button" class="btn btn-danger" onclick="removeFromCart('{{this.cart_product._id}}','{{this.varientId}}')"> Remove</button>
                                         </td>
                                     </tr>
 

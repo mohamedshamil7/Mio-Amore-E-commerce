@@ -51,7 +51,8 @@ const {
   viewOrderDetails,
   renderReviewPage,
   addReview,
-  VariationSelect
+  VariationSelect,
+  check_quantity
 
 } = require("../controller/usercontroller");
 
@@ -129,6 +130,7 @@ router.get('/gotoReview/:id',nocache,autherization,renderReviewPage)
 router.post('/addReview',nocache,autherization,addReview)
 
 router.get('/VariationSelect',nocache,autherization,VariationSelect)
+router.post('/check_quantity',nocache,autherization,check_quantity)
 
 module.exports = router;
 
