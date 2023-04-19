@@ -1,204 +1,154 @@
-<div id="label">
-    <title>Voxo | Invoice template </title>
+<style>
+    body{margin-top:20px;}
+</style>
 
-    <!--Google font-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
-        rel="stylesheet">
-
-    <!-- Icons -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/font-awesome.css">
-
-    <!-- Bootstrap css -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/vendors/bootstrap.css">
-
-    <!-- Theme css -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
 
+<div bgcolor="#f6f6f6" style="color: #333; height: 100%; width: 100%;" height="100%" width="100%">
+    <table bgcolor="#f6f6f6" cellspacing="0" style="border-collapse: collapse; padding: 40px; width: 100%;" width="100%">
+        <tbody>
+            <tr>
+                <td width="5px" style="padding: 0;"></td>
+                <td style="clear: both; display: block; margin: 0 auto; max-width: 600px; padding: 10px 0;">
+                    <table width="100%" cellspacing="0" style="border-collapse: collapse;">
+                        <tbody>
+                            <tr>
+                                <td style="padding: 0;">
+                                    <a
+                                        href="#"
+                                        style="color: #348eda;"
+                                        target="_blank"
+                                    >
+                                        <img
+                                            src="{{qrCode}}"
+                                            alt="QrCode"
+                                            style="height: 200px; max-width: 100%; width: 200px;"
+                                            height="200"
+                                            width="200"
+                                        />
+                                    </a>
+                                </td>
+                                <td style="color: #030303; font-size: 12px; padding: 0; text-align: right;" align="right">
+                                    <h3>Delivery Address :</h3> <br>
+                                    {{deleviryDetails.fullName}}<br />
+                                    {{deleviryDetails.useradd}}<br />
+                                    {{deleviryDetails.town}}, {{deleviryDetails.pin}}<br />
+                                     mobile : {{deleviryDetails.mobile}}<br />
 
-    <body class="bg-light">
-        <section class="theme-invoice-3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xxl-6 col-xl-8 mx-auto my-3">
-                        <div class="invoice-wrapper">
-                            <div class="invoice-header">
-                                <div class="header-left">
-                                    <div class="upper-icon">
-                                        <img src="label-css/assets/images/logo.svg" class="img-fluid" alt="">
-                                    </div>
 
-                                    <div class="header-address">
-                                        <div class="address-left">
-                                            <ul>
-                                                <li>Delivery Address: </li>
+                                    <strong>Scheduled Delivery on :{{scheduledDate}}</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="5px" style="padding: 0;"></td>
+            </tr>
 
-                                                <li>{{orderDetails.deleviryDetails.fullName}}</li>
-                                                <li>{{ orderDetails.deleviryDetails.useradd}}</li>
-                                                <li> {{orderDetails.deleviryDetails.town}},
-                                                    {{orderDetails.deleviryDetails.pin}}</li>
-                                                <li> Mobile: {{orderDetails.deleviryDetails.mobile}}</li>
-                                            </ul>
-                                        </div>
-
-                                        <div class="address-right">
-                                            <ul>
-                                                <li class="text-content" style="color: black; font-weight: 700; "><span
-                                                        class="" style="color: black; font-weight: 700;"> Issue Date
-                                                        :</span> {{date}}</li>
-                                                <li class="text-content" style="color: black; font-weight: 700;"><span
-                                                        class="" style="color: black; font-weight: 700;"> Delivery date
-                                                        :</span>{{orderDetails.scheduledDate}}</li>
-                                                {{#eq orderDetails.paymentMethod "COD"}}
-                                                <li class="text-content" style="color: black; font-weight: 700;"><span
-                                                        class="" style="color: black; font-weight: 700;"> COLLECT CASH:
-                                                    </span>{{orderDetails.totalAmount}}</li>
-                                                {{else}}
-                                                <li class="text-content" style="color: black; font-weight: 700;"><span
-                                                        class="" style="color: black; font-weight: 700;"> Prepaid
-                                                    </span>(Don't Collect Cash)</li>
-                                                {{/eq}}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="header-right">
-                                    <h3> Label</h3>
-                                </div>
-                            </div>
-                            <div class="invoice-body">
-                                <div class="table-responsive">
-                                    <table class="table table-product mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-start">Item detail</th>
-                                                <th></th>
-                                                <th></th>
-                                                <th></th>
-                                                <th>Qty</th>
-                                                {{!-- <th>Price</th> --}}
-                                                {{!-- <th>Amout</th> --}}
-                                            </tr>
-                                        </thead>
+            <tr>
+                <td width="5px" style="padding: 0;"></td>
+                <td bgcolor="#FFFFFF" style="border: 1px solid #000; clear: both; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
+                    <table width="100%" style="background: #f9f9f9; border-bottom: 1px solid #eee; border-collapse: collapse; color: #999;">
+                        <tbody>
+                            <tr>
+                                {{#eq paymentMethod "COD"}}
+                                <td width="50%" style="padding: 20px;"><strong style="color: #333; font-size: 24px;">₹ {{totalAmount}}</strong> <strong>COLLECT CASH</strong> </td>
+                                {{else}}
+                                <td width="50%" style="padding: 20px;"><strong style="color: #333; font-size: 24px;">₹ {{totalAmount}}</strong> <strong>Paid (DO NOT COLLECT CASH)</strong> </td>
+                                {{/eq}}
+                                <td align="right" width="50%" style="padding: 20px;">Thanks for using <span class="il">MioAmore.com</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td style="padding: 0;"></td>
+                <td width="5px" style="padding: 0;"></td>
+            </tr>
+            <tr>
+                <td width="5px" style="padding: 0;"></td>
+                <td style="border: 1px solid #000; border-top: 0; clear: both; display: block; margin: 0 auto; max-width: 600px; padding: 0;">
+                    <table cellspacing="0" style="border-collapse: collapse; border-left: 1px solid #000; margin: 0 auto; max-width: 600px;">
+                        <tbody>
+                            <tr>
+                                <td valign="top"  style="padding: 20px;">
+                                    <h3
+                                        style="
+                                            border-bottom: 1px solid #000;
+                                            color: #000;
+                                            font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+                                            font-size: 18px;
+                                            font-weight: bold;
+                                            line-height: 1.2;
+                                            margin: 0;
+                                            margin-bottom: 15px;
+                                            padding-bottom: 5px;
+                                        "
+                                    >
+                                        Order Details :
+                                    </h3>
+                                    <table cellspacing="0" style="border-collapse: collapse; margin-bottom: 40px;">
                                         <tbody>
-                                            {{#each orderDetails.cart}}
+                                            {{#each cart}}
                                             <tr>
-                                                <td class="text-start">{{this.cart_product.ProductName}}</td>
-                                                <td class="text-content"></td>
-                                                <td class="text-content"></td>
-                                                <td class="text-content"></td>
-                                                <td class="text-content">{{this.quantity}}</td>
-                                                {{!-- <td class="text-content">$60.00</td> --}}
-                                                {{!-- <td>$156.00</td> --}}
+                                                <td style="padding: 5px 0;">{{this.cart_product.ProductName}}</td>
+                                                <td align="right" style="padding: 5px 0;">Quantity : {{this.quantity}} <br> size : {{this.cart_product.Size}} <br> color: {{this.cart_product.Color}} </td>
                                             </tr>
                                             {{/each}}
-                                        </tbody>
-                                        {{!-- <tfoot>
+                                           
+                                           {{#eq paymentMethod "COD" }}
                                             <tr>
-                                                <td colspan="2"></td>
-                                                <td colspan="2">GRAND TOTAL</td>
-                                                <td>$325.00</td>
+                                                <td style="border-bottom: 2px solid #000; border-top: 2px solid #000; font-weight: bold; padding: 5px 0;">Amount To Be Paid</td>
+                                                <td align="right" style="border-bottom: 2px solid #000; border-top: 2px solid #000; font-weight: bold; padding: 5px 0;"> ₹ {{totalAmount}}</td>
                                             </tr>
-                                        </tfoot> --}}
+                                           {{else}}
+                                            <tr>
+                                                <td style="border-bottom: 2px solid #000; border-top: 2px solid #000; font-weight: bold; padding: 5px 0;">Amount paid</td>
+                                                <td align="right" style="border-bottom: 2px solid #000; border-top: 2px solid #000; font-weight: bold; padding: 5px 0;">₹ {{totalAmount}}</td>
+                                            </tr>
+                                           {{/eq}}
+                                        </tbody>
                                     </table>
-                                </div>
-                            </div>
-                            <div class="invoice-footer">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="5px" style="padding: 0;"></td>
+            </tr>
 
-                                <div class="support-box">
-                                    <ul>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-phone"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>+91 1234567890</li>
-                                                        <li>+91 1234567890</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-earth-americas"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>support@MioAmore.com</li>
-                                                        <li>www.MioAmore.com</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-location-dot"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>MioAmore Store</li>
-                                                        <li>Address : kochi, IL</li>
-                                                        <li> 89th street , Suite 69,</li>
-                                                        <li>Kerala India-2768283</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                       
-
-                    </div>
-                    
-                </div>
-            </div>
-             <div class="row pad-top-botm">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                <hr>
-                                <button type="button" id="download-button" class="btn btn-success btn-lg"> Download
-                                    PDF</button>
-
-                            </div>
-                        </div>
-        </section>
-
-    </body>
+            <tr style="color: #666; font-size: 12px;">
+                <td width="5px" style="padding: 10px 0;"></td>
+                <td style="clear: both; display: block; margin: 0 auto; max-width: 600px; padding: 10px 0;">
+                    <table width="100%" cellspacing="0" style="border-collapse: collapse;">
+                        <tbody>
+                            <tr>
+                                <td width="40%" valign="top" style="padding: 10px 0;">
+                                    <h4 style="margin: 0;">Delivery Issues?</h4>
+                                    <p style="color: #666; font-size: 12px; font-weight: normal; margin-bottom: 10px;">
+                                        Please visit our
+                                        Page
+                                        </a>
+                                    </p>
+                                </td>
+                                <td width="10%" style="padding: 10px 0;">&nbsp;</td>
+                                <td width="40%" valign="top" style="padding: 10px 0;">
+                                    <h4 style="margin: 0;"><span class="il">MioAmore</span> Fashion Store</h4>
+                                    <p style="color: #666; font-size: 12px; font-weight: normal; margin-bottom: 10px;">
+                                        Maradu Kochi , kerala IN , 690121
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td width="5px" style="padding: 10px 0;"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 
 
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-<!-- PDF AND EXCEL -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-<script>
-    const button = document.getElementById('download-button');
-    function generatePDF() {
-        // Choose the element that your content will be rendered to.
-        const element = document.getElementById('label');
-        // Choose the element and save the PDF for your user.
-        html2pdf().from(element).save();
-    }
-    button.addEventListener('click', generatePDF);
-    function export_data() {
-        let data = document.getElementById('label');
-        var fp = XLSX.utils.table_to_book(data, { sheet: 'arjun' });
-        XLSX.write(fp, {
-            bookType: 'xlsx',
-            type: 'base64'
-        });
-        XLSX.writeFile(fp, 'test.xlsx');
-    }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>

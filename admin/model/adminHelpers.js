@@ -599,6 +599,7 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
                 const singleOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
                 if(singleOrder){
+                    console.log(singleOrder);
                     resolve(singleOrder)
                 }else{
                     reject()

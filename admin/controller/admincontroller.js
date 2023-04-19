@@ -1,13 +1,19 @@
 var path = require("path");
 const adminHelper = require("../model/adminHelpers");
 const voucher_codes = require('voucher-code-generator');
-
+const puppeteer = require('puppeteer')
 const { ObjectId } = require('mongodb')
 const jwt = require("jsonwebtoken");
+const hbs = require('hbs');
 require("dotenv").config();
 const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = require("@aws-sdk/client-s3");
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { readFile } = require("fs/promises");
+const { log } = require("console");
+var util = require('handlebars-utils');
+var QRCode = require('qrcode')
+
 
 // const PDFDocument = require('pdfkit');
 // const easyinvoice = require('easyinvoice');
@@ -903,21 +909,131 @@ await adminHelper.updateBanner3(req.body).then(()=>{
 
     invoice:async(req,res)=>{
       let orderDetails
-      await adminHelper.viewSingleOrder(req.params.id).then((details)=>{
+      await adminHelper.viewSingleOrder(req.query.id).then(async(details)=>{
         orderDetails = details
-      })
+        orderDetails.logo =await getImgUrl("logo.jpg");
+        orderDetails.date = new Date().toLocaleString()
 
-      console.log(orderDetails.cart);
-      res.render("adminView/invoice",{admin:true, orderDetails, date:new Date().toLocaleString()})
+      })
+      try{
+       console.log("inside try");
+  
+        const browser =await  puppeteer.launch()
+        const page = await browser.newPage()
+        // const content = await compile("invoice",orderDetails)
+        const compile = async function(templateName, data){
+          console.log("inide copile contnet");
+          const filePath = path.join(process.cwd(),"/views",`adminView/${templateName}.hbs`);
+          const html = await readFile(filePath, "utf-8");
+          
+          return hbs.handlebars.compile(html)(data);
+        }
+        const content  = await compile("invoice",orderDetails)
+  
+        await page.setContent(content)
+        // const filePath = path.join(process.cwd(),"temp",`Invoice-${req.query.id}.pdf`);
+  
+        const pdfBuffer=  await  page.pdf({
+          format:"A4",
+          printBackground:true
+        });
+          await browser.close()
+          try{
+            res.set({
+              'Content-Type': 'application/pdf',
+              'Content-Disposition': `attachment; filename=invoice-${req.query.id}`,
+            });
+            res.send(pdfBuffer);
+          }
+          catch(e){
+            console.log("error ", e);
+          }
+         
+      }
+      catch(e){
+        console.log("error occured", e);
+      }
+      
+
+      // console.log(orderDetails.cart);
+      // res.render("adminView/invoice",{admin:true, orderDetails, date:new Date().toLocaleString()})
 
 },
 renderbillLabel:async(req,res)=>{
   let orderDetails
-      await adminHelper.viewSingleOrder(req.params.id).then((details)=>{
+      await adminHelper.viewSingleOrder(req.query.id).then(async(details)=>{
         orderDetails = details
+        orderDetails.logo =await getImgUrl("logo.jpg");
+        orderDetails.date = new Date().toLocaleString()
+      }).catch(()=>{
+        console.log("error occured during view single order rendershipping label");
       })
       console.log(orderDetails);
-  res.render('adminView/shippinglabel',{ orderDetails, date:new Date().toLocaleString()})
+
+
+      var opts = {
+        errorCorrectionLevel: 'H',
+        type: 'image/jpeg',
+        quality: 0.9,
+        margin: 5,
+    
+      }
+      QRCode.toDataURL( req.query.id, opts, function (err, url) {
+        if (err) throw err
+      
+        orderDetails.qrCode = url
+      })
+
+      try{
+        console.log("inside try");
+   
+         const browser =await  puppeteer.launch()
+         const page = await browser.newPage()
+         // const content = await compile("invoice",orderDetails)
+         const compile = async function(templateName, data){
+           console.log("inide copile contnet");
+           const filePath = path.join(process.cwd(),"/views",`adminView/${templateName}.hbs`);
+           const html = await readFile(filePath, "utf-8");
+           hbs.registerHelper('eq',function(a,b,options){
+            if (arguments.length === 2) {
+              options = b;
+              b = options.hash.compare;
+            }
+            return util.value(a === b, this, options);
+           })
+
+           
+           return hbs.handlebars.compile(html)(data);
+         }
+         const content  = await compile("shippinglabel",orderDetails)
+   
+         await page.setContent(content)
+         // const filePath = path.join(process.cwd(),"temp",`Invoice-${req.query.id}.pdf`);
+   
+         const pdfBuffer=  await  page.pdf({
+           format:"A4",
+           printBackground:true
+         });
+           await browser.close()
+           try{
+             res.set({
+               'Content-Type': 'application/pdf',
+               'Content-Disposition': `attachment; filename=shippingLabel-${req.query.id}`,
+             });
+             res.send(pdfBuffer);
+           }
+           catch(e){
+             console.log("error ", e);
+           }
+          
+       }
+       catch(e){
+         console.log("error occured", e);
+       }
+
+
+
+  // res.render('adminView/shippinglabel',{ orderDetails, date:new Date().toLocaleString()})
 },
 
 renderSalesReport:async(req,res)=>{
