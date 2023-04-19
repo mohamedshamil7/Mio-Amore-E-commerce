@@ -4,78 +4,69 @@
 <h1 >Orders</h1>
     {{!-- {{message}} --}}
     <h1>{{e}}</h1>
-    <table class="table table-bordered border-primary mt-5" id="orders">
-        <thead>
-            <tr>
-                <th scope="col">User</th>
-                <th scope="col">Date</th>
-                <th scope="col">Total Price</th>
-                <th scope="col">Method</th>
-                <th scope="col">Status</th>
-                <th scope="col">DeliveryStatus</th>
-                <th>View</th>
-                <th>Return</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each orders}}
-            <tr>
-                <td>{{this.user.username}}</td>
-                <td>{{this.date}}</td>
-                <td>₹{{this.totalAmount}}</td>
-                <td>{{this.paymentMethod}}</td>
-                <td>
+   <table class="table table-striped table-hover table-bordered mt-5">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">User</th>
+      <th scope="col">Date</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Method</th>
+      <th scope="col">Status</th>
+      <th scope="col">Delivery Status</th>
+      <th>View</th>
+      <th>Return</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each orders}}
+    <tr>
+      <td>{{this.user.username}}</td>
+      <td>{{this.date}}</td>
+      <td>₹{{this.totalAmount}}</td>
+      <td>{{this.paymentMethod}}</td>
+      <td>
+        {{#if this.btnStatus}}
+          <span class="badge bg-success text-white py-2 px-3">{{this.status}}</span>
+          <button type="button" class="btn btn-danger btn-sm  mt-4 shadow-sm ms-2 fw-bold" onclick="cancelOrder('{{this._id}}')">Cancel Order</button>
+        {{else}}
+          <p class="badge bg-secondary">{{this.status}}</p>
+        {{/if}}
+      </td>
+      <td>
+        {{#if this.deliveryScheduled}}
+          <p class="badge bg-info text-dark">{{this.deliveryStatus}}</p>
+          <a href="/admin/confirmDelivery/{{this._id}}"><button type="button" class="btn btn-secondary btn-sm mt-2">Confirm Delivery</button></a> 
+          <a href="/admin/invoice?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Invoice</button></a> 
+          <a href="/admin/billLabel?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Billing Label</button></a> 
+        {{else}}
+          <p class="badge bg-secondary">{{this.deliveryStatus}}</p>
+          {{#if this.deliveredDate}}
+            <p class="badge bg-success">{{this.deliveredDate}}</p>
+            <a href="/admin/invoice?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Invoice</button></a> 
+            <a href="/admin/billLabel?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Billing Label</button></a> 
+          {{else}}
+            <a href="/admin/scheduleOrder/{{this._id}}"><button type="button" class="btn btn-secondary btn-sm mt-2">Schedule Order</button></a> 
+          {{/if}}
+        {{/if}}
+      </td>
+      <td>
+        <a href="/admin/view-order-product/{{this._id}}"><button type="button" class="btn btn-secondary btn-sm">View Products</button></a>
+        {{#if this.returnplaced }}
+          <a href="/admin/returnConfirm/{{this._id}}"><button type="button" class="btn btn-secondary btn-sm mt-2">Confirm Return</button></a>
+        {{else}}
+          <p></p>
+        {{/if}}
+        {{#if this.returnConfirmed}}
+          <h5>Order Returned</h5>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
 
-                    {{#if this.btnStatus}}
-                    <p class="badge bg-success">{{this.status}}</p> <br>
-                        {{!-- <a href="/admin/cancelOrder/{{this._id}}"> <p class="cancel badge badge-danger" >Cancel Order</p></a> --}}
-                         <p onclick="cancelOrder('{{this._id}}')" class="cancel badge bg-danger" >Cancel Order</p>
-                        
-                        {{else}}
-                    <p class="badge bg-secondary">{{this.status}}</p> <br>
-                    {{/if}}
-                </td>
-                <td>
-                    {{#if this.deliveryScheduled}}
-                     <p class="badge bg-info text-dark">Delivery Scheduled on {{this.deliveryStatus}}</p> <br>
-                   <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a> 
-                   <a href=" /admin/invoice?id={{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
-                   {{!-- <a href=" /admin/confirmDelivery/{{this._id}}"><button type="button"  class="btn btn-secondary bg-dark">confirm Delivery?</button> </a>  --}}
-                   <a href=" /admin/billLabel?id={{this._id}}" ><button type="button"  class="btn btn-success  mt-4">download Billing label</button> </a> 
 
-                    {{else}}
-                     <p class="badge bg-secondary">{{this.deliveryStatus}}</p> <br>
-                     {{#if this.deliveredDate}}
-                     <p class="badge bg-success">Delivered  on {{this.deliveredDate}}</p> <br>
-                   <a href=" /admin/invoice?id={{this._id}}" ><button type="button"  class="btn btn-success ">download invoice</button> </a> 
-                   <a href=" /admin/billLabel?id={{this._id}}" ><button type="button"  class="btn btn-success mt-4">download Billing label</button> </a> 
 
-                     {{else}}
-                   <a href=" /admin/scheduleOrder/{{this._id}}"><button type="button"  class="btn btn-secondary">schedule Order</button> </a> 
-                     {{/if}}
-                   {{/if}}
-                </td>
-
-                    {{!-- {{else}}
-                    <p class="badge badge-secondary">{{this.status}}</p> <br>
-                    {{/if}} --}}
-                
-                
-                <td><a href="/admin/view-order-product/{{this._id}}"><button type="button" class="btn btn-secondary">ViewProducts</button></a></td>
-                {{#if this.returnplaced }}
-                 <td><a href="/admin/returnConfirm/{{this._id}}"><button type="button" class="btn btn-secondary">Confirm Return?</button></a>
-                 {{else}}
-                 <td></td>
-                 {{/if}}
-                 {{#if this.returnConfirmed}}
-                 <h5>Order returned</h5>
-                 {{/if}}
-                 
-                 </td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
         </div>
     </div>
 
@@ -89,7 +80,7 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+{{!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
 
@@ -99,7 +90,7 @@
   $(document).ready( function () {
     $('#orders').DataTable();
 } );
-</script>
+</script> --}}
 
 
 

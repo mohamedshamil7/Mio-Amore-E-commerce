@@ -6,30 +6,26 @@
              <!-- General Form Elements -->
               <form action="/admin/addProduct-submit" method="post" enctype='multipart/form-data' >
                 <div class="row mb-3">
-                  <label for="inputText" class="col-sm-2 col-form-label">Product Name</label>
-                  <div class="col-sm-4">
-                    <input type="text" name="ProductName" class="form-control">
-                  </div>
-                </div>
-                {{!-- <div class="row mb-3">
-                  <label for="inputEmail" class="col-sm-2 col-form-label">Company</label>
-                  <div class="col-sm-4">
-                    <input type="text" name="Company" class="form-control">
-                  </div>
-                </div> --}}
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Brand</label>
-                  <div class="col-sm-4">
-                    <select class="form-select"name="Company" aria-label="Default select example">
-                      <option selected>select Brand</option>
-                      {{#each brands}}
-                      <option value="{{this.brandName}}">{{this.brandName}}</option> 
-                    {{/each}}
-                    </select>
-                  </div>
-                </div>
+  <label for="inputText" class="col-sm-2 col-form-label fw-bold">Product Name</label>
+  <div class="col-sm-4">
+    <input type="text" name="ProductName" class="form-control">
+  </div>
+</div>
+
+<div class="row mb-3">
+  <label class="col-sm-2 col-form-label fw-bold">Brand</label>
+  <div class="col-sm-4">
+    <select class="form-select" name="Company" aria-label="Default select example">
+      <option selected disabled>Choose brand</option>
+      {{#each brands}}
+      <option value="{{this.brandName}}">{{this.brandName}}</option> 
+      {{/each}}
+    </select>
+  </div>
+</div>
+
                  <div class="row mb-3">
-                  <label for="inputNumber"  class="col-sm-2 col-form-label">MRP</label>
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">MRP</label>
                   <div class="col-sm-4">
                     <input type="number" name="MRP" id="MRP" class="form-control">
                   </div>
@@ -37,20 +33,20 @@
                 </div>
 
                 <div class="row mb-3">
-                  <label for="inputNumber"  class="col-sm-2 col-form-label">Selling Price</label>
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Selling Price</label>
                   <div class="col-sm-4">
                     <input type="number" name="Price" class="form-control">
                   </div>
                 </div>
             <div class="row mb-3">
-                <label  class="col-sm-2 col-form-label">File Upload</label>
+                <label  class="col-sm-2 col-form-label fw-bold">File Upload</label>
                 <div class="col-sm-4 mb-3">
                     <input class="form-control" type="file" name="Image1"  id="formFile">
                 </div>
               </div>
 
               <div class="row mb-3">
-          <label class="col-sm-2 col-form-label">File Upload</label>
+          <label class="col-sm-2 col-form-label fw-bold">File Upload</label>
           {{!-- <img style="width: 50px;" src="" alt="no"> --}}
           <div class="col-sm-4 mb-3">
             <input class="form-control" type="file" name="Image2" id="formFile">
@@ -58,7 +54,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="col-sm-2 col-form-label">File Upload</label>
+          <label class="col-sm-2 col-form-label fw-bold">File Upload</label>
           {{!-- <img style="width: 50px;" src="" alt="no"> --}}
           <div class="col-sm-4 mb-3">
             <input class="form-control" type="file" name="Image3" id="formFile">
@@ -66,7 +62,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="col-sm-2 col-form-label">File Upload</label>
+          <label class="col-sm-2 col-form-label fw-bold">File Upload</label>
           {{!-- <img style="width: 50px;" src="" alt="no"> --}}
           <div class="col-sm-4 mb-3">
             <input class="form-control" type="file" name="Image4" id="formFile">
@@ -74,13 +70,13 @@
         </div>
 
                 <div class="row mb-3">
-                  <label for="inputDate" class="col-sm-2 col-form-label">Manufacturing Date</label>
+                  <label for="inputDate" class="col-sm-2 col-form-label fw-bold">Manufacturing Date</label>
                   <div class="col-sm-4">
                     <input type="date" name="ManufacturingDate" class="form-control">
                   </div>
                 </div>
                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Category</label>
+                  <label class="col-sm-2 col-form-label fw-bold">Category</label>
                   <div class="col-sm-4">
                     <select class="form-select"name="category" aria-label="Default select example">
                       <option selected>select Category</option>
@@ -93,7 +89,7 @@
 
 
               <div class="row mb-3">
-                  <label for="inputNumber"  class="col-sm-2 col-form-label">Size</label>
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Size</label>
                   <div class="col-sm-4">
                     <input type="text" name="Size" class="form-control">
                   </div>
@@ -101,7 +97,7 @@
 
 
                 <div class="row mb-3">
-                  <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Color</label>
                   <div class="col-sm-4">
                     <input type="text" name="Color" class="form-control">
                   </div>
@@ -110,36 +106,36 @@
 
 
                 <div class="row mb-3">
-                  <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Stock</label>
                   <div class="col-sm-4">
                     <input type="number" name="Stock" class="form-control">
                   </div>
                 </div>
                 <div class="row mb-5">
-                  <label class="col-sm-2 col-form-label">Payment Options</label>
+                  <label class="col-sm-2 col-form-label fw-bold">Payment Options</label>
                   <div class="col-sm-10">
                     
                     
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox"  id="flexSwitchCheckCheckedDisabled" checked disabled>
-                      <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Online payment (mandidatory)</label>
+                      <label class="form-check-label fw-bold" for="flexSwitchCheckCheckedDisabled">Online payment (mandidatory)</label>
                     </div>
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" name="COD" value="true" id="true">
-                      <label class="form-check-label" for="flexSwitchCheckDefault">COD(optional)</label>
+                      <label class="form-check-label fw-bold" for="flexSwitchCheckDefault">COD(optional)</label>
                     </div>
                   </div>
                 </div>
 
                 <div class="row mb-3">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Description</label>
+                  <label for="inputPassword" class="col-sm-2 col-form-label fw-bold">Description</label>
                   <div class="col-sm-6">
                     <textarea class="form-control" name="Description" style="height: 100px"></textarea>
                   </div>
                 </div>
                 <div class="row mb-3">
                   {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
-                  <div class="col-sm-4 col-form-label">
+                  <div class="col-sm-4 col-form-label ">
                     <button type="submit" class="btn btn-primary">Add Product</button>
                   </div>
                 </div>

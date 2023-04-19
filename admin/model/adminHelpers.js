@@ -862,8 +862,26 @@ module.exports={
                         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: ObjectId(orderId) },{session})
 
                         for (let i = 0; i < fullOrder.cart.length; i++) {
+                            if(fullOrder.cart[i].varientId == fullOrder.cart[i].item){
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
+
+                            }else{
+                                let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{
+                                    $inc: {'Variations.$[x].Data.$[j].Stock':fullOrder.cart[i].quantity}, 
+                                
+                            },{arrayFilters:[
+                                {'j.id':ObjectId(fullOrder.cart[i].varientId)},{'x.id':ObjectId(fullOrder.cart[i].sizeId)}
+                                ],session},
+                                ) 
+
+                                if(varint){
+                                    console.log("varient kjdnas",varint);
+                                }else{
+                                    console.log(varint);
+                                    console.log("noononononononononon");
+                                }
+                            }
                             // stock incrimenting 
-                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
                         }
                         
                         let creditData={
