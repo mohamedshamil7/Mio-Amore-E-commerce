@@ -10,7 +10,7 @@ const server=
     {
         routes:[{
             
-            prefix:"/user",
+            prefix:"/",
             target:"http://localhost:4000/"
         },
         {
