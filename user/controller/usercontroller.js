@@ -1,7 +1,5 @@
 const jwt = require("jsonwebtoken");
 const userHelpers = require("../models/userHelpers/userHelpers");
-const { read, rmSync } = require("fs");
-const { send } = require("process");
 const { ObjectId } = require("mongodb");
 const Swal = require('sweetalert2')
 
@@ -13,7 +11,7 @@ require("dotenv").config();
 const cc= require("currency-converter-lt")
 
 var paypal= require('paypal-rest-sdk')
-const { S3Client, PutObjectCommand,GetObjectCommand  } = require("@aws-sdk/client-s3");
+const { S3Client, GetObjectCommand  } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 
@@ -1650,7 +1648,7 @@ module.exports = {
           if(emailRegex.test(req.body.email) && sanitize.test(req.body.email)){
             ok=true
           }else {
-            
+
           }
         }
       }

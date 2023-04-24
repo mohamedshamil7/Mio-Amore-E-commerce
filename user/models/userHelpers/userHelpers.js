@@ -2,11 +2,10 @@ require("dotenv").config();
 var db=require("../../../dbconnections/dbConnection")
 var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")
-const { resolve } = require("path")
 const jwt=require("jsonwebtoken");
-const { reject, promiseAllSettled } = require("firebase-tools/lib/utils");
+
 const { ObjectId } = require("mongodb");
-const { response } = require("../../app");
+
 const mongoClient=require('mongodb').MongoClient
 
 const crypto = require('crypto');
@@ -17,8 +16,6 @@ const MONGODB=process.env.MONGODB
 require("dotenv").config();
 const razorPay= require("razorpay");
 const { stringify } = require("querystring");
-const { stat } = require("fs");
-const { log } = require("console");
 const Key_ID=process.env.RAZORPAY_KEY_ID
 const KEY_SECRET=process.env.RAZORPAY_KEY_SECRET
 var instance =new razorPay({
