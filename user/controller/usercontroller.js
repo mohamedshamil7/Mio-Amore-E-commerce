@@ -328,6 +328,7 @@ module.exports = {
   },
   userLoginroute: (req, res, next) => {
     let userData = req.body;
+    console.log(";.;.",userData);
     console.log("?????????");
     userHelpers
       .doLogin(userData)
@@ -1629,7 +1630,35 @@ module.exports = {
     }).catch((response)=>{
       res.json({status:false})
     })
+  },
+
+
+
+
+  
+
+
+  ///////checkings////
+
+  regexCheck:(req,res,next)=>{
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const sanitize = /[\$#!%^&*()+={}\|:;<>\/?`~\\]/g;
+    let ok 
+
+      if(req.body){
+        if(req.body.email){
+          if(emailRegex.test(req.body.email) && sanitize.test(req.body.email)){
+            ok=true
+          }else {
+            
+          }
+        }
+      }
   }
+
+
+
+
 
 };
 

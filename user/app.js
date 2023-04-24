@@ -6,9 +6,13 @@ const hbs = require('express-handlebars');
 var logger = require('morgan');
 var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin');
-var cors= require('cors')
+
 const Handlebars = require('handlebars')
 const helpers=require("handlebars-helpers")();
+
+const {xssFilter,crossOriginResourcePolicy } = require("helmet");
+
+
 
 const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
@@ -28,12 +32,18 @@ var db=require('../dbconnections/dbConnection')
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-app.use(cors({Credentials:true,origin:'http://localhost:8001'}))
+// app.use(cors({Credentials:true,origin:'http://localhost:8001'}))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(xssFilter());
+app.use(crossOriginResourcePolicy({ policy: "cross-origin" }));
+
+
+
 app.engine('hbs',hbs.engine({extname:'hbs',defaultLayout:'layout',handlebars: allowInsecurePrototypeAccess(Handlebars),layoutsDir:__dirname+'/views',partialsDir:__dirname+'/views',helpers:helpers}))
 
 Handlebars.registerHelper( "when",function(operand_1, operator, operand_2, options) {
