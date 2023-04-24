@@ -4,8 +4,10 @@ const { ObjectId } = require('mongodb')
 var bcrypt=require('bcrypt')
 const Collections = require('../../dbconnections/Collections')
 const { resolve } = require('path')
+
 const {S3Client, GetObjectCommand, DeleteBucketCorsCommand  } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { log } = require('console')
 
 const mongoClient=require('mongodb').MongoClient
 
