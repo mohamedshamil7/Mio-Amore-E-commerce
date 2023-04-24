@@ -27,9 +27,6 @@ paypal.configure({
 
 
 const { stringify } = require("querystring");
-const e = require("express");
-const { log } = require("console");
-const { response } = require("../app");
 
 
 const bucketname = process.env.BUCKET_NAME

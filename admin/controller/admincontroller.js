@@ -10,15 +10,9 @@ const { S3Client, PutObjectCommand,GetObjectCommand, DeleteObjectCommand  } = re
 const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { readFile } = require("fs/promises");
-const { log } = require("console");
 var util = require('handlebars-utils');
 var QRCode = require('qrcode')
 
-
-// const PDFDocument = require('pdfkit');
-// const easyinvoice = require('easyinvoice');
-// const pdfjsLib = require('pdfjs-dist');
-// const fs = require('fs');
 
 
 
