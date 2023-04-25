@@ -102,7 +102,7 @@ module.exports={
 
      userBlockCheck:(userId)=>{
         return new Promise(async(resolve,reject)=>{
-            let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId)})
+            let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id: new ObjectId (userId)})
             console.log(user);
             console.log(user.isBlocked,"....");
             if(user.isBlocked==true){
