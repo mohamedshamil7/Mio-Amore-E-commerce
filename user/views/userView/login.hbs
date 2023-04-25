@@ -183,7 +183,7 @@
                         </div>
 
                         <div class="input-box">
-                            <form class="row g-4" action="/user/login-submit" method="post">
+                            <form class="row g-4" action="/login-submit" method="post">
                                 <div class="col-12">
                                     <span style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form">
@@ -230,14 +230,14 @@
                             <ul>
                                 <li>
                                     {{!-- <button class="btn google-button w-100" onclick="loginwithOtp()">Log In with OTP?</button> --}}
-                                    <a href="/user/loginwithOtpPage" class="btn google-button w-100">
+                                    <a href="/loginwithOtpPage" class="btn google-button w-100">
                                         <img src="../assets/images/inner-page/facebook.png" class="blur-up lazyload"
                                             alt=""> Log In with OTP?
                                     </a>
                                 </li>
                                 <li>
                                     <button  class="btn google-button w-100" id="loginGoogle"  type="button">
-                                    <img src="/user/assets/images/inner-page/google.png" width="20" style="margin-right: 5%;" class="blur-up lazyload"  alt="">
+                                    <img src="../assets/images/inner-page/google.png" width="20" style="margin-right: 5%;" class="blur-up lazyload"  alt="">
                                           Log In with Google</button>
                                 </li>
                                 
@@ -250,7 +250,7 @@
 
                         <div class="sign-up-box">
                             <h4>Don't have an account?</h4>
-                            <a href="/user/signup">Sign Up</a>
+                            <a href="/signup">Sign Up</a>
                         </div>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
     </script>
 
 
-<script src="/user/javascripts/validation.js"></script>
+<script src="/javascripts/validation.js"></script>
 
 
     <script  type="module" src="/user/javascripts/firebase-google.js"></script>

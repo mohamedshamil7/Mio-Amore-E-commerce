@@ -271,7 +271,7 @@ module.exports = {
   },
   redirectHome: (req, res) => {
     console.log("entereddd");
-    res.redirect("/user/home");
+    res.redirect("/home");
   },
 
   renderLogin: (req, res, next) => {
