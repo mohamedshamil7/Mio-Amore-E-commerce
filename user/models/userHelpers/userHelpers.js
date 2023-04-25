@@ -174,7 +174,7 @@ module.exports={
                 if(wishlist !=-1){
                     db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new ObjectId(userId)},{
                         $pull:{
-                            wishlist:ObjectId(prodID)
+                            wishlist:new ObjectId(prodID)
                         }
                     }).then((response)=>{
                         resolve(response)
@@ -185,7 +185,7 @@ module.exports={
                 else{
                     db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new  ObjectId(userId)},{
                         $push:{
-                            wishlist:ObjectId(prodID)
+                            wishlist:new ObjectId(prodID)
                         }
                     }).then((response)=>{
                         resolve(response)
@@ -198,7 +198,7 @@ module.exports={
                 await  db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new ObjectId(userId)},{
                 
                     $push:{
-                        wishlist:ObjectId(prodID)
+                        wishlist:new ObjectId(prodID)
                     }
                 },{upsert:true}).then((response)=>{
                     db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(prodID)},{
@@ -232,7 +232,7 @@ module.exports={
                 let wishlist=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
                     {
                         $match:{
-                            user:ObjectId(userId)
+                            user:new ObjectId(userId)
                         }
                     },
                     {
@@ -283,7 +283,7 @@ inWishlist:(userId,prodId)=>{
             let product= await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
                 {
                     $match:{
-                        user:ObjectId(userId)
+                        user:new ObjectId(userId)
                     }
                     
                 },
@@ -292,7 +292,7 @@ inWishlist:(userId,prodId)=>{
                 },
                 {
                     $match:{
-                       wishlist: ObjectId(prodId)
+                       wishlist:new ObjectId(prodId)
                     }
                 }
 
@@ -377,7 +377,7 @@ getcart:(userId)=>{
         const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
             {
                 $match:{
-                    user:ObjectId(userId)
+                    user:new ObjectId(userId)
                 }
             },
             {
@@ -423,7 +423,7 @@ getcart:(userId)=>{
                   let vari=  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                         {
                             $match:{
-                                _id:ObjectId(cartItems[i].item)
+                                _id:new ObjectId(cartItems[i].item)
                             }
                         },
                         {
@@ -436,7 +436,7 @@ getcart:(userId)=>{
                         },
                         {
                             $match:{
-                                "Variations.id":ObjectId(cartItems[i].sizeId)
+                                "Variations.id":new ObjectId(cartItems[i].sizeId)
                             }
                         },
                         {
@@ -444,7 +444,7 @@ getcart:(userId)=>{
                         },
                         {
                             $match:{
-                                'Variations.Data.id':ObjectId (cartItems[i].varientId)
+                                'Variations.Data.id':new ObjectId (cartItems[i].varientId)
                             }
                         }
 
@@ -585,7 +585,7 @@ changeProductQuantity:(data)=>{
             let stock= await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                 {
                     $match:{
-                        _id:ObjectId(data.product)
+                        _id:new ObjectId(data.product)
                     }
                 },
                 {
@@ -598,7 +598,7 @@ changeProductQuantity:(data)=>{
                 },
                 {
                     $match:{
-                        "Variations.id":ObjectId(data.sizeId)
+                        "Variations.id":new ObjectId(data.sizeId)
                     }
                 },
                 {
@@ -606,7 +606,7 @@ changeProductQuantity:(data)=>{
                 },
                 {
                     $match:{
-                        'Variations.Data.id':ObjectId (data.varientId)
+                        'Variations.Data.id':new ObjectId (data.varientId)
                     }
                 }
             ]).toArray()
@@ -676,7 +676,7 @@ getTotalAmount:(userId)=>{
           .aggregate([
             {
               $match: {
-                user: ObjectId(userId),
+                user:new ObjectId(userId),
               },
             },
             {
@@ -780,7 +780,7 @@ getAddress:(userId)=>{
             let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
                 {
                     $match:{
-                        _id:ObjectId(userId)
+                        _id:new ObjectId(userId)
                     }
                 },
                 {
@@ -829,7 +829,7 @@ console.log(typeof userId);
         })
         console.log("///////////////////////////",coupens);
         if(coupens) console.log(`coupen applied and and total couepen is updated`);
-        let usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+        let usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
             $push:{usedcoupens:coupens.value._id}
         },{upsert:true})
     }   
@@ -843,7 +843,7 @@ console.log(typeof userId);
         },
          {
             $match:{
-               'Address.id':ObjectId(order.Address)
+               'Address.id':new ObjectId(order.Address)
             },
             
         },
@@ -1088,7 +1088,7 @@ inStockcheck:(userId)=>{
         let stock= await db.get().collection(collection.CART_COLLECTION).aggregate([
             {
                 $match:{
-                    user:ObjectId(userId)
+                    user:new ObjectId(userId)
                 }
             },
             {
@@ -1386,7 +1386,7 @@ debitFromWallet:(orderId,total,user)=>{
                                                   as: 'data',
                                                   in: {
                                                     $cond: {
-                                                      if: { $eq: ['$$data.id',ObjectId(varientId)] },
+                                                      if: { $eq: ['$$data.id',new ObjectId(varientId)] },
                                                       then: {
                                                         $mergeObjects: [
                                                           '$$data',
@@ -1689,7 +1689,7 @@ getAllReviews:(prodId)=>{
         let reviews = await db.get().collection(collection.REVIEW_COLLECTION).aggregate([
             {
                 $match:{
-                    productId:ObjectId(prodId)
+                    productId:new ObjectId(prodId)
                 }
             },
                 
@@ -1725,7 +1725,7 @@ getAllVariations:(prodId)=>{
         let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
             {
                 $match:{
-                    _id:ObjectId(prodId)
+                    _id:new ObjectId(prodId)
                 }
             },
             {
@@ -1759,7 +1759,7 @@ check_quantity:(userId,data)=>{
             let cart = await db.get().collection(collection.CART_COLLECTION).aggregate([
                 {
                     $match:{
-                        user:ObjectId(userId)
+                        user:new ObjectId(userId)
                     }
                 },
                 {
@@ -1767,7 +1767,7 @@ check_quantity:(userId,data)=>{
                 },
                 {
                     $match:{
-                        "product.varientId":ObjectId(data.varientId)
+                        "product.varientId":new ObjectId(data.varientId)
                     }
                 },
                 
