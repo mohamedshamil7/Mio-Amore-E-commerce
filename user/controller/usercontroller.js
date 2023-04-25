@@ -188,7 +188,7 @@ module.exports = {
     console.log(decode);
     let walletData = await wallet(req);
     console.log(walletData.total, "//////////");
-    let total = await TotalAmount(req);
+    // let total = await TotalAmount(req);
     let cart = await cartProd(req);
     let products = cart.cartItems;
     let outofStock = cart.outofStock;
@@ -262,7 +262,7 @@ module.exports = {
       userpar: true,
       products,
       count,
-      total,
+      // total,
       outofStock,
       walletTotal: walletData.total,
       banner1,

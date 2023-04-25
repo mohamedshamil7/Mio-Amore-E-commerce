@@ -371,7 +371,7 @@ addToCart:(userId,data)=>{
 getcart:(userId)=>{
     let total =0
     return new Promise(async(resolve,reject)=>{
-      let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+      let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user: new ObjectId(userId)})
     //   console.log("check cart erere",cart);
       if(cart){
         const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
@@ -1247,7 +1247,7 @@ returnOrderSubmit:(orderId)=>{
 
 getWallet:(userId)=>{
     return new Promise(async(resolve,reject)=>{
-        let total  = await db.get().collection(collection.WALLET_COLLECTION).findOne({userId:ObjectId(userId)})
+        let total  = await db.get().collection(collection.WALLET_COLLECTION).findOne({userId: new ObjectId(userId)})
         if(total){
             resolve(total)
         }else{
