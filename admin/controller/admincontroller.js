@@ -2,7 +2,7 @@ var path = require("path");
 const adminHelper = require("../model/adminHelpers");
 const voucher_codes = require('voucher-code-generator');
 const puppeteer = require('puppeteer')
-const { ObjectId } = require('mongodb')
+
 const jwt = require("jsonwebtoken");
 const hbs = require('hbs');
 require("dotenv").config();
@@ -591,14 +591,7 @@ if(data.length!==0){
     })
   },
 
-  ImageSupplier: (req, res) => {
-    console.log(req.params.Image, "??????/////////////////////");
-    console.log("call coming");
 
-    res.sendFile(
-      path.resolve(`public/images/product-images/${req.params.Image}`)
-    );
-  },
 
   allorders: (req, res) => {
     adminHelper.getAllorders().then((orders) => {

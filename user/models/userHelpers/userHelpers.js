@@ -2,7 +2,7 @@ require("dotenv").config();
 var db=require("../../../dbconnections/dbConnection")
 var collection=require("../../../dbconnections/Collections")
 const bcrypt=require("bcrypt")
-const jwt=require("jsonwebtoken");
+
 
 const { ObjectId } = require("mongodb");
 
@@ -22,7 +22,6 @@ var instance =new razorPay({
    key_secret:KEY_SECRET
 })
 
-var MY_SECRET = process.env.MY_SECRET
 
 
 module.exports={

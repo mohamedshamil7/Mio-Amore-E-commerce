@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userHelpers = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
-const Swal = require('sweetalert2')
+
 
 require("dotenv").config();
 
