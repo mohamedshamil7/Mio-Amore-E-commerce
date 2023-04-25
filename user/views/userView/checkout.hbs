@@ -400,7 +400,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{!--http://localhost:8001/user/addAddress --}}
+                    {{!--/user/addAddress --}}
                     <form action="" id="address_form" method="post">
                         <div>
                                 <div class="form-floating theme-form-floating">
@@ -485,7 +485,7 @@
             e.preventDefault()
             console.log("called")
             $.ajax({
-                url:'http://localhost:8001/user/placeOrder',
+                url:'/user/placeOrder',
                 data:$('#placeorder_form').serialize(),
                 method:'post',
                 success:(response )=> {
@@ -498,7 +498,7 @@
                     else if(response.status=='paypal'){
                         window.location = response.forwardLink
                     } else if(response.status ==true){
-                         location.href="http://localhost:8001/user/orderSuccess"
+                         location.href="/user/orderSuccess"
                     }
                 },
                  error:(xhr, thrownError)=>{
@@ -557,14 +557,14 @@
             console.log(payment)
             console.log(order.receipt)
             $.ajax({
-                url:'http://localhost:8001/user/placeOrder',
+                url:'/user/placeOrder',
                 data:{
                     payment,order, orderId
                 },
                 method:"post",
                 success:(response=>{
                     if(response.status == true){
-                        location.href="http://localhost:8001/user/orderSuccess"
+                        location.href="/user/orderSuccess"
                     }
                 })
             })
@@ -573,7 +573,7 @@
         function checkCoupen(){
               var code = document.getElementById('code').value
               $.ajax({
-                url:'http://localhost:8001/user/checkCoupen',
+                url:'/user/checkCoupen',
                 data:{
                     code
                 },

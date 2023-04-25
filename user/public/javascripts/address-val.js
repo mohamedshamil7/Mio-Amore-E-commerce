@@ -100,7 +100,7 @@ $("#address_form").submit((e)=>{
     e.preventDefault()
     if(validateName()&& validatePhone() && validateHouse() && validateAddress() && validatePin() && validateLandmark() && validateTown()){
         $.ajax({
-            url:'http://localhost:8001/user/addAddress',
+            url:'/user/addAddress',
             data:$('#address_form').serialize(),
             method:'post',
             success:(response)=>{
@@ -118,7 +118,7 @@ $("#address_Prof_form").submit((e)=>{
     e.preventDefault()
     if(validateName()&& validatePhone() && validateHouse() && validateAddress() && validatePin() && validateLandmark() && validateTown()){
         $.ajax({
-            url:'http://localhost:8001/user/addAddress',
+            url:'/user/addAddress',
             data:$('#address_Prof_form').serialize(),
             method:'post',
             success:(response)=>{

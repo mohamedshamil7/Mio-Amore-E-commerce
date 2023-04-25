@@ -139,7 +139,7 @@
                                         {{#each Variations}}
 
                                         <li>
-                                            {{!-- <form action="http://localhost:8001/user/VariationSelect"> --}}
+                                            {{!-- <form action="/user/VariationSelect"> --}}
                                                 {{!-- <input type="text" name="variationId"  value="{{this.Variations.Data.id}}" hidden> --}}
                                                 {{!-- <input type="text" name="prodId"  value="{{data._id}}" hidden> --}}
                                             {{!-- <a > <button type="submit" style="border: none; background: none;" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a> --}}
@@ -685,7 +685,7 @@
 
     if(stock == "true"){
         $.ajax({
-                 url:"http://localhost:8001/user/check_quantity",
+                 url:"/user/check_quantity",
                  method:"post",
                  data:{
                     varientId:id.varientId,
@@ -731,7 +731,7 @@
 
     if(id){
         $.ajax({
-        url:' http://localhost:8001/user/addToCart',
+        url:' /user/addToCart',
         data:{
             prodId,
            varient:id.varientId,

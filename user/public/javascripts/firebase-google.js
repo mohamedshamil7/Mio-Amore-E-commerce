@@ -55,7 +55,7 @@ import {
 
         if(userData){
 
-          location.href = `http://localhost:8001/user/googleSignUp/${queryString}`;
+          location.href = `/user/googleSignUp/${queryString}`;
 
          }else{
           alert("error occured")
@@ -64,7 +64,7 @@ import {
         // alert('old user')
         if(userData){
           // var queryString = $.param(userData);
-          location.href = `http://localhost:8001/user/googleLogin/${queryString}`;
+          location.href = `/user/googleLogin/${queryString}`;
 
          }else{
           alert("error occured")

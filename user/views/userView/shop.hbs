@@ -106,7 +106,7 @@
                                             <ul class="category-list custom-padding custom-height">
                                                     {{#each categories}}
                                                 <li>
-                                                    <form action="http://localhost:8001/user/changeCategory" method="post">
+                                                    <form action="/user/changeCategory" method="post">
                                                         <input type="text" name="name" id="" value="{{this.categoryName}}" hidden>
                                                         <button style="border: none;"  type="submit">{{this.categoryName}}</button>
                                                     </form>
@@ -165,7 +165,7 @@
                                 
                             <div class="category-dropdown">
                                 <h5 class="text-content">Sort By :</h5>
-                                        <form action="http://localhost:8001/user/sort" method="post">
+                                        <form action="/user/sort" method="post">
                                     <div class="dropdown">
                                 <select name="opt">
                                     <option class="dropdown-item" value="low">  Low - High</option>
@@ -302,7 +302,7 @@
         }
         console.log(name)
         $.ajax({
-            url: 'http://localhost:8001/user/search',
+            url: '/user/search',
             data: {
                 data: name
             },

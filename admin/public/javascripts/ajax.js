@@ -12,7 +12,7 @@ console.log(id);
   }).then((result) => {
     if (result.isConfirmed) {
         $.ajax({
-            url:' http://localhost:8001/admin/deleteCategory/'+id,
+            url:' /admin/deleteCategory/'+id,
             method:'post',
             success:(response)=>{
                 if(response.status){
@@ -49,7 +49,7 @@ function deleteBrand(id){
     }).then((result) => {
       if (result.isConfirmed) {
           $.ajax({
-              url:' http://localhost:8001/admin/deleteBrand/'+id,
+              url:' /admin/deleteBrand/'+id,
               method:'post',
               success:(response)=>{
                   if(response.status){
@@ -87,7 +87,7 @@ function cancelOrder(orderId){
       if(result.isConfirmed){
           console.log(orderId);
           $.ajax({
-              url:"http://localhost:8001/admin/cancelOrder",
+              url:"/admin/cancelOrder",
               method:'post',
               data:{
                   orderId
@@ -120,7 +120,7 @@ function changeDeliveryStatus(orderid,status){
 function addCategory (){
   const category = document.getElementById("newCategory").value
   $.ajax({
-    url:"http://localhost:8001/admin/addCategory",
+    url:"/admin/addCategory",
     method:'post',
     data:{
         category
@@ -158,7 +158,7 @@ function addBrand (){
     return error
   }
   $.ajax({
-    url:"http://localhost:8001/admin/addBrand",
+    url:"/admin/addBrand",
     method:'post',
     data:{
         brand
@@ -204,7 +204,7 @@ function couponDelete(id){
   }).then((result)=>{
     if (result.isConfirmed) {
       $.ajax({
-        url:' http://localhost:8001/admin/deletecoupon',
+        url:' /admin/deletecoupon',
         method:'post',
         data:{
           id
@@ -239,7 +239,7 @@ function delivwerStatuschange(id){
   alert(s)
   
   $.ajax({
-    url:"http://localhost:8001/admin/delivery-status",
+    url:"/admin/delivery-status",
     data:{
       id,
       status:s
@@ -260,7 +260,7 @@ function scheduleorder(orderId){
   let date = document.getElementById('deliverydate').value
   alert(date)
   $.ajax({
-    url:"http://localhost:8001/admin/deliveryDateSubmit",
+    url:"/admin/deliveryDateSubmit",
     data:{orderId:orderId, deliveryDate:date},
     method:"post",
     success:(response)=>{
@@ -276,7 +276,7 @@ function scheduleorder(orderId){
           timer: 1000
         })
         setTimeout(()=>{
-          location.href='http://localhost:8001/admin/allorders'
+          location.href='/admin/allorders'
         },1000)
         
       }

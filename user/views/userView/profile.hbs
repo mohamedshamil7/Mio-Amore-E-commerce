@@ -226,7 +226,7 @@
                                             </div>
                                         </div>
 
-                   <a href="http://localhost:8001/user/viewOrderDetails/{{this._id}}"> <button  style=" margin-top: 30px;" class="btn  btn-success ">View Details</button> </a> 
+                   <a href="/user/viewOrderDetails/{{this._id}}"> <button  style=" margin-top: 30px;" class="btn  btn-success ">View Details</button> </a> 
                                         {{#if this.btnStatus}}
                     <button  onclick="cancelOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> 
                                                    
@@ -627,7 +627,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{!--http://localhost:8001/user/addAddress --}}
+                    {{!--/user/addAddress --}}
                     <form action="" id="address_Prof_form" method="post">
                         <div>
                                 <div class="form-floating theme-form-floating">
@@ -710,7 +710,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{!--http://localhost:8001/user/addAddress --}}
+                    {{!--/user/addAddress --}}
                     <form action="" id="address_Prof_forms" method="post">
                         <div>
                                 <div class="form-floating theme-form-floating">

@@ -78,7 +78,7 @@ const ValidateOTP = () => {
       // console.log(result.user);
 
       try{
-        location.href = `http://localhost:8001/user/otpverified/${numb}`;
+        location.href = `/user/otpverified/${numb}`;
 
       }
       catch(e){

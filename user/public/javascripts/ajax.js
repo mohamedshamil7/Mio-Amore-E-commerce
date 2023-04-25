@@ -9,7 +9,7 @@
 
 // function wishlistCheck(prodId){
 //     $.ajax({
-//         url:"http://localhost:8001/user/addToWishlist/"+prodId,
+//         url:"/user/addToWishlist/"+prodId,
 //         method:'get',
 
 //     })
@@ -21,7 +21,7 @@ function quantityChange(cartId,prodId,count,quantity,varientId,sizeId){
     quantity=parseInt(quantity)
     $.ajax({
         
-        url:"http://localhost:8001/user/changeProductQuantity",
+        url:"/user/changeProductQuantity",
         data:{
             cart:cartId,
             product:prodId,
@@ -75,7 +75,7 @@ function removeFromCart(prodId, varientId){
 
         if (result.isConfirmed) {
             $.ajax({
-                url:"http://localhost:8001/user/removeCart",
+                url:"/user/removeCart",
                 method:'post',
                 data:{
                 prodId,
@@ -104,7 +104,7 @@ function removeFromCart(prodId, varientId){
 
 function loginwithOtp(){
     $.ajax({
-        url:"http://localhost:8001/user/loginwithOtpPage",
+        url:"/user/loginwithOtpPage",
         method:'get'
     })
 
@@ -123,7 +123,7 @@ function cancelOrder(orderId){
         if(result.isConfirmed){
             console.log(orderId);
             $.ajax({
-                url:"http://localhost:8001/user/cancelOrder",
+                url:"/user/cancelOrder",
                 method:'post',
                 data:{
                     orderId
@@ -159,7 +159,7 @@ function returnOrder(orderId){
         if(result.isConfirmed){
             console.log(orderId);
             $.ajax({
-                url:"http://localhost:8001/user/returnOrder",
+                url:"/user/returnOrder",
                 method:'post',
                 data:{
                     orderId
@@ -194,7 +194,7 @@ function deleteAdd(id){
     }).then((result)=>{
         if(result.isConfirmed){
             $.ajax({
-                url:"http://localhost:8001/user/deleteAdd",
+                url:"/user/deleteAdd",
                 method:'delete',
                 data:{
                     id
@@ -220,7 +220,7 @@ function deleteAdd(id){
 
 // function addReview(prodId,){
 //     $.ajax({
-//         url:":8001/user/addReview",http://localhost
+//         url:":/user/addReview",http://localhost
 //         method:'get',
 //         data:{
 //             prodId

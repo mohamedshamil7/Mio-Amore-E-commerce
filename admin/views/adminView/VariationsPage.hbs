@@ -127,7 +127,7 @@
         let Stock = document.getElementById('Stock').value
 
         $.ajax({
-            url:"http://localhost:8001/admin/addVarient-submit",
+            url:"/admin/addVarient-submit",
             data:{
                 prodId,
                 Size,
@@ -156,7 +156,7 @@
 
 
       $.ajax({
-            url:"http://localhost:8001/admin/variationDelete",
+            url:"/admin/variationDelete",
             data:{
                 prodId,
                 varId:variatioinId
@@ -182,7 +182,7 @@
 
 
       $.ajax({
-            url:"http://localhost:8001/admin/variationEdit",
+            url:"/admin/variationEdit",
             data:{
                 prodId,
                 varId:variatioinId

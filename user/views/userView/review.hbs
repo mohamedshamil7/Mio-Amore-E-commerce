@@ -692,7 +692,7 @@ function addReview(){
     let prodId = document.getElementById('productId').value
     alert(prodId)
     $.ajax({
-        url:"http://localhost:8001/user/addReview",
+        url:"/user/addReview",
         data:{
             prodId,
             star,
@@ -702,7 +702,7 @@ function addReview(){
         success:(response)=>{
             if(response.status){
                 alert(true)
-                location.href = "http://localhost:8001/user/profile"
+                location.href = "/user/profile"
             }else{
                 alert(false)
             }
