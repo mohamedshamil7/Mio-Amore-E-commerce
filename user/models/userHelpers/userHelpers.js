@@ -321,13 +321,14 @@ addToCart:(userId,data)=>{
     console.log(data.varient,":var");
     console.log(data.sizeId,":size");
     let prodObj = {
-            item: ObjectId(data.prodId),
-            varientId:ObjectId(data.varient),
-            sizeId:ObjectId(data.sizeId),
+            item:new ObjectId(data.prodId),
+            varientId:new ObjectId(data.varient),
+            sizeId:new ObjectId(data.sizeId),
             quantity: 1,
           };
 
     return new Promise(async(resolve,reject)=>{
+
         let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:new ObjectId(userId)}) 
         console.log(userCart);
         if(userCart){
@@ -355,7 +356,7 @@ addToCart:(userId,data)=>{
             }
         }else{
             const newcart={
-                user:ObjectId(userId),
+                user:new ObjectId(userId),
                 product:[prodObj]
             }
             db.get().collection(collection.CART_COLLECTION).insertOne(newcart).then(()=>{
@@ -744,7 +745,7 @@ getTotalAmount:(userId)=>{
 },
 
  addAddress:(userId,Data)=>{
-    Data.id=ObjectId()
+    Data.id=new ObjectId()
     return new Promise(async(resolve,reject)=>{
         let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userId),Address:{$exists:true}})
         if(user){
@@ -1160,7 +1161,7 @@ cancelOrderSubmit:(orderId)=>{
 
         if(fullOrder.paymentMethod !=="COD"){
             let creditData={
-                transactionId:ObjectId(),
+                transactionId:new ObjectId(),
                orderId:fullOrder._id,
                amount:fullOrder.totalAmount,
                 amountCreditedOn:new Date().toDateString()
@@ -1257,7 +1258,7 @@ getWallet:(userId)=>{
 },
 debitFromWallet:(orderId,total,user)=>{
     let debitData={
-        transactionId:ObjectId(),
+        transactionId:new ObjectId(),
        orderId:orderId,
        amount:total,
         amountDebitedOn:new Date().toDateString()
@@ -1654,8 +1655,8 @@ getsingleorderDetails:(orderId)=>{
 
 addReview:(userId,prodId,star,review)=>{
  let data={
-    userId:ObjectId(userId) ,
-    productId: ObjectId(prodId) ,
+    userIdnew :ObjectId(userId) ,
+    productId:new ObjectId(prodId) ,
     rating:Number(star),
     review : review,
     date:new Date().toDateString()

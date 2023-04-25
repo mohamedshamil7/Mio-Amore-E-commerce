@@ -355,7 +355,7 @@ module.exports = {
 
   userLogout: (req, res) => {
     res.clearCookie("token");
-    res.redirect("/user/login");
+    res.redirect("/login");
   },
 
   productPage: async (req, res) => {
