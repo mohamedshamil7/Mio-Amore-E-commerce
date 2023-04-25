@@ -9,7 +9,7 @@ var adminRouter = require('./routes/admin');
 const Handlebars = require('handlebars')
 const helpers=require("handlebars-helpers")();
 
-const {xssFilter,crossOriginResourcePolicy } = require("helmet");
+// const {xssFilter,crossOriginResourcePolicy } = require("helmet");
 
 
 
@@ -38,8 +38,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(xssFilter());
-app.use(crossOriginResourcePolicy({ policy: "cross-origin" }));
+// app.use(xssFilter());
+// app.use(crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 
 
