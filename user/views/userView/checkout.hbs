@@ -476,7 +476,7 @@
     </section>
 
     <!-- Checkout section End -->
-<script src="/user/javascripts/address-val.js"></script>
+<script src="../javascripts/address-val.js"></script>
 
   
 <script>
@@ -485,7 +485,7 @@
             e.preventDefault()
             console.log("called")
             $.ajax({
-                url:'/user/placeOrder',
+                url:'/placeOrder',
                 data:$('#placeorder_form').serialize(),
                 method:'post',
                 success:(response )=> {
@@ -498,7 +498,7 @@
                     else if(response.status=='paypal'){
                         window.location = response.forwardLink
                     } else if(response.status ==true){
-                         location.href="/user/orderSuccess"
+                         location.href="/orderSuccess"
                     }
                 },
                  error:(xhr, thrownError)=>{
@@ -521,7 +521,7 @@
                 "currency": "INR",
                 "name": "MIo Amore",
                 "description": "Enjoy Fashion",
-                "image": "/user/images/logopng.png",
+                "image": "../images/logopng.png",
                 "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                 "handler": function (response) {
                     verifyPayment(response, order,orderid)
@@ -557,14 +557,14 @@
             console.log(payment)
             console.log(order.receipt)
             $.ajax({
-                url:'/user/placeOrder',
+                url:'/placeOrder',
                 data:{
                     payment,order, orderId
                 },
                 method:"post",
                 success:(response=>{
                     if(response.status == true){
-                        location.href="/user/orderSuccess"
+                        location.href="/orderSuccess"
                     }
                 })
             })
@@ -573,7 +573,7 @@
         function checkCoupen(){
               var code = document.getElementById('code').value
               $.ajax({
-                url:'/user/checkCoupen',
+                url:'/checkCoupen',
                 data:{
                     code
                 },

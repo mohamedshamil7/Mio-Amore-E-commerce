@@ -106,7 +106,7 @@
                                             <ul class="category-list custom-padding custom-height">
                                                     {{#each categories}}
                                                 <li>
-                                                    <form action="/user/changeCategory" method="post">
+                                                    <form action="/changeCategory" method="post">
                                                         <input type="text" name="name" id="" value="{{this.categoryName}}" hidden>
                                                         <button style="border: none;"  type="submit">{{this.categoryName}}</button>
                                                     </form>
@@ -165,7 +165,7 @@
                                 
                             <div class="category-dropdown">
                                 <h5 class="text-content">Sort By :</h5>
-                                        <form action="/user/sort" method="post">
+                                        <form action="/sort" method="post">
                                     <div class="dropdown">
                                 <select name="opt">
                                     <option class="dropdown-item" value="low">  Low - High</option>
@@ -194,26 +194,26 @@
                             <div class="product-box-3 h-100 wow fadeInUp">
                                 <div class="product-header">
                                     <div class="product-image">
-                                        <a href="/user/product/{{this._id}}">
+                                        <a href="/product/{{this._id}}">
                                             <img src="{{this.urlImage1}}"
                                                 class="img-fluid blur-up lazyload" alt="">
                                         </a>
 
                                         <ul class="product-option">
                                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                <a href="/user/product/{{this._id}}" >
+                                                <a href="/product/{{this._id}}" >
                                                     <i data-feather="eye"></i>
                                                 </a>
                                             </li>
 
-                                            <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
+                                            {{!-- <li data-bs-toggle="tooltip" data-bs-placement="top" title="Compare">
                                                 <a href="compare.html">
                                                     <i data-feather="refresh-cw"></i>
                                                 </a>
-                                            </li>
+                                            </li> --}}
 
                                             <li data-bs-toggle="tooltip" data-bs-placement="top" title="Wishlist">
-                                                <a href="/user/addToWishlist/{{this._id}}" class="notifi-wishlist">
+                                                <a href="/addToWishlist/{{this._id}}" class="notifi-wishlist">
                                                     <i data-feather="heart"></i>
                                                 </a>
                                             </li>
@@ -223,7 +223,7 @@
                                 <div class="product-footer">
                                     <div class="product-detail">
                                         <span class="span-name">{{this.category}}</span>
-                                        <a href="/user/product/{{this._id}}">
+                                        <a href="/product/{{this._id}}">
                                             <h5 class="name">{{this.ProductName}}</h5>
                                         </a>
                                         {{!-- <p class="text-content mt-1 mb-2 product-content">Cheesy feet cheesy grin brie.
@@ -302,7 +302,7 @@
         }
         console.log(name)
         $.ajax({
-            url: '/user/search',
+            url: '/search',
             data: {
                 data: name
             },

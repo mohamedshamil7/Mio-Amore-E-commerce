@@ -188,7 +188,7 @@
                                         onclick="addToCart('{{data._id}}')">ADD TO CART </button>
 
 
-                                       <a href="/user/usercart"> <button id="goToCartButton" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" > Item in Cart.. Go to cart <i class="fa-solid fa-arrow-right icon"></i> </button> </a> 
+                                       <a href="/usercart"> <button id="goToCartButton" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" > Item in Cart.. Go to cart <i class="fa-solid fa-arrow-right icon"></i> </button> </a> 
 
                                         <button id="addToCartUnavailable" style="display: none;" class="btn btn-md bg-dark cart-button text-white w-100" >Currently Not Available</button>
                                         {{else}}
@@ -200,12 +200,12 @@
                                 <div class="buy-box">
                                     {{#if wishlist }}
                                     
-                                    <a href="/user/addToWishlist/{{data._id}}">
+                                    <a href="/addToWishlist/{{data._id}}">
                                         <i data-feather="heart"></i>
                                         <span style="color: red;">Remove from Wishlist</span>
                                     </a>
                                     {{else}}
-                                      <a href=" /user/addToWishlist/{{data._id}}">
+                                      <a href=" /addToWishlist/{{data._id}}">
                                         <i data-feather="heart"></i>
                                         <span>Add To Wishlist</span>
                                     </a>
@@ -685,7 +685,7 @@
 
     if(stock == "true"){
         $.ajax({
-                 url:"/user/check_quantity",
+                 url:"/check_quantity",
                  method:"post",
                  data:{
                     varientId:id.varientId,
@@ -731,7 +731,7 @@
 
     if(id){
         $.ajax({
-        url:' /user/addToCart',
+        url:' /addToCart',
         data:{
             prodId,
            varient:id.varientId,

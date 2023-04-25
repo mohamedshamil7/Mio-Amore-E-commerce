@@ -23,8 +23,8 @@
                                 <i class="fa-solid fa-bars"></i>
                             </span>
                         </button>
-                        <a href="/user/home" class="web-logo nav-logo">
-                            <img src="/user/images/logo.jpg" class="img-fluid blur-up lazyload" alt="">
+                        <a href="/home" class="web-logo nav-logo">
+                            <img src="../images/logo.jpg" class="img-fluid blur-up lazyload" alt="">
                         </a>
 
                         <div class="header-nav-middle">
@@ -91,11 +91,11 @@
                                             <li class="product-box-contain">
                                                 <i></i>
                                                 {{#if user}}
-                                                <a href="/user/logout">Log out</a>
+                                                <a href="/logout">Log out</a>
                                                 {{else}}
-                                                <a href="/user/login">Log in</a>
+                                                <a href="/login">Log in</a>
                                             <li class="product-box-contain">
-                                                <a href="/user/signup">Register</a>
+                                                <a href="/signup">Register</a>
                                             </li>
                                             {{/if}}
                                 </li>
@@ -166,7 +166,7 @@
         <div class="row">
             <div class="col-xxl-6 col-xl-5 col-lg-6 d-lg-block d-none ms-auto">
                 <div class="image-contain">
-                    <img src="/user/assets/images/inner-page/otp.png" class="img-fluid" alt="">
+                    <img src="../assets/images/inner-page/otp.png" class="img-fluid" alt="">
                 </div>
             </div>
 
@@ -243,7 +243,7 @@
 
                             <li>
                                 <button class="btn google-button w-100" id="loginGoogle" type="button">
-                                    <img src="/user/assets/images/inner-page/google.png" width="20"
+                                    <img src="../assets/images/inner-page/google.png" width="20"
                                         style="margin-right: 5%;" class="blur-up lazyload" alt="">
                                     Log In with Google</button>
 
@@ -262,7 +262,7 @@
 
                     <div class="sign-up-box">
                         <h4>Don't have an account?</h4>
-                        <a href="/user/signup">Sign Up</a>
+                        <a href="/signup">Sign Up</a>
                     </div>
                 </div>
             </div>
@@ -275,15 +275,15 @@
 
 <!-- log in section end -->
 
-<script type="module" src="/user/javascripts/firebase-otp.js"></script>
-<script type="module" src="/user/javascripts/firebase-google.js"></script>
+<script type="module" src="../javascripts/firebase-otp.js"></script>
+<script type="module" src="../javascripts/firebase-google.js"></script>
 
 
 
 
 
 
-<script src="/user/javascripts/validation.js"></script>
+<script src="../javascripts/validation.js"></script>
 
 
 {{!--

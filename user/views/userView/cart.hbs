@@ -13,7 +13,7 @@
                                     <tr class="product-box-contain">
                                         <td class="product-detail">
                                             <div class="product border-0">
-                                                <a href="/user/product/{{this.cart_product._id}}" class="product-image">
+                                                <a href="/product/{{this.cart_product._id}}" class="product-image">
                                                     <img src="{{this.cart_product.urlImage1}}"
                                                         class="img-fluid blur-up lazyload" alt="">
                                                 </a>
@@ -140,7 +140,7 @@
 
 
                                    {{else}}
-                <img style="margin-left:5% ;" src="/user/images/112087-empty.gif" alt="">
+                <img style="margin-left:5% ;" src="/images/112087-empty.gif" alt="">
                                    {{/if}}
                 </div>
                 {{#if products}}
@@ -194,7 +194,7 @@
                                 </li>
                                 {{else}}
                                 <li>
-                                    <button onclick="location.href = '/user/checkout';"
+                                    <button onclick="location.href = '/checkout';"
                                         class="btn btn-animation proceed-btn fw-bold">Process To Checkout</button>
                                 </li>
 
@@ -204,7 +204,7 @@
                             
 
                                 <li>
-                                    <button onclick="location.href = '/user/home'"
+                                    <button onclick="location.href = '/home'"
                                         class="btn btn-light shopping-button text-dark">
                                         <i class="fa-solid fa-arrow-left-long"></i>Return To Shopping</button>
                                 </li>

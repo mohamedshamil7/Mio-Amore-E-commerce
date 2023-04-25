@@ -63,7 +63,7 @@ function emailLogin() {
         return user.getIdToken().then((idToken) => {
           try {
             $.ajax({
-              url: "/user/login-submit",
+              url: "/login-submit",
               method: "POST",
               data: {
                 email: email,

@@ -21,7 +21,7 @@ function quantityChange(cartId,prodId,count,quantity,varientId,sizeId){
     quantity=parseInt(quantity)
     $.ajax({
         
-        url:"/user/changeProductQuantity",
+        url:"/changeProductQuantity",
         data:{
             cart:cartId,
             product:prodId,
@@ -75,7 +75,7 @@ function removeFromCart(prodId, varientId){
 
         if (result.isConfirmed) {
             $.ajax({
-                url:"/user/removeCart",
+                url:"/removeCart",
                 method:'post',
                 data:{
                 prodId,
@@ -104,7 +104,7 @@ function removeFromCart(prodId, varientId){
 
 function loginwithOtp(){
     $.ajax({
-        url:"/user/loginwithOtpPage",
+        url:"/loginwithOtpPage",
         method:'get'
     })
 
@@ -123,7 +123,7 @@ function cancelOrder(orderId){
         if(result.isConfirmed){
             console.log(orderId);
             $.ajax({
-                url:"/user/cancelOrder",
+                url:"/cancelOrder",
                 method:'post',
                 data:{
                     orderId
@@ -159,7 +159,7 @@ function returnOrder(orderId){
         if(result.isConfirmed){
             console.log(orderId);
             $.ajax({
-                url:"/user/returnOrder",
+                url:"/returnOrder",
                 method:'post',
                 data:{
                     orderId
@@ -194,7 +194,7 @@ function deleteAdd(id){
     }).then((result)=>{
         if(result.isConfirmed){
             $.ajax({
-                url:"/user/deleteAdd",
+                url:"/deleteAdd",
                 method:'delete',
                 data:{
                     id

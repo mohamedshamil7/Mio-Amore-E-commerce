@@ -224,7 +224,7 @@
                                 <tr>
                                     <td> <img src="{{this.cart_product.urlImage1}}" width="50" alt=""> </td>
                                     <td>
-                                        <a href="/user/product/{{this.cart_product._id}}"> {{this.cart_product.ProductName}}</a></td>
+                                        <a href="/product/{{this.cart_product._id}}"> {{this.cart_product.ProductName}}</a></td>
                                         <td>{{this.cart_product.Size}}</td>
                                         <td>{{this.cart_product.Color}}</td>
                                     <td>{{this.quantity}}</td>
@@ -232,7 +232,7 @@
                                     {{#if this.deliveredDate}}
                                     <td>
                                         {{err}}
-                                        <a href="/user/gotoReview/{{this.cart_product._id}}"><button class="btn" type="button"> write a review? </button></td></a>
+                                        <a href="/gotoReview/{{this.cart_product._id}}"><button class="btn" type="button"> write a review? </button></td></a>
                                     {{/if}}
                                 </tr>
                                 {{/each}}

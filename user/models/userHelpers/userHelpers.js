@@ -140,7 +140,7 @@ module.exports={
         console.log("enttered");
         return new Promise(async(resolve,reject)=>{
 
-            await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)}).then((response)=>{
+            await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id: new ObjectId(prodid)}).then((response)=>{
             
                 console.log(response)
               resolve(response)
@@ -165,14 +165,14 @@ module.exports={
      },
      addToWishlist:(prodID,userId)=>{
         return new Promise(async(resolve,reject)=>{
-            let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
+            let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:new ObjectId(userId)})
             if(userwl){
                 wishlist= userwl.wishlist.findIndex(product=>{
                     return product==prodID
                 })
                 console.log(wishlist);
                 if(wishlist !=-1){
-                    db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:ObjectId(userId)},{
+                    db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new ObjectId(userId)},{
                         $pull:{
                             wishlist:ObjectId(prodID)
                         }
@@ -183,7 +183,7 @@ module.exports={
                     })
                 }
                 else{
-                    db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:ObjectId(userId)},{
+                    db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new  ObjectId(userId)},{
                         $push:{
                             wishlist:ObjectId(prodID)
                         }
@@ -195,13 +195,13 @@ module.exports={
 
                 }
             }else{
-                await  db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:ObjectId(userId)},{
+                await  db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new ObjectId(userId)},{
                 
                     $push:{
                         wishlist:ObjectId(prodID)
                     }
                 },{upsert:true}).then((response)=>{
-                    db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(prodID)},{
+                    db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(prodID)},{
                         $set:{
                             inWishlist: true
                         }
@@ -226,7 +226,7 @@ module.exports={
     //  }
     wishlistProducts:(userId)=>{
         return new Promise(async(resolve,reject)=>{
-             let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
+             let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user: new ObjectId(userId)})
              console.log(userwl);
              if(userwl){
                 let wishlist=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
@@ -278,7 +278,7 @@ module.exports={
 
 inWishlist:(userId,prodId)=>{
     return new Promise(async(resolve,reject)=>{
-        let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
+        let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user: new ObjectId(userId)})
         if(userwl){
             let product= await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
                 {
@@ -328,7 +328,7 @@ addToCart:(userId,data)=>{
           };
 
     return new Promise(async(resolve,reject)=>{
-        let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)}) 
+        let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:new ObjectId(userId)}) 
         console.log(userCart);
         if(userCart){
             // const proExist = userCart.books.findIndex((book) => book.item == proId);
@@ -338,14 +338,14 @@ addToCart:(userId,data)=>{
             console.log(cart);
 
             if(cart !==-1){
-                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId),'product.varientId':ObjectId(data.varient)},{
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId),'product.varientId':new ObjectId(data.varient)},{
                     $inc:{'product.$.quantity':1}
                 }).then(()=>{
                     resolve()
                 })
             }
             else{
-                db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId)},{
+                db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId)},{
                     $push:{
                         product:prodObj
                     }
@@ -517,11 +517,11 @@ removeCart:(userId,prodId,varientId)=>{
     
     console.log("prodd>>>>>>>>>>>>>>>>>",prodId);
     return new Promise(async(resolve,reject)=>{
-        let userCart= db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        let userCart= db.get().collection(collection.CART_COLLECTION).findOne({user:new ObjectId(userId)})
         if(userCart){
-            db.get().collection(collection.CART_COLLECTION).updateOne({user:ObjectId(userId)},{
+            db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId)},{
                 $pull:{
-                    product:{varientId:ObjectId(varientId)}
+                    product:{varientId:new ObjectId(varientId)}
                 }
             }) 
             resolve(userCart)
@@ -534,7 +534,7 @@ removeCart:(userId,prodId,varientId)=>{
 getCartCount:(userId)=>{
     return new Promise(async(resolve,reject)=>{
         let count=0
-        let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:ObjectId(userId)})
+        let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user:new  ObjectId(userId)})
         if(cart){
            
             count=cart.product.length
@@ -556,7 +556,7 @@ changeProductQuantity:(data)=>{
 
         if(data.product == data.varientId){
 
-            let stock= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(data.product)})
+            let stock= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(data.product)})
             stock=stock.Stock
 
             if(stock<(quantity + count)){
@@ -564,15 +564,15 @@ changeProductQuantity:(data)=>{
                     return reject()
                 }else{
                     if(count== -1 && quantity== 1 ){
-                            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
+                            await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:new ObjectId(data.cart)},{'product.varientId':new ObjectId(data.varientId)}]},{
                                 $pull:{
-                                    product:{varientId:ObjectId(data.varientId)}
+                                    product:{varientId:new ObjectId(data.varientId)}
                                 }
                             }).then(()=>{
                                 resolve({prodDelete:true})
                             })
                         }else{
-                                    await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
+                                    await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:new ObjectId(data.cart)},{'product.varientId':new ObjectId(data.varientId)}]},{
                                         $inc:{'product.$.quantity':count}  
                                     }).then(()=>{
                                         resolve(true)
@@ -617,15 +617,15 @@ changeProductQuantity:(data)=>{
             return reject()
                  }else{
                     if(count== -1 && quantity== 1 ){
-                        await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
+                        await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:new ObjectId(data.cart)},{'product.varientId':new ObjectId(data.varientId)}]},{
                             $pull:{
-                                product:{varientId:ObjectId(data.varientId)}
+                                product:{varientId:new ObjectId(data.varientId)}
                             }
                         }).then(()=>{
                             resolve({prodDelete:true})
                         })
                     }else{
-                        await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
+                        await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:new ObjectId(data.cart)},{'product.varientId':new ObjectId(data.varientId)}]},{
                             $inc:{'product.$.quantity':count}  
                         }).then(()=>{
                             resolve(true)
@@ -746,9 +746,9 @@ getTotalAmount:(userId)=>{
  addAddress:(userId,Data)=>{
     Data.id=ObjectId()
     return new Promise(async(resolve,reject)=>{
-        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId),Address:{$exists:true}})
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userId),Address:{$exists:true}})
         if(user){
-            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
                 $push:{
                     Address:Data
                 }
@@ -759,7 +759,7 @@ getTotalAmount:(userId)=>{
             })
             // console.log(user,"is herere");
         }else{
-            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+            await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
                 $push:{
                     Address:Data
                 }
@@ -774,7 +774,7 @@ getTotalAmount:(userId)=>{
 },
 getAddress:(userId)=>{
     return new Promise(async(resolve,reject)=>{
-        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId),Address:{$exists:true}})
+        let user= await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userId),Address:{$exists:true}})
         // resolve(user)
         if(user){
             let address= await db.get().collection(collection.USER_COLLECTION).aggregate([
@@ -924,7 +924,7 @@ console.log(typeof userId);
             }]).then(()=>{
                 console.log("herehhrehehhe");
                 // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
-                db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)}).then(()=>{
+                db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)}).then(()=>{
                     console.log("resolve stage");
                 resolve()
                  }).catch((error=>{
@@ -979,7 +979,7 @@ verifyPayment:(details)=>{
 changePaymentStatus:(orderId)=>{
     console.log('efnriuerfvyvbbbbv',orderId);
     return new Promise(async(resolve,reject)=>{
-        db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+        db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
             $set: { status: 'placed' },
         })
         resolve()
@@ -1120,7 +1120,7 @@ inStockcheck:(userId)=>{
 getUserData:(userId)=>{
     // console.log(userId);
     return new  Promise(async(resolve,reject)=>{
-        let Data=await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userId) })
+        let Data=await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userId) })
         console.log(Data);
         if(Data){
             resolve(Data)
@@ -1131,7 +1131,7 @@ getUserData:(userId)=>{
 getOrderDetails:(userid)=>{
     // console.log("///////",userid);
     return new Promise(async(resolve,reject)=>{
-        let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:ObjectId(userid)}).sort( { "fullDate": -1} ).toArray()
+        let Data= await db.get().collection(collection.ORDER_COLLECTION).find({userId:new ObjectId(userid)}).sort( { "fullDate": -1} ).toArray()
         if(Data) resolve(Data)
         // let Data= await db.get().collection(collection.ORDER_COLLECTION).aggregate([
         //     {
@@ -1146,14 +1146,14 @@ getOrderDetails:(userid)=>{
 cancelOrderSubmit:(orderId)=>{
     console.log(orderId);
     return new Promise(async(resolve,reject)=>{
-        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:new ObjectId(orderId)})
 
         for (let i = 0; i < fullOrder.cart.length; i++) {
           await db
             .get()
             .collection(collection.PRODUCT_COLLECTIONS)
             .updateOne(
-              { _id: ObjectId(fullOrder.cart[i].item) },
+              { _id:new  ObjectId(fullOrder.cart[i].item) },
               { $inc: { Stock: fullOrder.cart[i].quantity } }
             );
         }
@@ -1165,7 +1165,7 @@ cancelOrderSubmit:(orderId)=>{
                amount:fullOrder.totalAmount,
                 amountCreditedOn:new Date().toDateString()
             }
-            await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+            await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:new ObjectId(fullOrder.userId)},{
                 $inc:{
                     total:fullOrder.totalAmount
                 },
@@ -1180,7 +1180,7 @@ cancelOrderSubmit:(orderId)=>{
         
         
 
-       let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+       let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
             $set:{
                 status: 'Cancelled',
                 deliveryStatus: 'Cancelled',
@@ -1227,7 +1227,7 @@ returnOrderSubmit:(orderId)=>{
         // updating status of return
         let status = "return applied"
 
-        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
             $set:{
                 status: status,
                 btnStatus: false,
@@ -1264,7 +1264,7 @@ debitFromWallet:(orderId,total,user)=>{
 
     }
     return new Promise(async(resolve,reject)=>{
-       let wallet= await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(user)},{
+       let wallet= await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:new ObjectId(user)},{
             $inc:{
                 total:-total
             },
@@ -1324,7 +1324,7 @@ debitFromWallet:(orderId,total,user)=>{
                         }
                     }
                             console.log(statuss,"statussus");
-                    const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(order)},{
+                    const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
                         $set:{
                             status:statuss,
                             PaymentStatus:PaymentStatus,
@@ -1344,22 +1344,22 @@ debitFromWallet:(orderId,total,user)=>{
                             console.log(sizeId,">>>>> size udtrd");
                             if(prodId == varientId){
                                 console.log("same");
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},{
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
                                     $inc: {Stock:-ids[i].quantity}, 
                                 
                                 },{session})   
         
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},[{
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},[{
                                  $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
                             
                                  }],{session})
                             }else{
                                 console.log("different");
-                              let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(ids[i].prodId)},{
+                              let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
                                     $inc: {'Variations.$[i].Data.$[j].Stock':-ids[i].quantity}, 
                                 
                             },{arrayFilters:[
-                                {'j.id':ObjectId(varientId)},{'i.id':ObjectId(sizeId)}
+                                {'j.id':new ObjectId(varientId)},{'i.id':new ObjectId(sizeId)}
                                 ],session},
                                 ) 
 
@@ -1369,7 +1369,7 @@ debitFromWallet:(orderId,total,user)=>{
                                     console.log(varint);
                                     console.log("noononononononononon");
                                 }
-                              let varei1= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(prodId)}, [
+                              let varei1= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(prodId)}, [
                                 {
                                   $set: {
                                     Variations: {
@@ -1427,11 +1427,11 @@ debitFromWallet:(orderId,total,user)=>{
                         }
                         
                         console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:ObjectId(userId)},{session})
+                        let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)},{session})
                         console.log(`${deletecart.deletedCount} was /were deleted from cart collection `);
         
                     }else{
-                        const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(order)},{
+                        const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
                             $set:{
                                 status:"Cancelled",
                                 PaymentStatus:"Payment not done ",
@@ -1573,7 +1573,7 @@ findCoupen:(code,userid)=>{
     return new Promise(async(resolve,reject)=>{
     Coupen = await db.get().collection(collection.COUPEN_COLLECTION).findOne({code:code})
      if(Coupen){
-     user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:ObjectId(userid),usedcoupens:Coupen._id})
+     user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userid),usedcoupens:Coupen._id})
 
      }
      console.log(user,"././,,,.");
@@ -1593,9 +1593,9 @@ findCoupen:(code,userid)=>{
 delAddress:(id,user)=>{
     console.log(id,"This is id");
     return new Promise(async(resolve,reject)=>{
-      let del=  await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(user)},{
+      let del=  await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(user)},{
             $pull:{
-                Address:{id:ObjectId(id)}
+                Address:{id:new ObjectId(id)}
             }
         })
         if(del){
@@ -1640,7 +1640,7 @@ getsingleorderDetails:(orderId)=>{
     console.log(orderId);
 
     return new Promise(async(resolve,reject)=>{
-        const data = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+        const data = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:new ObjectId(orderId)})
 
         if(data){
             console.log(data);
@@ -1674,7 +1674,7 @@ checkReview:(userId, prodId)=>{
     console.log(userId,"userId");
     console.log(prodId,"prodis");
     return new Promise(async(resolve,reject)=>{
-        let data = await db.get().collection(collection.REVIEW_COLLECTION).findOne({ $and: [{ productId: ObjectId(prodId) }, { userId: ObjectId(userId) }] });
+        let data = await db.get().collection(collection.REVIEW_COLLECTION).findOne({ $and: [{ productId:new  ObjectId(prodId) }, { userId:new  ObjectId(userId) }] });
         if(data){
             reject()
         }else{

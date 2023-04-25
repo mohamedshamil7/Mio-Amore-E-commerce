@@ -10,13 +10,13 @@
                     <div class="product-box-3 h-100">
                         <div class="product-header">
                             <div class="product-image">
-                                <a href="/user/product/{{this.Product._id}}">
+                                <a href="/product/{{this.Product._id}}">
                                     <img src="{{this.Product.urlImage1}}" class="img-fluid blur-up lazyload"
                                         alt="">
                                 </a>
 
                                 <div class="product-header-top">
-                                <a class="wishlist-button close_button" href="/user/addToWishlist/{{this.Product._id}}"><button class="btn wishlist-button close_button">
+                                <a class="wishlist-button close_button" href="/addToWishlist/{{this.Product._id}}"><button class="btn wishlist-button close_button">
                                         <i data-feather="x"></i>
                                     </button></a>    
                                 </div>
@@ -25,7 +25,7 @@
                         <div class="product-footer">
                             <div class="product-detail">
                                 <span class="span-name">{{this.Product.category}}</span>
-                                <a href="/user/product/{{this.Product._id}}">
+                                <a href="/product/{{this.Product._id}}">
                                     <h5 class="name">{{this.Product.ProductName}}</h5>
                                 </a>
                                 <h6 class="unit mt-1">250 ml</h6>
@@ -61,7 +61,7 @@
                 </div>
                         {{/each}} 
                         {{else}}
-                        <img style="margin-bottom: 50%; " height="700"  src="/user/images/47335-wishlist-animation.gif" alt="">
+                        <img style="margin-bottom: 50%; " height="700"  src="../images/47335-wishlist-animation.gif" alt="">
                         {{/if}}
 
             </div>
