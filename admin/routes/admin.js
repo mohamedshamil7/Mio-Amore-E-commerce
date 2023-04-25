@@ -29,7 +29,7 @@ const {
   // deleteProduct,
   editProduct,
   EditProductData,
-  ImageSupplier,
+
   availabilityCheck,
   allorders,
   cancelOrderAdmin,
@@ -109,7 +109,7 @@ router.post("/edit-Product",nocache,autherization,editProduct)
 
 router.post("/editProduct-submit",autherization,upload,EditProductData)
 
-router.get("/ImageSupply/:Image",ImageSupplier )
+
 
 router.get("/allorders",nocache,autherization,allorders)
 
