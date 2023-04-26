@@ -175,7 +175,7 @@ module.exports = {
   },
 
   redirectAdminDash: (req, res) => {
-    res.redirect("/adminDash");
+    res.redirect("/admin/adminDash");
   },
   renderadminDash: async (req, res) => {
     let salesToday = await adminHelper.getDailyOrder()

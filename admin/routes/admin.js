@@ -74,83 +74,83 @@ const{
   upload3,
 }=require("../public/javascripts/multer")
 /* GET home page. */
-router.get('/',renderadminLogin);
+router.get('/admin/',renderadminLogin);
 
-router.post('/sales',autherization,salesReport)
-router.post('/login-submit',nocache,adminLoginRoute,redirectAdminDash)
+router.post('/admin/sales',autherization,salesReport)
+router.post('/admin/login-submit',nocache,adminLoginRoute,redirectAdminDash)
 
-router.get("/adminDash",nocache,autherization,renderadminDash)
+router.get("/admin/adminDash",nocache,autherization,renderadminDash)
 
-router.get("/allUsers",nocache,autherization,AllUsersPage)
+router.get("/admin/allUsers",nocache,autherization,AllUsersPage)
 
-router.post("/blockManager",autherization,userBlock)
+router.post("/admin/blockManager",autherization,userBlock)
 
-router.get("/stocks",nocache,autherization,stockPage)
+router.get("/admin/stocks",nocache,autherization,stockPage)
 
-router.get("/categories",nocache,autherization,categories_Page)
-router.get("/brands",nocache,autherization,brandsPage)
+router.get("/admin/categories",nocache,autherization,categories_Page)
+router.get("/admin/brands",nocache,autherization,brandsPage)
 
 
-router.post("/addBrand",nocache,autherization,addBrand)
-router.post("/addCategory",nocache,autherization,addCategoryManager)
+router.post("/admin/addBrand",nocache,autherization,addBrand)
+router.post("/admin/addCategory",nocache,autherization,addCategoryManager)
 
-router.post("/prodAvailability/:id",autherization,availabilityCheck)
+router.post("/admin/prodAvailability/:id",autherization,availabilityCheck)
 
-router.post("/deleteCategory/:id",autherization,deleteCategory)
-router.post("/deleteBrand/:id",autherization,deleteBrand)
+router.post("/admin/deleteCategory/:id",autherization,deleteCategory)
+router.post("/admin/deleteBrand/:id",autherization,deleteBrand)
 
-router.get("/add-product",nocache,autherization,addProductForm)
+router.get("/admin/add-product",nocache,autherization,addProductForm)
 
-router.post("/addProduct-submit",autherization,upload,addNewProduct)
+router.post("/admin/addProduct-submit",autherization,upload,addNewProduct)
 
 // router.post("/delete-Product",deleteProduct)
 
-router.post("/edit-Product",nocache,autherization,editProduct)
+router.post("/admin/edit-Product",nocache,autherization,editProduct)
 
-router.post("/editProduct-submit",autherization,upload,EditProductData)
+router.post("/admin/editProduct-submit",autherization,upload,EditProductData)
 
 
 
-router.get("/allorders",nocache,autherization,allorders)
+router.get("/admin/allorders",nocache,autherization,allorders)
 
-router.post('/cancelOrder',autherization, cancelOrderAdmin);
+router.post('/admin/cancelOrder',autherization, cancelOrderAdmin);
 
-router.get('/view-order-product/:id',nocache,autherization, viewOrderProduct);
-router.get('/returnConfirm/:id',nocache,autherization, confrimReturn);
-router.post("/delivery-status",autherization, deliveryStatus)
+router.get('/admin/view-order-product/:id',nocache,autherization, viewOrderProduct);
+router.get('/admin/returnConfirm/:id',nocache,autherization, confrimReturn);
+router.post("/admin/delivery-status",autherization, deliveryStatus)
 
-router.get("/logout",nocache,autherization,adminLogout)
-router.delete("/deleteImage",nocache,autherization,deleteImage)
+router.get("/admin/logout",nocache,autherization,adminLogout)
+router.delete("/admin/deleteImage",nocache,autherization,deleteImage)
 
-router.get("/addCoupen",nocache,autherization,getAddCoupenPage)
-router.get("/coupen",nocache,autherization,getCoupenpage)
-router.post('/addcouponsubmit',nocache,autherization,addCoupenSubmit)
-router.get('/generatecode', autherization, codeGenerator);
-router.post('/deletecoupon', autherization, deletecoupon);
+router.get("/admin/addCoupen",nocache,autherization,getAddCoupenPage)
+router.get("/admin/coupen",nocache,autherization,getCoupenpage)
+router.post('/admin/addcouponsubmit',nocache,autherization,addCoupenSubmit)
+router.get('/admin/generatecode', autherization, codeGenerator);
+router.post('/admin/deletecoupon', autherization, deletecoupon);
 
-router.post('/deliveryDateSubmit', autherization, deliveryDateSubmit);
+router.post('/admin/deliveryDateSubmit', autherization, deliveryDateSubmit);
 
-router.get("/banners",nocache,autherization,bannerPage)
+router.get("/admin/banners",nocache,autherization,bannerPage)
 
-router.get("/scheduleOrder/:id",nocache,autherization,scheduleOrder)
+router.get("/admin/scheduleOrder/:id",nocache,autherization,scheduleOrder)
 
-router.post("/banner1-submit",autherization,upload1,banner1Add)
-router.post("/banner2-submit",autherization,upload2,banner2Add)
-router.post("/banner3-submit",autherization,upload3,banner3Add)
+router.post("/admin/banner1-submit",autherization,upload1,banner1Add)
+router.post("/admin/banner2-submit",autherization,upload2,banner2Add)
+router.post("/admin/banner3-submit",autherization,upload3,banner3Add)
 
-router.delete("/delBanner",nocache,autherization,delBanner)
-router.get("/confirmDelivery/:id",nocache,autherization,confirmDelivery)
-router.get("/invoice",nocache,autherization,invoice)
-router.get("/billLabel",nocache,autherization,renderbillLabel)
-router.get("/Sales",nocache,autherization,renderSalesReport)
-router.post("/sale-filter",nocache,autherization,salesFilter)
+router.delete("/admin/delBanner",nocache,autherization,delBanner)
+router.get("/admin/confirmDelivery/:id",nocache,autherization,confirmDelivery)
+router.get("/admin/invoice",nocache,autherization,invoice)
+router.get("/admin/billLabel",nocache,autherization,renderbillLabel)
+router.get("/admin/Sales",nocache,autherization,renderSalesReport)
+router.post("/admin/sale-filter",nocache,autherization,salesFilter)
 
-router.get("/addVariations",nocache,autherization,addVariations)
+router.get("/admin/addVariations",nocache,autherization,addVariations)
 
-router.delete("/variationDelete",nocache,autherization,variationDelete)
-router.post("/addVarient-submit",nocache,autherization,addVarient_submit)
-router.get("/variationEdit",nocache,autherization,variationEdit)
+router.delete("/admin/variationDelete",nocache,autherization,variationDelete)
+router.post("/admin/addVarient-submit",nocache,autherization,addVarient_submit)
+router.get("/admin/variationEdit",nocache,autherization,variationEdit)
 
-router.post("/editVariation-submit",nocache,autherization,editVariation_submit)
+router.post("/admin/editVariation-submit",nocache,autherization,editVariation_submit)
 module.exports = router;
 
