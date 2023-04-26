@@ -1288,17 +1288,19 @@ debitFromWallet:(orderId,total,user)=>{
         return new Promise(async(resolve,reject)=>{
            const url=MONGODB
 
-            mongoClient.connect(url, async function(err, client) {
-              if (err) throw err;
-              
-              console.log("Connected to MongoDB database!");
-            
-              const session = client.startSession();
+           mongoClient.connect(url).then(async(client)=>{
+               console.log("Connected to MongoDB database!");
+
+
+
+                  const session = client.startSession();
               const transactionOptions={
                 readPreference:'primary',
                 readConcern:{level:'local'},
                 writeConcern:{w:'majority'}
             }
+
+
             try{
                 let statuss 
                 console.log("here");
@@ -1478,7 +1480,20 @@ debitFromWallet:(orderId,total,user)=>{
                     console.log("erro retun com");
                 }
             }
-            })
+
+
+
+           }).
+           catch((err)=>{
+            throw err;
+           })
+
+              
+            
+           
+            
+           
+            
         })
     
 },

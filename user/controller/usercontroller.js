@@ -681,7 +681,7 @@ module.exports = {
     })
 
     let user = decode.value.username;
-    let userID = ObjectId(decode.value.insertedId);
+    let userID = new ObjectId(decode.value.insertedId);
     console.log("uer if", userID);
     console.log("@#############@@@@@@@###", user);
     console.log("???????", Address, ">>>>>");
@@ -916,7 +916,7 @@ module.exports = {
         }
         let user = stringify(req.body.userId);
 
-        let id = ObjectId(req.body.userId);
+        let id =new  ObjectId(req.body.userId);
 
         console.log(id);
 
