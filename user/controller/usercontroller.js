@@ -137,7 +137,7 @@ module.exports = {
         const user = jwt.verify(token, MY_SECRET);
         console.log("userrrrr<<<<<<<<<<<<<<<<<<<>>>>>>>" + user);
         if (user) {
-          res.render("userView/home");
+          res.redirect("/home")
           // res.redirect("/user/home")
         }
       } catch (err) {

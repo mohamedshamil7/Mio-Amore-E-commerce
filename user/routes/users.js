@@ -57,9 +57,7 @@ const {
 } = require("../controller/usercontroller");
 
 /* GET home page. */
-router.get('/',nocache,homeJwtCheck, function(req, res, next) {
-  res.render('index', { title: 'Express' });
-},);
+router.get('/',nocache,homeJwtCheck,redirectHome);
 
 router.get('/login',nocache,homeJwtCheck,renderLogin)
 
