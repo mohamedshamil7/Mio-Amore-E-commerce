@@ -11,7 +11,9 @@ const crypto = require("crypto")
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { readFile } = require("fs/promises");
 var util = require('handlebars-utils');
-var QRCode = require('qrcode')
+var QRCode = require('qrcode');
+
+
 
 
 
@@ -84,6 +86,7 @@ module.exports = {
   },
 
   renderadminLogin: (req, res) => {
+    console.log("calll is herererrrre");
     res.render("adminView/adminlogin");
   },
 
@@ -120,6 +123,7 @@ module.exports = {
   },
 
   adminLoginRoute: (req, res, next) => {
+    console.log("lgo in admin login route");
     adminHelper
       .adminLogin(req.body)
       .then((response) => {
@@ -171,7 +175,7 @@ module.exports = {
   },
 
   redirectAdminDash: (req, res) => {
-    res.redirect("/admin/adminDash");
+    res.redirect("admin/adminDash");
   },
   renderadminDash: async (req, res) => {
     let salesToday = await adminHelper.getDailyOrder()

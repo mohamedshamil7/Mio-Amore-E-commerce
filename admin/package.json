@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon./bin/wwwadmin"
+    "start": "nodemon ./bin/www"
+
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.294.0",
