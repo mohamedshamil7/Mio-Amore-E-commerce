@@ -729,6 +729,7 @@
 
  function addToCart(prodId){
 
+     let cartbtn = document.getElementById('addToCartButton').disabled = true;
     if(id){
         $.ajax({
         url:' /addToCart',
