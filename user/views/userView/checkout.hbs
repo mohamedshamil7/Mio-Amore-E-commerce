@@ -4,9 +4,9 @@
                 <form action="" id="placeorder_form">
                     <input type="text " name="order" value="true" hidden>
                      <input type="text" id="amount" name="offerPrice" hidden>
-                     <input type="text" id="Coupen_code" name="Coupen_code" hidden>
-            <div class="row g-sm-4 g-3">
-                <div class="col-lg-8">
+                     <input type="text" id="Coupen_Id" name="Coupen_Id" hidden>
+                    <div class="row g-sm-4 g-3">
+                    <div class="col-lg-8">
                     <div class="left-sidebar-checkout">
                         <div class="checkout-detail-box">
                             <ul>
@@ -381,7 +381,7 @@
                                     {{/each}}
                             </ul>
                         </div>
-
+                        {{!-- <input type="text" id="coupenId" readonly hidden> --}}
                         <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold" type="submit">Place Order</button>
                     </div>
                 </div>
@@ -563,7 +563,6 @@
                 },
                 "modal": {
                     "ondismiss": function () {
-                        {{!-- razorpayClose(orderid) --}}
                         razorpayClose()
                     }
                 }
@@ -576,9 +575,7 @@
             rzp1.open();
         }
 
-       {{!-- function razorpayClose(orderId){
-        
-        } --}}
+
 
 
         function verifyPayment(payment,order,orderId){
@@ -608,10 +605,10 @@
                 },
                 method:"post",
                 success:(response=>{
-                     document.getElementById('offer').innerHTML = '₹' + response.Total 
+                     document.getElementById('offer').innerHTML = '₹' + response.newTotal 
                      document.getElementById('hurPrice').innerHTML = `(offer applied)`
-                      document.getElementById('amount').value = response.Total
-                      document.getElementById('Coupen_code').value = code
+                      document.getElementById('amount').value = response.newTotal
+                      document.getElementById('Coupen_Id').value = response.coupenId
                       document.getElementById('error-2').innerHTML = ''
                 })  ,
                 error:(xhr, thrownError)=>{

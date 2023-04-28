@@ -810,11 +810,10 @@ getAddress:(userId)=>{
 
 
 placeOrder:(order,cart,total)=>{
-    let Coupen  
-    let coupens
-    console.log(`order.coupen code is ${order.Coupen_code}`);
-    if(order.Coupen_code){
-        Coupen = order.Coupen_code
+    let Coupen ;
+    console.log(`order.coupen Id is ${order.Coupen_Id}`);
+    if(order.Coupen_Id){
+        Coupen = order.Coupen_Id
     }
 
 return new Promise(async(resolve,reject)=>{
@@ -825,13 +824,12 @@ console.log(typeof userId);
      let order_status= 'pending'
     //bug chance...?????????????/////////////////////////////////
     if(Coupen){
-         coupens= await db.get().collection(collection.COUPEN_COLLECTION).findOneAndUpdate({code:Coupen},{
+          await db.get().collection(collection.COUPEN_COLLECTION).updateOne({_id:Coupen},{
            $inc: {totalCoupen:-1}
         })
-        console.log("///////////////////////////",coupens);
-        if(coupens) console.log(`coupen applied and and total couepen is updated`);
+         console.log(`coupen applied and and total couepen is updated`);
         let usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
-            $push:{usedcoupens:coupens.value._id}
+            $push:{usedcoupens:Coupen}
         },{upsert:true})
     }   
      /////////////////////////////////////////
@@ -874,11 +872,10 @@ console.log(typeof userId);
     // let user = userId
 
     // console.log("??????/////",user);
-
+    
     let orderObj={
         deleviryDetails:address[0].deleviryDetails ,
         userId:userId,
-        
         totalAmount:total,
         paymentMethod:order.PaymentOption,
         PaymentStatus: order.PaymentStatus,
@@ -889,6 +886,9 @@ console.log(typeof userId);
         btnStatus: true,
         transactionId:null,
         deliveryStatus:"Preparing",
+    }
+    if(Coupen){
+        orderObj.coupenId=Coupen
     }
     console.log(userId);
     db.get().collection(collection.ORDER_COLLECTION).insertOne(orderObj).then((response)=>{
@@ -1801,12 +1801,13 @@ check_quantity:(userId,data)=>{
 
 deleteOrder:(orderId)=>{
     return new Promise(async(resolve,reject)=>{
-        let order = await db.get().collection(collection.ORDER_COLLECTION).deleteOne({_id:new ObjectId(orderId)})
-        if(order.deletedCount){
-            resolve(true)
-        }else {
-            reject(false)
-        }
+        let order = await db.get().collection(collection.ORDER_COLLECTION).findOneAndDelete({_id:new ObjectId(orderId)})
+        console.log("deleteed details :", order);
+        // if(order.deletedCount){
+        //     resolve(true)
+        // }else {
+        //     reject(false)
+        // }
     })
 }
 

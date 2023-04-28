@@ -666,8 +666,8 @@ module.exports = {
   checkoutPage: async (req, res) => {
     let decode = tokenVerify(req);
     let cart = await cartProd(req);
-    if(cart.products.length <0){
-      return res.redirect('/home')
+    if(!cart.cartItems){
+      return res.redirect('/usercart')
     }
     // let products= cart.cartItems
     // let outofStock= cart.outofStock
@@ -907,8 +907,9 @@ module.exports = {
 
     let globalorderId = null;
 
+
     function getOrderid() {
-      return globalorderId;
+      return {globalorderId,globelCoupenId};
     }
 
     try {
@@ -1464,7 +1465,8 @@ module.exports = {
     let decode = await tokenVerify(req)
     let cart = await cartProd(req)
     let Total = cart.total
-    let offerPrice;
+    let offerPrice=0;
+    let newTotal=0;
     console.log(req.body.code);
     let coupenData;
     await userHelpers
@@ -1484,9 +1486,9 @@ module.exports = {
                   console.log(offerPrice);
                   if (Total >= coupenData.minLimit) {
                   if (offerPrice <= coupenData.maxLimit) {
-                    Total = Total - offerPrice;
+                    newTotal = Total - offerPrice;
                   } else {
-                    Total = Total - coupenData.maxLimit;
+                    newTotal = Total - coupenData.maxLimit;
                   }
                   } else {
                     let d = coupenData.minLimit - offerPrice;
@@ -1495,7 +1497,7 @@ module.exports = {
                   }
                 } else if(coupenData.redeemType ==="amount") {
                   console.log("entred here ta amount");
-                  Total = parseInt(Math.floor(Total - coupenData.amount));
+                  newTotal = parseInt(Math.floor(Total - coupenData.amount));
                   // console.log(offerPrice);
                 }
             }else{
@@ -1508,11 +1510,11 @@ module.exports = {
         } else {
           return res.status(404).send("Coupen Not available..Please try later");
         }
-      } else if (coupenData) {
-      }
-    } if(Total){
+      } 
+    } if(newTotal){
+      console.log(coupenData);
       console.log(Total, "new total");
-      res.json({ Total });
+      res.json({ newTotal ,coupenId:coupenData._id });
 
     }
       }) .catch((err) => {
