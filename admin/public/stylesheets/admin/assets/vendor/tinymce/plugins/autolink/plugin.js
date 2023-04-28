@@ -1,6 +1,4 @@
-/**
- * TinyMCE version 6.2.0 (2022-09-08)
- */
+
 
 (function () {
   'use strict';
