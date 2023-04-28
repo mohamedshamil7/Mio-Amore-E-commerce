@@ -971,9 +971,9 @@ module.exports = {
               payment_method: "paypal",
             },
             redirect_urls: {
-              return_url: `http://localhost:8001/user/placeOrder/${orderId}`,
+              return_url: `/placeOrder/${orderId}`,
               // "return_url": "http://localhost:8001/user/o",
-              cancel_url: "http://cancel.url",
+              cancel_url: `/placeOrder?cancel=true,orderId=${orderId}`,
             },
             transactions: [
               {
@@ -1018,7 +1018,10 @@ module.exports = {
         console.log(`data is coming${req.params.data}`);
         globalorderId = req.params.data
         // console.log(data);
-      } else {
+      }else if(req.query.cancel){
+        res.json({ status: false , orderId:req.query.orderId});
+      }
+       else {
         payment_method = "razorPay";
         console.log(`payment meth here i s sinsncsdijcdc${payment_method}`);
         console.log(req.body);
@@ -1649,6 +1652,16 @@ module.exports = {
           }
         }
       }
+  },
+
+
+  deleteOrder:async(req,res)=>{
+    // let decode = await tokenVerify(req)
+    userHelpers.deleteOrder(req.body.orderId).then((response)=>{
+      res.json({status:true})
+    }).catch((error)=>{
+      console.log("error occcured during deleting order");
+    })
   }
 
 

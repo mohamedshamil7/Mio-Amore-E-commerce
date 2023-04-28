@@ -499,6 +499,30 @@
                         window.location = response.forwardLink
                     } else if(response.status ==true){
                          location.href="/orderSuccess"
+                    }else if(response.status==false){
+                                                Swal.fire({
+                        title: 'Error Occured',
+                        text: "Error occured during payment .....Order has been cancelled",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Go back to home!'
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url:'/deleteOrder',
+                                data:{orderId:response.orderId},
+                                method:'delete',
+                                success:(response)=>{
+                                    if(response.status==true){
+
+                                    location.href="/home"  
+                                    }
+
+                                }
+                            })
+                        }
+                        })
                     }
                 },
                  error:(xhr, thrownError)=>{
@@ -539,6 +563,7 @@
                 },
                 "modal": {
                     "ondismiss": function () {
+                        {{!-- razorpayClose(orderid) --}}
                         razorpayClose()
                     }
                 }
@@ -550,6 +575,10 @@
             });
             rzp1.open();
         }
+
+       {{!-- function razorpayClose(orderId){
+        
+        } --}}
 
 
         function verifyPayment(payment,order,orderId){

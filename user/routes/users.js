@@ -52,7 +52,8 @@ const {
   renderReviewPage,
   addReview,
   VariationSelect,
-  check_quantity
+  check_quantity,
+  deleteOrder
 
 } = require("../controller/usercontroller");
 
@@ -125,7 +126,9 @@ router.post("/search",nocache,search)
 router.delete("/deleteAdd",nocache,delAddress)
 router.get('/viewOrderDetails/:id',nocache,autherization,viewOrderDetails)
 router.get('/gotoReview/:id',nocache,autherization,renderReviewPage)
-router.post('/addReview',nocache,autherization,addReview)
+router.post('/addReview',nocache,autherization,addReview),
+
+router.delete('/deleteOrder',nocache,deleteOrder)
 
 router.get('/VariationSelect',nocache,autherization,VariationSelect)
 router.post('/check_quantity',nocache,autherization,check_quantity)

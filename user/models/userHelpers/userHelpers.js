@@ -1797,6 +1797,17 @@ check_quantity:(userId,data)=>{
             }
         
         })
+},
+
+deleteOrder:(orderId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let order = await db.get().collection(collection.ORDER_COLLECTION).deleteOne({_id:new ObjectId(orderId)})
+        if(order.deletedCount){
+            resolve(true)
+        }else {
+            reject(false)
+        }
+    })
 }
 
 
