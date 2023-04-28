@@ -666,6 +666,9 @@ module.exports = {
   checkoutPage: async (req, res) => {
     let decode = tokenVerify(req);
     let cart = await cartProd(req);
+    if(cart.products.length <0){
+      return res.redirect('/home')
+    }
     // let products= cart.cartItems
     // let outofStock= cart.outofStock
     let walletData = await wallet(req);
@@ -971,9 +974,8 @@ module.exports = {
               payment_method: "paypal",
             },
             redirect_urls: {
-              return_url: `/placeOrder/${orderId}`,
-              // "return_url": "http://localhost:8001/user/o",
-              cancel_url: `/placeOrder?cancel=true,orderId=${orderId}`,
+              return_url: `https://mioamore.live/placeOrder/${orderId}`,
+              cancel_url: `https://mioamore.live/placeOrder?cancel=true,orderId=${orderId}`,
             },
             transactions: [
               {
@@ -1093,7 +1095,7 @@ module.exports = {
               // console.log("codedededeeeee");
               // res.render("userView/orderSuccess");
               
-              res.redirect("/user/orderSuccess");
+              res.redirect("/orderSuccess");
             }
           })
           .catch((e) => {
