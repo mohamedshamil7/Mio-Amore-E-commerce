@@ -273,7 +273,7 @@ module.exports={
     }
 
         return new Promise(async(resolve,reject)=>{
-           await db.get().collection(collection.USER_COLLECTION).updateOne({_id:ObjectId(userId)},{
+           await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
                 $set:{
                     isBlocked:update
                 }
@@ -337,7 +337,7 @@ module.exports={
     },
     deleteBrand:(id)=>{
         return new Promise(async(resolve,reject)=>{
-            db.get().collection(collection.BRAND_COLLECTION).findOneAndDelete({_id:ObjectId(id)}).then((response)=>{
+            db.get().collection(collection.BRAND_COLLECTION).findOneAndDelete({_id:new ObjectId(id)}).then((response)=>{
                 resolve(response);
             }).catch(()=>{
                 reject()
@@ -369,7 +369,7 @@ module.exports={
     },
     deleteCategories:(Id)=>{
         return new Promise((resolve,reject)=>{
-            db.get().collection(collection.CATTEGORY_COLLECTION).findOneAndDelete({_id:ObjectId(Id)}).then((response)=>{
+            db.get().collection(collection.CATTEGORY_COLLECTION).findOneAndDelete({_id:new ObjectId(Id)}).then((response)=>{
                 console.log(response);
                  db.get().collection(collection.PRODUCT_COLLECTIONS).updateMany({category:response.value.categoryName},{
                     $set:{
@@ -413,7 +413,7 @@ module.exports={
             status= true
         }
 
-        await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
+        await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(id)},{
             $set:{
                 Availability:status
             }
@@ -429,7 +429,7 @@ module.exports={
     },
     getEditProduct:(id)=>{
         return new Promise(async(resolve,reject)=>{
-            let product= db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(id)})
+            let product= db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(id)})
             if(product) resolve(product)
             else reject()
     
@@ -452,7 +452,7 @@ module.exports={
             id.inStock=true
         }
         return new Promise(async(resolve,reject)=>{
-            let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(id)},{
+            let Product= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(id)},{
                 $set:{
                     ProductName:id.ProductName,
                     Company:id.Company,
@@ -488,25 +488,25 @@ module.exports={
 
         fetchImage1:(prodId)=>{
             return new Promise(async(resolve,reject)=>{
-                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image1:true}})
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(prodId)},{projection:{Image1:true}})
                 resolve(data.Image1)
             })
         },
         fetchImage2:(prodId)=>{
             return new Promise(async(resolve,reject)=>{
-                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image2:true}})
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new  ObjectId(prodId)},{projection:{Image2:true}})
                 resolve(data.Image2)
             })
         },
         fetchImage3:(prodId)=>{
             return new Promise(async(resolve,reject)=>{
-                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image3:true}})
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(prodId)},{projection:{Image3:true}})
                 resolve(data.Image3)
             })
         },
         fetchImage4:(prodId)=>{
             return new Promise(async(resolve,reject)=>{
-                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodId)},{projection:{Image4:true}})
+                let data= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(prodId)},{projection:{Image4:true}})
                 resolve(data.Image4)
             })
         },
@@ -549,16 +549,16 @@ module.exports={
 
         cancelOrderAdminSubmit:(orderId)=>{
             return new Promise(async(resolve,reject)=>{
-                let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+                let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:new ObjectId(orderId)})
                 for (let i = 0; i < fullOrder.cart.length; i++) {
-                  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne( { _id: ObjectId(fullOrder.cart[i].item) },
+                  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne( { _id:new  ObjectId(fullOrder.cart[i].item) },
                       { $inc: { Stock: fullOrder.cart[i].quantity } }
                     );
                 }
 
                 if(fullOrder.paymentMethod !=="COD"){
                     let creditData={
-                        transactionId:ObjectId(),
+                        transactionId:new ObjectId(),
                        orderId:fullOrder._id,
                        amount:fullOrder.totalAmount,
                         amountCreditedOn:new Date().toDateString()
@@ -566,7 +566,7 @@ module.exports={
             
             
                     }
-                     await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                     await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:new ObjectId(fullOrder.userId)},{
                             $inc:{
                                 total:fullOrder.totalAmount
                             },
@@ -577,7 +577,7 @@ module.exports={
                     })
                 }
               
-              let order=  await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+              let order=  await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
                     $set:{
                         status: 'Cancelled',
                         deliveryStatus: 'Cancelled',
@@ -596,7 +596,7 @@ module.exports={
 
         viewSingleOrder:(orderId)=>{
             return new Promise(async(resolve,reject)=>{
-                const singleOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:ObjectId(orderId)})
+                const singleOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({_id:new ObjectId(orderId)})
                 if(singleOrder){
                     console.log(singleOrder);
                     resolve(singleOrder)
@@ -621,7 +621,7 @@ module.exports={
 
             }
             return new Promise(async(resolve,reject)=>{
-           await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId), },{
+           await db .get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId), },{
                     $set:{
                         // status:status,
                         deliveryStatus:dstatus,
@@ -692,9 +692,9 @@ module.exports={
         },
         deleteCoupen:(id)=>{
             return new Promise(async(resolve,reject)=>{
-                const coupen =await  db.get().collection(collection.COUPEN_COLLECTION).findOneAndDelete({_id:ObjectId(id)})
+                const coupen =await  db.get().collection(collection.COUPEN_COLLECTION).findOneAndDelete({_id:new ObjectId(id)})
                 if(coupen.value.type =='product'){
-                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({coupenId:ObjectId(coupen.value._id)},{
+                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({coupenId:new ObjectId(coupen.value._id)},{
                         $unset:{offer:1,coupenId:1,offerPercent:1}
                     })
                 }
@@ -706,25 +706,25 @@ module.exports={
             return new Promise(async(resolve,reject)=>{
                 if(no==="Image1"){
                     console.log(";;hereree");
-                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image1:1}
                     })
                 }
               else  if(no==="Image2"){
                     console.log(";;hereree");
-                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $set:{Image2:''}
                     })
                 }
                else if(no==="Image3"){
                     console.log(";;hereree");
-                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image3:1}
                     })
                 }
                 else if(no==="Image4"){
                     console.log(";;hereree");
-                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(product)},{
+                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image4:1}
                     })
                 }
@@ -858,18 +858,18 @@ module.exports={
 
                   try{
                     const transactionResults= await session.withTransaction(async()=>{
-                        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id: ObjectId(orderId) },{session})
+                        let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id:new  ObjectId(orderId) },{session})
 
                         for (let i = 0; i < fullOrder.cart.length; i++) {
                             if(fullOrder.cart[i].varientId == fullOrder.cart[i].item){
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
+                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
 
                             }else{
-                                let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(fullOrder.cart[i].item)},{
+                                let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(fullOrder.cart[i].item)},{
                                     $inc: {'Variations.$[x].Data.$[j].Stock':fullOrder.cart[i].quantity}, 
                                 
                             },{arrayFilters:[
-                                {'j.id':ObjectId(fullOrder.cart[i].varientId)},{'x.id':ObjectId(fullOrder.cart[i].sizeId)}
+                                {'j.id':new ObjectId(fullOrder.cart[i].varientId)},{'x.id':new ObjectId(fullOrder.cart[i].sizeId)}
                                 ],session},
                                 ) 
 
@@ -884,7 +884,7 @@ module.exports={
                         }
                         
                         let creditData={
-                            transactionId:ObjectId(),
+                            transactionId:new ObjectId(),
                             orderId:fullOrder._id,
                             amount:fullOrder.totalAmount,
                             amountCreditedOn:new Date().toDateString()
@@ -892,7 +892,7 @@ module.exports={
                         }
                         
                         console.log("fullOrder:222",fullOrder.userId);
-                    let wallet=   await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:ObjectId(fullOrder.userId)},{
+                    let wallet=   await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:new ObjectId(fullOrder.userId)},{
                            $inc:{
                                 total:fullOrder.totalAmount
                             },
@@ -904,7 +904,7 @@ module.exports={
 
                         console.log(wallet);
 
-                        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+                        let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
                                 $set:{
                                     status: 'return confirmed',
                                     deliveryStatus: 'returned',
@@ -952,7 +952,7 @@ module.exports={
             let id = data.orderId
             let deliveyDate = data.deliveryDate
             return new Promise(async(resolve,reject)=>{
-                let order = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(id)},{
+                let order = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(id)},{
                     $set:{
                         deliveryStatus:deliveyDate,
                         deliveryScheduled:true,
@@ -972,7 +972,7 @@ module.exports={
               let   cancelOption = false;
                 let deliveryDate = new Date().toDateString()
             return new Promise(async(resolve,reject)=>{
-           let delivery =   await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(orderId)},{
+           let delivery =   await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
                     $set:{
                         status:"Delivered",
                         deliveryStatus:'Delivered',
@@ -1020,7 +1020,7 @@ module.exports={
         AddVariation:(data)=>{
             console.log(data.prodId);
             let  dataToInsert={
-                id:ObjectId(),
+                id:new ObjectId(),
                 color:data.Color,
                 Price:data.Price,
                 Stock:data.Stock,
@@ -1028,20 +1028,20 @@ module.exports={
                 inStock:true
             }
             return new Promise(async(resolve,reject)=>{
-           const product =   await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(data.prodId), "Variations.Size": data.Size },)
+           const product =   await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:new ObjectId(data.prodId), "Variations.Size": data.Size },)
                 console.log(product);
            if(product !=null){
 
          console.log("entereeddddddd");
                 // Size: " " exists, push data into it
-           const ins=   await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId), "Variations.Size": data.Size },
+           const ins=   await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId), "Variations.Size": data.Size },
                   { $push: { "Variations.$.Data": dataToInsert } }, )
                 console.log(ins,":ins");
                 console.log("Variation size already there  and nee color inserted");
                 resolve(ins)
            }else{
              let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
-             $push:{Variations:{ id:ObjectId(),Size:data.Size, Data:[dataToInsert]}}
+             $push:{Variations:{ id:new ObjectId(),Size:data.Size, Data:[dataToInsert]}}
 
             })
             console.log(ins,":ins") ;
@@ -1057,7 +1057,7 @@ module.exports={
                 let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                     {
                         $match:{
-                            _id:ObjectId(prodId)
+                            _id:new ObjectId(prodId)
                         }
                     },
                     {
@@ -1087,8 +1087,8 @@ module.exports={
             console.log(data.prodId);
             console.log(data.varId);
             return new Promise(async(resolve,reject)=>{
-                let del = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
-                    $pull:{"Variations.$[].Data":{id:ObjectId(data.varId)}}
+                let del = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId)},{
+                    $pull:{"Variations.$[].Data":{id:new ObjectId(data.varId)}}
                 })
                 if(del){
                     console.log(del);
@@ -1105,7 +1105,7 @@ module.exports={
                 let vari =  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                     {
                         $match:{
-                            _id:ObjectId(prodId)
+                            _id:new ObjectId(prodId)
                         }
                     },
                     {
@@ -1118,7 +1118,7 @@ module.exports={
                     },
                     {
                         $match:{
-                            "Variations.Data.id":ObjectId(variationId)
+                            "Variations.Data.id":new ObjectId(variationId)
                         }
                     },
                     {
@@ -1162,7 +1162,7 @@ module.exports={
 
                     }
                 },{arrayFilters:[
-                    {'j.id':ObjectId(data.dataId)},{'i.id':ObjectId(data.varId)}
+                    {'j.id':new ObjectId(data.dataId)},{'i.id':new ObjectId(data.varId)}
                     ]}
                 )
                 if(edit){
