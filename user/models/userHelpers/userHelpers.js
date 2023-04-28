@@ -823,7 +823,10 @@ console.log(typeof userId);
 
      let order_status= 'pending'
     //bug chance...?????????????/////////////////////////////////
+    console.log("//bug chance...?????????????/////////////////////////////////");
     if(Coupen){
+        console.log("//bug chance...?????????????/////////////////////////////////");
+
           await db.get().collection(collection.COUPEN_COLLECTION).updateOne({_id:Coupen},{
            $inc: {totalCoupen:-1}
         })
@@ -1434,6 +1437,7 @@ debitFromWallet:(orderId,total,user)=>{
                         console.log(`${deletecart.deletedCount} was /were deleted from cart collection `);
         
                     }else{
+                        console.log("//////////////cancelled////");
                         const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
                             $set:{
                                 status:"Cancelled",

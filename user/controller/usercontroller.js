@@ -909,7 +909,7 @@ module.exports = {
 
 
     function getOrderid() {
-      return {globalorderId,globelCoupenId};
+      return {globalorderId};
     }
 
     try {
