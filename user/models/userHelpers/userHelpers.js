@@ -339,14 +339,14 @@ addToCart:(userId,data)=>{
             console.log(cart);
 
             if(cart !==-1){
-                db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId),'product.varientId':new ObjectId(data.varient)},{
+               await db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId),'product.varientId':new ObjectId(data.varient)},{
                     $inc:{'product.$.quantity':1}
                 }).then(()=>{
                     resolve()
                 })
             }
             else{
-                db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId)},{
+               await db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId)},{
                     $push:{
                         product:prodObj
                     }
@@ -359,7 +359,7 @@ addToCart:(userId,data)=>{
                 user:new ObjectId(userId),
                 product:[prodObj]
             }
-            db.get().collection(collection.CART_COLLECTION).insertOne(newcart).then(()=>{
+            await db.get().collection(collection.CART_COLLECTION).insertOne(newcart).then(()=>{
                 resolve()
             }).catch((error)=>{
                 reject(error)
