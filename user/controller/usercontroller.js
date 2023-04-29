@@ -1025,7 +1025,10 @@ module.exports = {
         console.log(`data is coming${req.params.data}`);
         globalorderId = req.params.data
         // console.log(data);
+
       }else if(req.query.cancel){
+        console.log("here in cancel dkljdkfjl1!!!!!!!!!!!!!!!!!!!!");
+        console.log(req.query.orderId);
         await userHelpers.deleteOrder(req.query.orderId).then((resp)=>{
           if(resp.matchedCount){
             res.json({ status: false });

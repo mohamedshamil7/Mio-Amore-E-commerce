@@ -567,6 +567,7 @@
         function razorpayClose(orderId){
                 $.ajax({
                     url:`/placeOrder?cancel=true,orderId=${orderId}`,
+                    method:'post',
                     success:(resp)=>{
                         if(resp.status==false){
                               Swal.fire({
