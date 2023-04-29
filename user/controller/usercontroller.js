@@ -1116,6 +1116,16 @@ module.exports = {
           });
       }
     } catch (e) {
+      if(e.err){
+        await userHelpers.deleteOrder(e.orderId).then((resp)=>{
+          if(resp){
+            res.json({ status: false });
+
+          }
+        }).catch(()=>{
+          console.log("some error ocuuered");
+        })
+      }
       console.log(e, "this is theerroro ");
     }  
      

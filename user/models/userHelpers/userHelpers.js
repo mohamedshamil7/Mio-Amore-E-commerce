@@ -928,6 +928,8 @@ deleteOrder:(orderId)=>{
                 }else{
                     reject()
                 }
+            }else{
+                resolve(order)
             }
         }else {
             console.log("no roder val");
@@ -1098,12 +1100,7 @@ deleteOrder:(orderId)=>{
     
                     //     }
                     // },{session})
-                    await this.deleteOrder(order).then((resp)=>{
-
-                        console.log(`${resp.modifiedCount} was/were deleted due to transaction issues`);
-                    }).catch(()=>{
-                        console.log("error occcuredd");
-                    })
+               reject({err:"deelte",orderId:order})
                 }
                 
     
