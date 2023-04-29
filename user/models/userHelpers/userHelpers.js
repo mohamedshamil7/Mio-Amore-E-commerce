@@ -923,8 +923,8 @@ deleteOrder:(orderId)=>{
 
                 },)
                 if(usersCoupen.modifiedCount){
-                    resolve(usersCoupen)
                     console.log(usersCoupen,";kkkkkkkk");
+                    resolve(usersCoupen)
                 }else{
                     reject()
                 }

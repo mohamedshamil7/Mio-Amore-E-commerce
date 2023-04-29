@@ -565,9 +565,9 @@
         }
 
         function razorpayClose(orderId){
-            alert(orderId)
+            alert(order)
                 $.ajax({
-                    url:`/placeOrder?orderId=${orderId}`,
+                    url:`/placeOrder?cancel=true&orderId=${orderId}`,
                     method:'post',
                     success:(resp)=>{
                         if(resp.status==false){

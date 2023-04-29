@@ -979,7 +979,7 @@ module.exports = {
             },
             redirect_urls: {
               return_url: `https://mioamore.live/placeOrder/${orderId}`,
-              cancel_url: `https://mioamore.live/placeOrder?cancel=true,orderId=${orderId}`,
+              cancel_url: `https://mioamore.live/placeOrder?cancel=true&orderId=${orderId}`,
             },
             transactions: [
               {
@@ -1026,11 +1026,11 @@ module.exports = {
         globalorderId = req.params.data
         // console.log(data);
 
-      }else if(req.query.orderId){
+      }else if(req.query.cancel){
         console.log("here in cancel dkljdkfjl1!!!!!!!!!!!!!!!!!!!!");
         console.log(req.query.orderId);
         await userHelpers.deleteOrder(req.query.orderId).then((resp)=>{
-          if(resp.matchedCount){
+          if(resp){
             res.json({ status: false });
 
           }
