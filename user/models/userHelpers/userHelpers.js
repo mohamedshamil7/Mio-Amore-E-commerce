@@ -898,7 +898,8 @@ console.log(typeof userId);
         // db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(response.insertedId)},{
         //     $set:{  'cart.$[].deliveryStatus':'Order Confirmed'},
         // },{ multi: true })
-        resolve(response.insertedId)
+        this.deleteOrder(response.insertedId)
+        // resolve(response.insertedId)
 
     }).catch((error)=>{
         console.log(error);
@@ -907,35 +908,35 @@ console.log(typeof userId);
 
 },
             
-        removeCartAfterOrder:(items,userId)=>{
+//         removeCartAfterOrder:(items,userId)=>{
 
-    console.log("this is ccart",items);
+//     console.log("this is ccart",items);
 
 
-    return new Promise(async(resolve,reject)=>{
-        console.log("ullilkeri");
-        for(let i =0;i<items.length;i++){
-            console.log(";;");
-            items[i].quantity=Number(items[i].quantity)
-            await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
-                $inc: {Stock:-items[i].quantity}
+//     return new Promise(async(resolve,reject)=>{
+//         console.log("ullilkeri");
+//         for(let i =0;i<items.length;i++){
+//             console.log(";;");
+//             items[i].quantity=Number(items[i].quantity)
+//             await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
+//                 $inc: {Stock:-items[i].quantity}
                  
-             })
+//              })
 
 
-           await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},[{
-               $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
-            }]).then(()=>{
-                console.log("herehhrehehhe");
-                // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
-                db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)}).then(()=>{
-                    console.log("resolve stage");
-                resolve()
-                 }).catch((error=>{
-                    reject()
-                 }))
-            })
-        }
+//            await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},[{
+//                $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
+//             }]).then(()=>{
+//                 console.log("herehhrehehhe");
+//                 // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
+//                 db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)}).then(()=>{
+//                     console.log("resolve stage");
+//                 resolve()
+//                  }).catch((error=>{
+//                     reject()
+//                  }))
+//             })
+//         }
     
 
 
@@ -943,8 +944,232 @@ console.log(typeof userId);
 
         
         
+//     })
+// },
+
+
+    placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userId)=>{
+    console.log("orderrrr", order);
+    console.log(`paymetn motjog on trans ss  ${payment_method} `)
+    let error
+    let success
+    return new Promise(async(resolve,reject)=>{
+       const url=MONGODB
+
+       mongoClient.connect(url).then(async(client)=>{
+           console.log("Connected to MongoDB database!");
+
+
+
+              const session = client.startSession();
+          const transactionOptions={
+            readPreference:'primary',
+            readConcern:{level:'local'},
+            writeConcern:{w:'majority'}
+        }
+
+
+        try{
+            let statuss 
+            console.log("here");
+            const transactionResults= await session.withTransaction(async()=>{
+           
+                if(payment_method==="COD"){
+                    statuss= "placed"
+                }else if(payment_method ==="wallet"){
+                    if(transactionId!==null){
+                        statuss= "placed"
+                    }
+                } else if(payment_method ==="razorPay"){
+
+                    console.log(` pay meth ${payment_method}`);
+                    console.log(`razor pay trans ${transactionId}`);
+                    if(transactionId!==null){
+                        console.log("transiaction id is not null");
+                        statuss= "placed"
+                    }
+                }
+                else if(payment_method ==="paypal"){
+                    if(transactionId!==null){
+                        statuss= "placed"
+                    }
+                }
+                        console.log(statuss,"statussus");
+                        console.log(order);
+                const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
+                    $set:{
+                        status:statuss,
+                        PaymentStatus:PaymentStatus,
+                        transactionId:transactionId,
+                    }
+                },{session})
+                console.log(orderUpdation);
+    
+    
+    console.log(`status i s ${statuss}`);
+                if(statuss ==="placed"){
+                    for(let i = 0;i<ids.length;i++){
+                        console.log(ids.length);
+                        let prodId = ids[i].prodId.toString()
+                        let varientId = ids[i].varientId.toString()
+                        let sizeId = ids[i].sizeId.toString()
+                        console.log(sizeId,">>>>> size udtrd");
+                        if(prodId == varientId){
+                            console.log("same");
+                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
+                                $inc: {Stock:-ids[i].quantity}, 
+                            
+                            },{session})   
+    
+                            await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},[{
+                             $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
+                        
+                             }],{session})
+                        }else{
+                            console.log("different");
+                          let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
+                                $inc: {'Variations.$[i].Data.$[j].Stock':-ids[i].quantity}, 
+                            
+                        },{arrayFilters:[
+                            {'j.id':new ObjectId(varientId)},{'i.id':new ObjectId(sizeId)}
+                            ],session},
+                            ) 
+
+                            if(varint){
+                                console.log("varient kjdnas",varint);
+                            }else{
+                                console.log(varint);
+                                console.log("noononononononononon");
+                            }
+                          let varei1= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(prodId)}, [
+                            {
+                              $set: {
+                                Variations: {
+                                  $map: {
+                                    input: '$Variations',
+                                    as: 'variation',
+                                    in: {
+                                      $mergeObjects: [
+                                        '$$variation',
+                                        {
+                                          Data: {
+                                            $map: {
+                                              input: '$$variation.Data',
+                                              as: 'data',
+                                              in: {
+                                                $cond: {
+                                                  if: { $eq: ['$$data.id',new ObjectId(varientId)] },
+                                                  then: {
+                                                    $mergeObjects: [
+                                                      '$$data',
+                                                      {
+                                                        inStock: {
+                                                          $cond: {
+                                                            if: { $lt: ['$$data.Stock', 1] },
+                                                            then: false,
+                                                            else: true
+                                                          }
+                                                        }
+                                                      }
+                                                    ]
+                                                  },
+                                                  else: '$$data'
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ],{session})
+                            
+                            if(varei1){
+                                console.log("varie qwj ",varei1);
+                            }
+                        }
+                        
+                        
+                        
+                        
+                        
+                    }
+                    
+                    console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+                    let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)},{session})
+                    console.log(`${deletecart.deletedCount} was /were deleted from cart collection `);
+    
+                }else{
+                    console.log("//////////////cancelled////");
+                    const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
+                        $set:{
+                            status:"Cancelled",
+                            PaymentStatus:"Payment not done ",
+    
+                        }
+                    },{session})
+                    console.log(`${orderCancelation.updatedCount} was/were cancelld due to transaction issues`);
+                }
+                
+    
+            },transactionOptions)
+    
+    
+            if(transactionResults && statuss=="placed" ){
+                // console.log(transactionResults);
+                console.log(`transaction suceeded`);
+                return success = true
+            }else if(transactionResults && statuss!="placed"){
+                console.log(`transaction not completed payment failed or other issue `);
+                error = `transaction not completed payment failed or other issue `
+                return error
+            }
+            else{
+                console.log(`transaction failed`)
+                error = `transaction failed`
+                return error
+            }
+        }
+        catch(e){
+            console.log("entere catch ta");
+            console.log(`${e}    error`);
+        }
+        finally{
+            session.endSession()
+            client.close()
+            console.log(`session closed`);
+            if(success){
+                console.log(success);
+                resolve (success)
+            }else{
+                console.log(error);
+                reject (error)
+                console.log("erro retun com");
+            }
+        }
+
+
+
+       }).
+       catch((err)=>{
+        throw err;
+       })
+
+          
+        
+       
+        
+       
+        
     })
+
 },
+
+
+
     generateRazorPay:(orderId,total)=>{
     return new Promise(async(resolve,reject)=>{
         console.log(total);
@@ -1284,223 +1509,7 @@ debitFromWallet:(orderId,total,user)=>{
     })
 },
 
-    placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userId)=>{
-        console.log(`paymetn motjog on trans ss  ${payment_method}`)
-        let error
-        let success
-        return new Promise(async(resolve,reject)=>{
-           const url=MONGODB
-
-           mongoClient.connect(url).then(async(client)=>{
-               console.log("Connected to MongoDB database!");
-
-
-
-                  const session = client.startSession();
-              const transactionOptions={
-                readPreference:'primary',
-                readConcern:{level:'local'},
-                writeConcern:{w:'majority'}
-            }
-
-
-            try{
-                let statuss 
-                console.log("here");
-                const transactionResults= await session.withTransaction(async()=>{
-               
-                    if(payment_method==="COD"){
-                        statuss= "placed"
-                    }else if(payment_method ==="wallet"){
-                        if(transactionId!==null){
-                            statuss= "placed"
-                        }
-                    } else if(payment_method ==="razorPay"){
-
-                        console.log(` pay meth ${payment_method}`);
-                        console.log(`razor pay trans ${transactionId}`);
-                        if(transactionId!==null){
-                            console.log("transiaction id is not null");
-                            statuss= "placed"
-                        }
-                    }
-                    else if(payment_method ==="paypal"){
-                        if(transactionId!==null){
-                            statuss= "placed"
-                        }
-                    }
-                            console.log(statuss,"statussus");
-                    const orderUpdation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
-                        $set:{
-                            status:statuss,
-                            PaymentStatus:PaymentStatus,
-                            transactionId:transactionId,
-                        }
-                    },{session})
-                    console.log(orderUpdation);
-        
-        
-        console.log(`status i s ${statuss}`);
-                    if(statuss ==="placed"){
-                        for(let i = 0;i<ids.length;i++){
-                            console.log(ids.length);
-                            let prodId = ids[i].prodId.toString()
-                            let varientId = ids[i].varientId.toString()
-                            let sizeId = ids[i].sizeId.toString()
-                            console.log(sizeId,">>>>> size udtrd");
-                            if(prodId == varientId){
-                                console.log("same");
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
-                                    $inc: {Stock:-ids[i].quantity}, 
-                                
-                                },{session})   
-        
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},[{
-                                 $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
-                            
-                                 }],{session})
-                            }else{
-                                console.log("different");
-                              let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(ids[i].prodId)},{
-                                    $inc: {'Variations.$[i].Data.$[j].Stock':-ids[i].quantity}, 
-                                
-                            },{arrayFilters:[
-                                {'j.id':new ObjectId(varientId)},{'i.id':new ObjectId(sizeId)}
-                                ],session},
-                                ) 
-
-                                if(varint){
-                                    console.log("varient kjdnas",varint);
-                                }else{
-                                    console.log(varint);
-                                    console.log("noononononononononon");
-                                }
-                              let varei1= await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(prodId)}, [
-                                {
-                                  $set: {
-                                    Variations: {
-                                      $map: {
-                                        input: '$Variations',
-                                        as: 'variation',
-                                        in: {
-                                          $mergeObjects: [
-                                            '$$variation',
-                                            {
-                                              Data: {
-                                                $map: {
-                                                  input: '$$variation.Data',
-                                                  as: 'data',
-                                                  in: {
-                                                    $cond: {
-                                                      if: { $eq: ['$$data.id',new ObjectId(varientId)] },
-                                                      then: {
-                                                        $mergeObjects: [
-                                                          '$$data',
-                                                          {
-                                                            inStock: {
-                                                              $cond: {
-                                                                if: { $lt: ['$$data.Stock', 1] },
-                                                                then: false,
-                                                                else: true
-                                                              }
-                                                            }
-                                                          }
-                                                        ]
-                                                      },
-                                                      else: '$$data'
-                                                    }
-                                                  }
-                                                }
-                                              }
-                                            }
-                                          ]
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              ],{session})
-                                
-                                if(varei1){
-                                    console.log("varie qwj ",varei1);
-                                }
-                            }
-                            
-                            
-                            
-                            
-                            
-                        }
-                        
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                        let deletecart =  await  db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)},{session})
-                        console.log(`${deletecart.deletedCount} was /were deleted from cart collection `);
-        
-                    }else{
-                        console.log("//////////////cancelled////");
-                        const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
-                            $set:{
-                                status:"Cancelled",
-                                PaymentStatus:"Payment not done ",
-        
-                            }
-                        },{session})
-                        console.log(`${orderCancelation.updatedCount} was/were cancelld due to transaction issues`);
-                    }
-                    
-        
-                },transactionOptions)
-        
-        
-                if(transactionResults && statuss=="placed" ){
-                    // console.log(transactionResults);
-                    console.log(`transaction suceeded`);
-                    return success = true
-                }else if(transactionResults && statuss!="placed"){
-                    console.log(`transaction not completed payment failed or other issue `);
-                    error = `transaction not completed payment failed or other issue `
-                    return error
-                }
-                else{
-                    console.log(`transaction failed`)
-                    error = `transaction failed`
-                    return error
-                }
-            }
-            catch(e){
-                console.log("entere catch ta");
-                console.log(`${e}    error`);
-            }
-            finally{
-                session.endSession()
-                client.close()
-                console.log(`session closed`);
-                if(success){
-                    console.log(success);
-                    resolve (success)
-                }else{
-                    console.log(error);
-                    reject (error)
-                    console.log("erro retun com");
-                }
-            }
-
-
-
-           }).
-           catch((err)=>{
-            throw err;
-           })
-
-              
-            
-           
-            
-           
-            
-        })
-    
-},
+   
 
 getSortedData:(option)=>{
     console.log("call is heere");

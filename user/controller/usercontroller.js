@@ -1022,6 +1022,7 @@ module.exports = {
         globalorderId = req.params.data
         // console.log(data);
       }else if(req.query.cancel){
+        
         res.json({ status: false , orderId:req.query.orderId});
       }
        else {
