@@ -1026,7 +1026,7 @@ module.exports = {
         globalorderId = req.params.data
         // console.log(data);
 
-      }else if(req.query.cancel){
+      }else if(req.query.orderId){
         console.log("here in cancel dkljdkfjl1!!!!!!!!!!!!!!!!!!!!");
         console.log(req.query.orderId);
         await userHelpers.deleteOrder(req.query.orderId).then((resp)=>{
