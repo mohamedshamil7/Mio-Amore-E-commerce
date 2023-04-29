@@ -827,12 +827,12 @@ console.log(typeof userId);
     if(Coupen){
         console.log("//bug chance...?????????????/////////////////////////////////");
 
-          await db.get().collection(collection.COUPEN_COLLECTION).updateOne({_id:Coupen},{
+          await db.get().collection(collection.COUPEN_COLLECTION).updateOne({_id:new ObjectId(Coupen)},{
            $inc: {totalCoupen:-1}
         })
          console.log(`coupen applied and and total couepen is updated`);
         let usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(userId)},{
-            $push:{usedcoupens:Coupen}
+            $push:{usedcoupens:{ Coupen_Id:new ObjectId(Coupen)}}
         },{upsert:true})
     }   
      /////////////////////////////////////////
@@ -907,47 +907,29 @@ console.log(typeof userId);
 })
 
 },
-            
-//         removeCartAfterOrder:(items,userId)=>{
+deleteOrder:(orderId)=>{
+    return new Promise(async(resolve,reject)=>{
+        let order = await db.get().collection(collection.ORDER_COLLECTION).findOneAndDelete({_id:new ObjectId(orderId)})
+        console.log("deleteed details :", order);
+        if(order.value){
+            let usersCoupen
+            console.log(order.value);
+            if(order.value.coupenId){
+                await db.get().collection(collection.COUPEN_COLLECTION).updateOne({_id:new ObjectId(order.value.coupenId)},{
+                    $inc: {totalCoupen:1}
+                 })
+                  usersCoupen = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(order.value.userId)},{
+                    $pull:{usedcoupens:{Coupen_Id:new ObjectId(order.value.coupenId)}}
 
-//     console.log("this is ccart",items);
-
-
-//     return new Promise(async(resolve,reject)=>{
-//         console.log("ullilkeri");
-//         for(let i =0;i<items.length;i++){
-//             console.log(";;");
-//             items[i].quantity=Number(items[i].quantity)
-//             await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},{
-//                 $inc: {Stock:-items[i].quantity}
-                 
-//              })
-
-
-//            await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:items[i].prod},[{
-//                $set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}, 
-//             }]).then(()=>{
-//                 console.log("herehhrehehhe");
-//                 // {$set:{inStock:{$cond:{if:{$lt:["$Stock",1]},then:false,else:true}}}}
-//                 db.get().collection(collection.CART_COLLECTION).deleteOne({user:new ObjectId(userId)}).then(()=>{
-//                     console.log("resolve stage");
-//                 resolve()
-//                  }).catch((error=>{
-//                     reject()
-//                  }))
-//             })
-//         }
-    
-
-
-            
-
+                },)
+                console.log(usersCoupen,";kkkkkkkk");
+            }
+        }else {
+            console.log("no roder val");
+        }
+    })
+},
         
-        
-//     })
-// },
-
-
     placeOrderTrans:async(order,transactionId,PaymentStatus,payment_method,ids,userId)=>{
     console.log("orderrrr", order);
     console.log(`paymetn motjog on trans ss  ${payment_method} `)
@@ -1602,7 +1584,7 @@ findCoupen:(code,userid)=>{
     return new Promise(async(resolve,reject)=>{
     Coupen = await db.get().collection(collection.COUPEN_COLLECTION).findOne({code:code})
      if(Coupen){
-     user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userid),usedcoupens:Coupen._id})
+     user = await db.get().collection(collection.USER_COLLECTION).findOne({_id:new ObjectId(userid),usedcoupens:{Coupen_Id:new ObjectId(Coupen._id)}})
 
      }
      console.log(user,"././,,,.");
@@ -1812,18 +1794,7 @@ check_quantity:(userId,data)=>{
         })
 },
 
-deleteOrder:(orderId)=>{
-    return new Promise(async(resolve,reject)=>{
-        let order = await db.get().collection(collection.ORDER_COLLECTION).findOneAndDelete({_id:new ObjectId(orderId)})
-        console.log("deleteed details :", order);
-        if(order.value){
-            console.log(order.value);
-            // resolve(true)
-        }else {
-            console.log("no roder value");
-        }
-    })
-}
+
 
 
 }

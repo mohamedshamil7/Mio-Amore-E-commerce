@@ -917,7 +917,9 @@ module.exports = {
         if (!req.body.Address) {
           res.status(404).json({ error: "Ha Ocurrido un error" });
           return;
-        }
+        }else{
+          
+        
         let user = stringify(req.body.userId);
 
         let id =new  ObjectId(req.body.userId);
@@ -1009,6 +1011,7 @@ module.exports = {
 
           console.log(`payment option selected is paypal`);
         }
+      }
       } else if (req.params.data) {
         // let data=  JSON.parse('{"' + decodeURI(req.params.data.replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')
         // console.log(data);
@@ -1050,9 +1053,6 @@ module.exports = {
             // res.json({status:'Payment Failed'})
           });
       }
-    } catch (e) {
-      console.log(e, "this is theerroro ");
-    } finally {
       const orderId = getOrderid();
       console.log(orderId,"orderId");
       // console.log(`${transactionId} is the transaction id wallet`);
@@ -1106,7 +1106,11 @@ module.exports = {
             console.log(e);
           });
       }
-    }
+    } catch (e) {
+      console.log(e, "this is theerroro ");
+    }  
+     
+    
 
     
   },
