@@ -945,7 +945,7 @@ module.exports = {
 
         const orderId = await userHelpers.placeOrder(req.body, products, total);
         globalorderId = orderId;
-        await userHelpers.deleteOrder(orderId)
+        // await userHelpers.deleteOrder(orderId)
 
         if (req.body.PaymentOption === "COD") {
           /// true ? false
@@ -1026,8 +1026,14 @@ module.exports = {
         globalorderId = req.params.data
         // console.log(data);
       }else if(req.query.cancel){
+        await userHelpers.deleteOrder(req.query.orderId).then((resp)=>{
+          if(resp.matchedCount){
+            res.json({ status: false });
 
-        res.json({ status: false , orderId:req.query.orderId});
+          }
+        }).catch(()=>{
+          console.log("some error ocuuered");
+        })
       }
        else {
         payment_method = "razorPay";

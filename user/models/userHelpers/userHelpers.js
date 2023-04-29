@@ -922,7 +922,12 @@ deleteOrder:(orderId)=>{
                     $pull:{usedcoupens:{Coupen_Id:new ObjectId(order.value.coupenId)}}
 
                 },)
-                console.log(usersCoupen,";kkkkkkkk");
+                if(usersCoupen.modifiedCount){
+                    resolve(usersCoupen)
+                    console.log(usersCoupen,";kkkkkkkk");
+                }else{
+                    reject()
+                }
             }
         }else {
             console.log("no roder val");
@@ -1086,14 +1091,19 @@ deleteOrder:(orderId)=>{
     
                 }else{
                     console.log("//////////////cancelled////");
-                    const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
-                        $set:{
-                            status:"Cancelled",
-                            PaymentStatus:"Payment not done ",
+                    // const orderCancelation = await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(order)},{
+                    //     $set:{
+                    //         status:"Cancelled",
+                    //         PaymentStatus:"Payment not done ",
     
-                        }
-                    },{session})
-                    console.log(`${orderCancelation.updatedCount} was/were cancelld due to transaction issues`);
+                    //     }
+                    // },{session})
+                    await this.deleteOrder(order).then((resp)=>{
+
+                        console.log(`${resp.modifiedCount} was/were deleted due to transaction issues`);
+                    }).catch(()=>{
+                        console.log("error occcuredd");
+                    })
                 }
                 
     
