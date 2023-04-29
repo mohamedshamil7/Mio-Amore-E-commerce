@@ -909,7 +909,7 @@ module.exports = {
 
 
     function getOrderid() {
-      return {globalorderId};
+      return globalorderId;
     }
 
     try {
@@ -943,6 +943,7 @@ module.exports = {
 
         const orderId = await userHelpers.placeOrder(req.body, products, total);
         globalorderId = orderId;
+        await userHelpers.deleteOrder(orderId)
 
         if (req.body.PaymentOption === "COD") {
           /// true ? false
@@ -1022,7 +1023,7 @@ module.exports = {
         globalorderId = req.params.data
         // console.log(data);
       }else if(req.query.cancel){
-        
+
         res.json({ status: false , orderId:req.query.orderId});
       }
        else {

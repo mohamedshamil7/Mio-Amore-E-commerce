@@ -898,8 +898,8 @@ console.log(typeof userId);
         // db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:ObjectId(response.insertedId)},{
         //     $set:{  'cart.$[].deliveryStatus':'Order Confirmed'},
         // },{ multi: true })
-        this.deleteOrder(response.insertedId)
-        // resolve(response.insertedId)
+
+        resolve(response.insertedId)
 
     }).catch((error)=>{
         console.log(error);
@@ -1816,11 +1816,12 @@ deleteOrder:(orderId)=>{
     return new Promise(async(resolve,reject)=>{
         let order = await db.get().collection(collection.ORDER_COLLECTION).findOneAndDelete({_id:new ObjectId(orderId)})
         console.log("deleteed details :", order);
-        // if(order.deletedCount){
-        //     resolve(true)
-        // }else {
-        //     reject(false)
-        // }
+        if(order.value){
+            console.log(order.value);
+            // resolve(true)
+        }else {
+            console.log("no roder value");
+        }
     })
 }
 
