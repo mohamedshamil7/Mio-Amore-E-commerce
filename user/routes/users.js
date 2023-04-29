@@ -81,33 +81,33 @@ router.get('/getImage/:id',imageRoute)
 
 router.get("/wishlistPage",nocache,autherization,wishlistPage)
 
-router.get("/addToWishlist/:id",addToWishlist)
+router.get("/addToWishlist/:id",autherization,addToWishlist)
 
 router.post('/phone-submit',findbynumber)
 
-router.post('/addToCart',addToCart)
+router.post('/addToCart',autherization,addToCart)
 
 router.get('/usercart',nocache,autherization,getCart)
 
-router.post('/removeCart',removeCart)
+router.post('/removeCart',autherization,removeCart)
 
-router.post('/changeProductQuantity',changeProductQuantity)
+router.post('/changeProductQuantity',autherization,changeProductQuantity)
 
 router.get('/checkout',nocache,autherization,checkoutPage)
 
-router.post('/addAddress',nocache,addAddress)
+router.post('/addAddress',nocache,autherization,addAddress)
 
 router.get('/shop',nocache,autherization,shopProducts)
 
 router.post('/placeOrder',nocache,autherization,placeOrder)
 router.get('/placeOrder/:data',nocache,autherization,placeOrder)
 
-router.post('/verifyPayment',verifyPayment)
+router.post('/verifyPayment',autherization,verifyPayment)
 
 router.get('/orderSuccess',nocache,autherization,orderSuccess)
 router.get("/profile",nocache,autherization,renderProfilePage)
 
-router.get("/loginwithOtpPage",nocache,loginWtihOtpPage),
+router.get("/loginwithOtpPage",nocache,autherization,loginWtihOtpPage),
 
 
 router.post("/otpVerification",nocache,otpVerification),
@@ -123,7 +123,7 @@ router.post("/sort",nocache,autherization,sortShop)
 router.post("/changeCategory",nocache,autherization,filterCategory)
 router.post("/checkCoupen",nocache,autherization,checkCoupen)
 router.post("/search",nocache,search)
-router.delete("/deleteAdd",nocache,delAddress)
+router.delete("/deleteAdd",nocache,autherization,delAddress)
 router.get('/viewOrderDetails/:id',nocache,autherization,viewOrderDetails)
 router.get('/gotoReview/:id',nocache,autherization,renderReviewPage)
 router.post('/addReview',nocache,autherization,addReview),
