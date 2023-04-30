@@ -784,7 +784,7 @@ module.exports = {
       console.log("error");
     })
 
-    let limit = 3
+    let limit = 8
     let dbQuery={Availability:true}
     let pageNo
     let sortOrder={}
@@ -1598,13 +1598,47 @@ module.exports = {
       res.json({status:true})
     })
   },
-  search:(req,res)=>{
-    userHelpers.searchProduct(req.body.data).then((products)=>{
-      res.json(products)
-    }).catch(()=>{
-      console.log("product not found");
-      res.json(false)
+
+  
+  search:async(req,res)=>{
+
+    let payload=req.body.e.trim()
+    console.log(payload);
+
+    await userHelpers.searchProduct(payload).then(async(data)=>{
+      console.log(data,"///;///;.")
+
+      async function processImages(Data) {
+        for (let i = 0; i < Data.length; i++) {
+  
+            if (Data[i].Image1) {
+    
+              Data[i].urlImage1 = await getImgUrl(
+                Data[i].Image1
+              );
+            }
+            // console.log("image 1 :", Data.cart[i].Image1);
+            // console.log("Data[i].urlImage1:", Data.cart[i].urlImage1);
+          
+        }
+        console.log("Data:", Data);
+        return Data;
+      }
+
+      let datas =await  processImages(data)
+
+        res.json(datas)
     })
+
+
+
+
+    // userHelpers.searchProduct(req.body.data).then((products)=>{
+    //   res.json(products)
+    // }).catch(()=>{
+    //   console.log("product not found");
+    //   res.json(false)
+    // })
   },
 
 

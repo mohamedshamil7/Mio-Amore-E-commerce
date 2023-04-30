@@ -1684,12 +1684,14 @@ getAllCoupens:()=>{
        }
     })
 },
+
+
 searchProduct:(data)=>{
     return new Promise(async(resolve,reject)=>{
-        const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({ $text: { $search: data } }).toArray()
-        if(product.length!=0){
-            console.log(product);
-            // resolve(product)
+        const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({ ProductName: { $regex:`.*${data}*`,$options:'i' } }).toArray()
+        if(product){
+            console.log(product,"/////");
+            resolve(product)
         }else{
             reject()
         }

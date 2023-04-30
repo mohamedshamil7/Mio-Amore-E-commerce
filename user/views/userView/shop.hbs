@@ -53,7 +53,10 @@
     <section class="section-b-space shop-section">
         <div class="container-fluid-lg">
             <div class="row">
+                   
+                
                 <div class="col-custome-3">
+                     
                     <div class="left-box wow fadeInUp">
                         <div class="shop-left-sidebar">
                             <div class="back-button">
@@ -226,12 +229,52 @@
                     </div>
                 </div> 
 
+                <style>
+                    .sugBar{
+                        width: 1200px;
+                    margin: auto;
+                    margin-top: 3rem;
+                    {{!-- background: rgb(255,110,0); --}}
+                        {{!-- background: linear-gradient(90deg, rgba(255,110,0,1) 0%, rgba(255,176,0,1) 100%); --}}
+                }
+                </style>
+
                 <div class="col-custome-9">
                     <div class="show-button">
                         <div class="filter-button-group mt-0">
                             <div class="filter-button d-inline-block d-lg-none">
                                 <a><i class="fa-solid fa-filter"></i> Filter Menu</a>
                             </div>
+                        </div>
+                       
+                        {{!-- <style>
+
+                        </style> --}}
+
+
+                         <div class="search-shop-page">
+                        <div class="search-full">
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i data-feather="search" class="font-light"></i>
+                                        </span>
+
+                                        <input type="text" id="search_input" class="form-control search-type" placeholder="Search here..">
+                                        <span class="input-group-text close-search">
+                                            <i onclick="closeSearch()" data-feather="x" class="font-light"></i>
+                                        </span>
+
+                                    </div>
+                                </div>
+
+                                 <div  id="searchData" class="sugBar">
+                <div class="nothing " id="nothing" style="display: none;">
+                    <h2 style="text-align: center;"> No results found</h2>
+                    </div>
+                    <div id="search_div">
+
+                    </div>
+                </div>
                         </div>
 
                         <div class="top-filter-menu">
@@ -240,7 +283,7 @@
                                 <h5 class="text-content">Sort By :</h5>
                                     <div class="dropdown-center">
                                 
-                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     sort
                                 </button>
                                 <ul class="dropdown-menu">
@@ -248,18 +291,18 @@
                                     <li><a class="dropdown-item" onclick="sort('-1')"> Price : high To low</a></li>
 
                                 </ul>
-
-
-                          
-
-
-                              
-                                
+                                </div>
+   
                             </div>
+
+                           
+                           
+
 
 
                             
                         </div>
+                         
 
                     </div>
 
@@ -373,6 +416,16 @@
     }
 
 
+    function clearAll(){
+        let url = new URL(window.location.href)
+        if (url.searchParams && url.searchParams.toString()) {
+            url.search = '';
+            {{!-- const newUrl = url.href; --}}
+            location.href = url;
+        }
+    }
+
+
 
 </script>
 
@@ -408,15 +461,6 @@
         }
     }
 
-        function clearAll(){
-        let url = new URL(window.location.href)
-        if (url.searchParams && url.searchParams.toString()) {
-            url.search = '';
-            {{!-- const newUrl = url.href; --}}
-            location.href = url;
-        }
-    }
-
 
 
 
@@ -440,41 +484,9 @@
 </script>
 
 <script>
-    function searchProd() {
-        
-        let name = document.getElementById('SearchProd').value
-        {{!-- let data = document.getElementById('mobile').value --}}
-        if(name == ''){
-            name = data
-        }
-        console.log(name)
-        $.ajax({
-            url: '/search',
-            data: {
-                data: name
-            },
-            method: 'post',
-            success: (response => {
-                if(response){
-                $(function () {
-                    $('#watchButton').click();
-                });
-                document.getElementById('result').style.display='block'
-                document.getElementById('error').style.display = 'none'
-                document.getElementById('bookname').innerHTML = response[0].bookname
-                document.getElementById('author').innerHTML = response[0].authorname
-                document.getElementById('image').setAttribute('src', `/book-image/${response[0]._id}.jpg`)
-                document.getElementById('hr').setAttribute('href', `/view-product/${response[0]._id}`)
-                console.log(response)
-                }else{
-                    $(function () {
-                    $('#watchButton').click();
-                });
-                document.getElementById('result').style.display='none'
-                document.getElementById('error').innerHTML = "No books found"
-                }
-            })
-        })
+    function closeSearch(){
+        document.getElementById('searchData').style.display = "none"
+        document.getElementById('search_input').value = ''
     }
     $(function () {
         var $overlay = $('.overlay'),
@@ -491,4 +503,78 @@
             $overlay.removeClass(openClass);
         });
     });
+</script>
+
+
+
+
+<script>
+
+
+  function debounce(fn, delay) {
+    let timeOutId;
+    return function (...args) {
+      if (timeOutId) {
+        clearTimeout(timeOutId)
+      }
+      timeOutId = setTimeout(() => {
+        fn(...args);
+      }, delay)
+    }
+  }
+  const searchData = document.getElementById('search_input')
+  searchData.addEventListener('keyup', debounce(async () => {
+    const div=document.getElementById('search_div')
+    const e = document.getElementById('search_input').value
+    if (!e) {
+      div.innerHTML = '';
+      document.getElementById('startfirst').classList.remove('d-none');
+    } else {
+        let res
+        $.ajax({
+            url: '/search',
+             method: 'POST',
+              data: { e },
+              success:(result)=>{
+                 res = result 
+                alert(res)
+
+                       {{!-- const res = result.data.search --}}
+                console.log(res)
+                div.innerHTML = '';
+                if (res.length < 1) {
+                    document.getElementById('nothing').style.display="flex";
+                    return;
+                } else {
+                     document.getElementById('nothing').style.display="none";
+                    console.log(res)
+                    res.forEach((item) => {
+
+                    div.innerHTML += `<div class="row align-items-center position-relative">
+                    <div>
+                        <a href="/view-product/${item._id}">
+                        <img class="img-fluid searchImage" src=${item.urlImage1} width=50 alt="..." style=>
+                        </a>
+                    </div>
+                    <div class="col position-static">
+                        <p class="mb-0 fw-bold">
+                        <a class="stretched-link text-body" href="/product/${item._id}">${item.ProductName}</a> <br>
+                        <span class="text" style="color:#00234d;">₹${item.Price}</span>
+                        </p>
+                            </div>
+                        </div>`
+
+                    });
+                    return;
+                }  
+              }
+        })
+
+
+    }
+  }, 500))
+
+
+
+
 </script>
