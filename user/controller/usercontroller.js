@@ -1757,6 +1757,8 @@ module.exports = {
             console.log("email ok");
           }else {
             console.log("syntax error");
+            let error = 'invalid syntax '
+            res.status(404).json({ error: error });
             return
           }
         }if (req.body.password){
