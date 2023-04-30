@@ -8,26 +8,30 @@
                 <div class="row mb-3">
   <label for="inputText" class="col-sm-2 col-form-label fw-bold">Product Name</label>
   <div class="col-sm-4">
-    <input type="text" name="ProductName" class="form-control">
+    <input type="text" name="ProductName" oninput="validateName()" id="ProductName" class="form-control">
+    <span id="ProductNameError" style="color: red;"></span>
   </div>
 </div>
 
 <div class="row mb-3">
   <label class="col-sm-2 col-form-label fw-bold">Brand</label>
   <div class="col-sm-4">
-    <select class="form-select" name="Company" aria-label="Default select example">
+    <select class="form-select" name="Company" aria-label="Default select example" required>
       <option selected disabled>Choose brand</option>
       {{#each brands}}
-      <option value="{{this.brandName}}">{{this.brandName}}</option> 
+      <option value="{{this.brandName}}">{{this.brandName}}</option > 
       {{/each}}
     </select>
+        <span id="brandError" style="color: red;"></span>
+
   </div>
 </div>
 
                  <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">MRP</label>
                   <div class="col-sm-4">
-                    <input type="number" name="MRP" id="MRP" class="form-control">
+                    <input type="number" oninput="validateMRP()" id="MRP" name="MRP" id="MRP" class="form-control">
+                        <span id="MRPerror" style="color: red;"></span>
                   </div>
                   <span id="mrp-error"></span>
                 </div>
@@ -35,7 +39,9 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Selling Price</label>
                   <div class="col-sm-4">
-                    <input type="number" name="Price" class="form-control">
+                    <input type="number" oninput="validatePrice()" id="Price" name="Price" class="form-control">
+
+                  <span id="Price-error"></span>
                   </div>
                 </div>
             <div class="row mb-3">
@@ -72,13 +78,14 @@
                 <div class="row mb-3">
                   <label for="inputDate" class="col-sm-2 col-form-label fw-bold">Manufacturing Date</label>
                   <div class="col-sm-4">
-                    <input type="date" name="ManufacturingDate" class="form-control">
+                    <input type="date" oninput="validatemanufacturingDate()" id="ManufacturingDate" name="ManufacturingDate" class="form-control">
+                    <span id="ManufacturingDateError"></span>
                   </div>
                 </div>
                <div class="row mb-3">
                   <label class="col-sm-2 col-form-label fw-bold">Category</label>
                   <div class="col-sm-4">
-                    <select class="form-select"name="category" aria-label="Default select example">
+                    <select class="form-select"name="category" aria-label="Default select example" required>
                       <option selected>select Category</option>
                       {{#each categories}}
                       <option value="{{this.categoryName}}">{{this.categoryName}}</option>
@@ -91,7 +98,8 @@
               <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Size</label>
                   <div class="col-sm-4">
-                    <input type="text" name="Size" class="form-control">
+                    <input oninput="validateSize()" type="text" id="Size" name="Size" class="form-control">
+                    <span id="Size-error"></span>
                   </div>
                 </div>
 
@@ -99,7 +107,8 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Color</label>
                   <div class="col-sm-4">
-                    <input type="text" name="Color" class="form-control">
+                    <input oninput="validateColor()" type="text" id="Color" name="Color" class="form-control">
+                    <span id="Color-error"></span>
                   </div>
                 </div>
 
@@ -108,7 +117,8 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">Stock</label>
                   <div class="col-sm-4">
-                    <input type="number" name="Stock" class="form-control">
+                    <input type="number" oninput="validateStock()" id="Stock" name="Stock" class="form-control">
+                    <span id="Stock-error"></span>
                   </div>
                 </div>
                 <div class="row mb-5">
@@ -130,13 +140,42 @@
                 <div class="row mb-3">
                   <label for="inputPassword" class="col-sm-2 col-form-label fw-bold">Description</label>
                   <div class="col-sm-6">
-                    <textarea class="form-control" name="Description" style="height: 100px"></textarea>
+                    <textarea class="form-control" oninput="validateDescription()" id="Description" name="Description" style="height: 100px"></textarea>
+                    <span id="Description-error"></span>
                   </div>
                 </div>
+
+
+              <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">KeyWord 1</label>
+                  <div class="col-sm-4">
+                    <input type="text" id="Keyword1" oninput="validatekeyWord1()" name="Keyword1" class="form-control">
+                    <span id="Keyword1-error"></span>
+                  </div>
+                </div>
+
+                          <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">KeyWord 2</label>
+                  <div class="col-sm-4">
+                    <input type="text" id="Keyword2" oninput="validatekeyWord2()" name="Keyword2" class="form-control">
+                    <span id="Keyword2-error"></span>
+                  </div>
+                </div>
+
+                      <div class="row mb-3">
+                  <label for="inputNumber"  class="col-sm-2 col-form-label fw-bold">KeyWord 3</label>
+                  <div class="col-sm-4">
+                    <input type="text" id="Keyword3" oninput="validatekeyWord3()" name="Keyword3" class="form-control">
+                    <span id="Keyword3-error"></span>
+                  </div>
+                </div>
+
+
+
                 <div class="row mb-3">
                   {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
                   <div class="col-sm-4 col-form-label ">
-                    <button type="submit" class="btn btn-primary">Add Product</button>
+                    <button type="submit" onclick="checkAll()" class="btn btn-primary">Add Product</button>
                   </div>
                 </div>
 
@@ -144,3 +183,5 @@
         </div>
     </div>
 </section>
+
+<script src="/admin/javascripts/product-validate.js"></script>
