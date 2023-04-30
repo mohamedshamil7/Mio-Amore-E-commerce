@@ -196,6 +196,7 @@ module.exports = {
     let banner1
     let banner2
     let banner3
+    let dbQuery={Availability:true}
     // console.log(cart);
     let banner = await userHelpers.getallBanners()
     async function processImagesd(Data) {
@@ -235,7 +236,7 @@ module.exports = {
     console.log("banners ", banner3);
     let count = await CartCount(req);
     await userHelpers
-      .getAllProducts()
+      .getAllProducts(dbQuery)
       .then((prodData) => {
         datas = prodData;
       })
@@ -771,11 +772,38 @@ module.exports = {
     let walletData = await wallet(req);
     let dataCount = null;
     let categories = null;
+    let brands = null
+    let AllProducts
     await userHelpers.getAllCategories().then((cat) => {
       categories = cat;
     });
+
+    await userHelpers.getAllBrands().then((brand)=>{
+      brands = brand;
+    }).catch((err)=>{
+      console.log("error");
+    })
+
+    let limit = 3
+    let dbQuery={Availability:true}
+    let pageNo
+    let sortOrder={}
+    if(req.query.p){
+      pageNo = req.query.p - 1 || 0;
+    }else{
+      pageNo= 0
+    }
+    if(req.query.category){
+      dbQuery.category = req.query.category;
+    }
+    if(req.query.brand){
+      dbQuery.Company = req.query.brand;
+    }if(req.query.sort){
+      sortOrder = {Price:parseInt(req.query.sort)}
+    }
+
     await userHelpers
-      .getAllProducts()
+      .getAllShopProducts(dbQuery,pageNo,sortOrder,limit)
       .then((datas) => {
         dataCount = datas;
       })
@@ -783,14 +811,25 @@ module.exports = {
         console.log(err);
         console.log("didtn get my all Products");
       });
+
+ await userHelpers.getAllProducts(dbQuery).then((data)=>{
+  AllProducts = data.all
+ })
+    console.log(AllProducts.length ,"kdfoifiiidididiiidiid");
+    let m = AllProducts.length/limit
+    let max = Math.ceil(m)
+    let page = []
+    for (let i =1 ; i<=max;i++){
+      page.push(parseInt(i))
+    }
+    pageNo = parseInt(pageNo+1)
+
+     
     console.log(dataCount);
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
-          // console.log(";;;;;fjf");
-          // console.log("image 1 :", data[i].Image1);
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
-          // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
       }
       console.log("Data:", data);
@@ -809,6 +848,9 @@ module.exports = {
       total,
       walletTotal: walletData.total,
       categories,
+      page,
+      pageNo,
+      brands
     });
   },
 

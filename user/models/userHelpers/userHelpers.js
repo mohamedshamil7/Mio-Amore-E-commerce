@@ -114,10 +114,35 @@ module.exports={
         })
      },
 
-     getAllProducts:()=>{
+     getAllProducts:(dbQuery)=>{
+        console.log("////kkr");
         return new Promise(async(resolve,reject)=>{
             try{
-                let all = await db.get().collection(collection.PRODUCT_COLLECTIONS).find().toArray()
+                let all = await db.get().collection(collection.PRODUCT_COLLECTIONS).find(dbQuery).toArray()
+
+                if(all){
+                    let data={
+                        all:all
+                    }
+                    console.log(data);
+                    resolve(data)
+                }
+                else{
+                    console.log("all selse worked");
+                    reject()
+                }
+            }
+            catch(err){
+                console.log(err);
+
+            }
+        })
+     },
+
+     getAllShopProducts:(dbQuery,pageNo,sortOrder,limit)=>{
+        return new Promise(async(resolve,reject)=>{
+            try{
+                let all = await db.get().collection(collection.PRODUCT_COLLECTIONS).find(dbQuery).sort(sortOrder).skip(pageNo*limit).limit(limit).toArray()
 
                 if(all){
                     let data={
@@ -136,6 +161,9 @@ module.exports={
             }
         })
      },
+
+
+
      viewProduct:(prodid)=>{
         console.log("enttered");
         return new Promise(async(resolve,reject)=>{
@@ -1563,6 +1591,19 @@ getAllCategories:()=>{
 
         if(categories){
             resolve(categories)
+        }
+        else{
+            reject(err)
+        }
+    })
+},
+
+getAllBrands:()=>{
+    return new Promise(async(resolve,reject)=>{
+        let brands= await  db.get().collection(collection.BRAND_COLLECTION).find().toArray()
+
+        if(brands){
+            resolve(brands)
         }
         else{
             reject(err)

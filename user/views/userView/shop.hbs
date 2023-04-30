@@ -62,8 +62,8 @@
 
                             <div class="filter-category">
                                 <div class="filter-title">
-                                    {{!-- <h2>Filters</h2> --}}
-                                    {{!-- <a href="javascript:void(0)">Clear All</a> --}}
+                                    <h2>Filters</h2>
+                                    <a onclick="clearAll()">Clear All</a>
                                 </div>
                                 {{!-- <ul>
                                     <li>
@@ -106,10 +106,10 @@
                                             <ul class="category-list custom-padding custom-height">
                                                     {{#each categories}}
                                                 <li>
-                                                    <form action="/changeCategory" method="post">
-                                                        <input type="text" name="name" id="" value="{{this.categoryName}}" hidden>
-                                                        <button style="border: none;"  type="submit">{{this.categoryName}}</button>
-                                                    </form>
+                                                    
+                                                        {{!-- <input type="text" name="name" id="" value="{{this.categoryName}}" hidden> --}}
+                                                        <button style="border: none;" onclick="selectCategory('{{this.categoryName}}')"  type="button">{{this.categoryName}}</button>
+
                                               
                                                     {{/each}}
                                                 </li>
@@ -145,6 +145,79 @@
                                             {{/if}}
                                         </div>
                                     </div>
+
+
+
+
+                                    
+                                    
+                                  </div>
+
+
+
+
+                                  <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne">
+                                            <span>Brands</span>
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingOne">
+                                        <div class="accordion-body">
+                                     
+
+                                                    {{#if brands}}
+                                            <ul class="category-list custom-padding custom-height">
+                                                    {{#each brands}}
+                                                <li>
+                                                    
+                                                        {{!-- <input type="text" name="name" id="" value="{{this.categoryName}}" hidden> --}}
+                                                        <button style="border: none;" onclick="selectbrand('{{this.brandName}}')"  type="button">{{this.brandName}}</button>
+
+                                              
+                                                    {{/each}}
+                                                </li>
+                                                {{!-- <li>
+                                                    <div class="form-check ps-0 m-0 category-list-box">
+                                                        <input class="checkbox_animated" type="checkbox" id="cake">
+                                                        <label class="form-check-label" for="cake">
+                                                            <span class="name">Bakery, Cake & Dairy</span>
+                                                            <span class="number">(12)</span>
+                                                        </label>
+                                                    </div>
+                                                </li> --}}
+                                                {{!-- <li>
+                                                    <div class="form-check ps-0 m-0 category-list-box">
+                                                        <input class="checkbox_animated" type="checkbox" id="behe">
+                                                        <label class="form-check-label" for="behe">
+                                                            <span class="name">Beverages</span>
+                                                            <span class="number">(20)</span>
+                                                        </label>
+                                                    </div>
+                                                </li> --}}
+                                                {{!-- <li>
+                                                    <div class="form-check ps-0 m-0 category-list-box">
+                                                        <input class="checkbox_animated" type="checkbox" id="snacks">
+                                                        <label class="form-check-label" for="snacks">
+                                                            <span class="name">Snacks & Branded Foods</span>
+                                                            <span class="number">(05)</span>
+                                                        </label>
+                                                    </div>
+                                                </li> --}}
+                                            
+                                            </ul>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+
+
+
+
+                                    
+                                    
                                   </div>
 
                                
@@ -165,16 +238,20 @@
                                 
                             <div class="category-dropdown">
                                 <h5 class="text-content">Sort By :</h5>
-                                        <form action="/sort" method="post">
-                                    <div class="dropdown">
-                                <select name="opt">
-                                    <option class="dropdown-item" value="low">  Low - High</option>
-                                    <option  class="dropdown-item" value="high">  High - Low</option>
-                                    {{!-- <option value="price">price</option> --}}
-                                </select>
-                                <button style="display: block; float: right; margin-left: 10px;" type="submit" class="btn btn-primary btn-sm ">Sort</button>
-                          </div>
-                            </form>
+                                    <div class="dropdown-center">
+                                
+                            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    sort
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" onclick="sort('1')" >Price : low To high</a></li>
+                                    <li><a class="dropdown-item" onclick="sort('-1')"> Price : high To low</a></li>
+
+                                </ul>
+
+
+                          
+
 
                               
                                 
@@ -264,25 +341,14 @@
 
                     <nav class="custome-pagination">
                         <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-disabled="true">
-                                    <i class="fa-solid fa-angles-left"></i>
-                                </a>
-                            </li>
+                       
+                            {{#each page}}
                             <li class="page-item active">
-                                <a class="page-link" href="javascript:void(0)">1</a>
+                                <a class="page-link" onclick="page('{{this}}')">{{this}}</a>
                             </li>
-                            <li class="page-item" aria-current="page">
-                                <a class="page-link" href="javascript:void(0)">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">
-                                    <i class="fa-solid fa-angles-right"></i>
-                                </a>
-                            </li>
+                            {{/each}}
+                           
+                    
                         </ul>
                     </nav>
                 </div>
@@ -290,7 +356,88 @@
         </div>
     </section>
     <!-- Shop Section End -->
+<script>
+  function  selectCategory(category){
+    alert(category)
+        let url = new URL(window.location.href)
+        alert(url)
+        if(url.searchParams && url.searchParams.has('category')){
 
+            url.searchParams.set('category',category)
+            alert(url)
+               location.href = url
+        }else {
+            url.searchParams.set('category',category)
+            location.href = url
+        }
+    }
+
+
+
+</script>
+
+<script>
+    function sort(val){
+
+         let url = new URL(window.location.href)
+         alert(url)
+         if(url.searchParams && url.searchParams.has('sort')){
+
+            url.searchParams.set('sort',val)
+            alert(url)
+               location.href = url
+        }else {
+            url.searchParams.set('sort',val)
+            location.href = url
+        }
+    }
+
+
+
+    function page(val){
+        let url = new URL(window.location.href)
+         alert(url)
+         if(url.searchParams && url.searchParams.has('p')){
+
+            url.searchParams.set('p',val)
+            alert(url)
+               location.href = url
+        }else {
+            url.searchParams.set('p',val)
+            location.href = url
+        }
+    }
+
+        function clearAll(){
+        let url = new URL(window.location.href)
+        if (url.searchParams && url.searchParams.toString()) {
+            url.search = '';
+            {{!-- const newUrl = url.href; --}}
+            location.href = url;
+        }
+    }
+
+
+
+
+
+
+
+    function selectbrand(brand){
+        let url = new URL(window.location.href)
+         alert(url)
+         if(url.searchParams && url.searchParams.has('brand')){
+
+            url.searchParams.set('brand',brand)
+            alert(url)
+               location.href = url
+        }else {
+            url.searchParams.set('brand',brand)
+            location.href = url
+        }
+    }
+
+</script>
 
 <script>
     function searchProd() {
