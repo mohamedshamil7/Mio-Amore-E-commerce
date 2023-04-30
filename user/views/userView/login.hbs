@@ -183,9 +183,9 @@
                         </div>
 
                         <div class="input-box">
-                            <form class="row g-4" action="/login-submit" method="post">
+                            <form class="row g-4" action="/login-submit" method="post" id="loginEmailForm">
                                 <div class="col-12">
-                                    <span style="color: red;">{{errorMessage}}</span>
+                                    <span id="errorMessage" style="color: red;">{{errorMessage}}</span>
                                     <div class="form-floating theme-form-floating log-in-form">
                                         <input type="email" class="form-control"  name="email" id="s-email" oninput="validateEmail()" placeholder="Email Address">
                                         <label for="email">Email Address</label>
@@ -267,3 +267,33 @@
 
 
     <script  type="module" src="../javascripts/firebase-google.js"></script>
+
+
+    <script>
+
+$("#loginEmailForm").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/login-submit",
+         data:$('#loginEmailForm').serialize(),
+           method:'post',
+           success:(response)=>{
+            if(response.status==true){
+                location.href='/home'
+            }else if(response.status==false){
+                document.getElementById("errorMessage").value = response.errorMessage
+
+            }
+           } ,error:(xhr, thrownError)=>{
+        console.log("isdda")
+        Swal.fire({
+            icon: 'error',
+            title: thrownError,
+            // text: 'Something went wrong!',
+           
+          })
+    }
+    })
+})
+
+    </script>

@@ -27,6 +27,7 @@ paypal.configure({
 
 
 const { stringify } = require("querystring");
+const { log } = require("console");
 
 
 const bucketname = process.env.BUCKET_NAME
@@ -339,12 +340,13 @@ module.exports = {
         res.status(201);
         console.log(token);
 
-        next();
+        res.json({status:true})
       })
       .catch((err) => {
-        res.render("userView/login", {
-          errorMessage: "Incorrect emailId or Password",
-        });
+        res.json({status:false, errorMessage: "Incorrect emailId or Password",})
+        // res.render("userView/login", {
+        //   errorMessage: "Incorrect emailId or Password",
+        // });
         console.log("error ducring login");
         console.log(err);
       });
@@ -1750,12 +1752,25 @@ module.exports = {
 
       if(req.body){
         if(req.body.email){
-          if(emailRegex.test(req.body.email) && sanitize.test(req.body.email)){
+          if(emailRegex.test(req.body.email)){
             ok=true
+            console.log("email ok");
           }else {
-
+            console.log("syntax error");
+            return
+          }
+        }if (req.body.password){
+          console.log(req.body.password);
+          if(sanitize.test(req.body.password)){
+            console.log("invalid syntax password");
+            let error = 'invalid syntax password'
+            res.status(404).json({ error: error });
+            return
+          }else{
+            ok = true
           }
         }
+        next()
       }
   },
 

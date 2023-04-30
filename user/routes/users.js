@@ -53,7 +53,8 @@ const {
   addReview,
   VariationSelect,
   check_quantity,
-  deleteOrder
+  deleteOrder,
+  regexCheck
 
 } = require("../controller/usercontroller");
 
@@ -65,7 +66,7 @@ router.get('/login',nocache,homeJwtCheck,renderLogin)
 // router.get("/otplogin",otppage)
 // router.post("/otp-submit",otpcheck)
 
-router.post('/login-submit',userLoginroute,redirectHome)
+router.post('/login-submit',regexCheck,userLoginroute,redirectHome)
 router.get("/logout",nocache,userLogout)
 
 router.get('/signup',nocache,renderSignup,renderHome)
