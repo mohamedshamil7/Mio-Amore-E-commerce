@@ -403,11 +403,11 @@
   function  selectCategory(category){
     alert(category)
         let url = new URL(window.location.href)
-        alert(url)
+
         if(url.searchParams && url.searchParams.has('category')){
 
             url.searchParams.set('category',category)
-            alert(url)
+
                location.href = url
         }else {
             url.searchParams.set('category',category)
@@ -433,11 +433,11 @@
     function sort(val){
 
          let url = new URL(window.location.href)
-         alert(url)
+
          if(url.searchParams && url.searchParams.has('sort')){
 
             url.searchParams.set('sort',val)
-            alert(url)
+
                location.href = url
         }else {
             url.searchParams.set('sort',val)
@@ -449,11 +449,11 @@
 
     function page(val){
         let url = new URL(window.location.href)
-         alert(url)
+
          if(url.searchParams && url.searchParams.has('p')){
 
             url.searchParams.set('p',val)
-            alert(url)
+
                location.href = url
         }else {
             url.searchParams.set('p',val)
@@ -469,11 +469,11 @@
 
     function selectbrand(brand){
         let url = new URL(window.location.href)
-         alert(url)
+
          if(url.searchParams && url.searchParams.has('brand')){
 
             url.searchParams.set('brand',brand)
-            alert(url)
+
                location.href = url
         }else {
             url.searchParams.set('brand',brand)
