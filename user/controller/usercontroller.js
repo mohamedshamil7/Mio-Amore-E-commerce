@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const userHelpers = require("../models/userHelpers/userHelpers");
 const { ObjectId } = require("mongodb");
-
+const {check , validationResult} = require('express-validator')
 
 require("dotenv").config();
 
@@ -343,7 +343,7 @@ module.exports = {
         res.json({status:true})
       })
       .catch((err) => {
-        res .json({status:false, errorMessage: "Incorrect emailId or Password",})
+        res.json({status:false, errorMessage: "Incorrect emailId or Password",})
         // res.render("userView/login", {
         //   errorMessage: "Incorrect emailId or Password",
         // });
@@ -1761,20 +1761,58 @@ module.exports = {
             res.status(404).json({ error: error });
             return
           }
-        }if (req.body.password){
+        }if (req.body.password ){
           console.log(req.body.password);
           if(sanitize.test(req.body.password)){
-            console.log("invalid syntax password");
-            let error = 'invalid syntax password'
+            console.log("invalid syntax ");
+            let error = 'invalid syntax '
+            res.status(404).json({ error: error });
+            return
+          }else{
+            ok = true
+          }
+        }if(req.body.username){
+          if(sanitize.test(req.body.username)){
+            console.log("invalid syntax ");
+            let error = 'invalid syntax '
+            res.status(404).json({ error: error });
+            return
+          }else{
+            ok = true
+          }
+
+        }if(req.body.phone){
+          if(sanitize.test(req.body.phone)){
+            console.log("invalid syntax ");
+            let error = 'invalid syntax '
             res.status(404).json({ error: error });
             return
           }else{
             ok = true
           }
         }
+        
         next()
       }
   },
+
+  loginVal:[
+    check('email').isEmail().withMessage('Email is not valid'),
+    check('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long')
+    .customSanitizer((value) => {
+      return value.trim().replace(/[$%^!#()]/g, '');
+    }),
+    
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    },
+  
+ 
+],
 
 
   deleteOrder:async(req,res)=>{

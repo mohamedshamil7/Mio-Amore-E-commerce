@@ -185,7 +185,7 @@
                         <div class="input-box">
                             <form class="row g-4" action="/login-submit" method="post" id="loginEmailForm">
                                 <div class="col-12">
-                                    <span id="errorMessage" style="color: red;">{{errorMessage}}</span>
+                                    <span id="errorMessageLogin" style="color: red;"></span>
                                     <div class="form-floating theme-form-floating log-in-form">
                                         <input type="email" class="form-control"  name="email" id="s-email" oninput="validateEmail()" placeholder="Email Address">
                                         <label for="email">Email Address</label>
@@ -284,11 +284,12 @@ $("#loginEmailForm").submit((e)=>{
                 location.href='/home'
             }else if(response.status=="false"){
                 alert(response.errorMessage)
-                document.getElementById("errorMessage").value = response.errorMessage
+                document.getElementById("errorMessageLogin").innerHTML = response.errorMessage
 
             }
            } ,error:(xhr, thrownError)=>{
-        console.log("isdda")
+            alert(xhr)
+        console.log(xhr)
         Swal.fire({
             icon: 'error',
             title: xhr,
