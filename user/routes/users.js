@@ -54,7 +54,11 @@ const {
   VariationSelect,
   check_quantity,
   deleteOrder,
-  regexCheck
+  regexCheck,
+  loginVal,
+  shopVal,
+  signupVal,
+
 
 } = require("../controller/usercontroller");
 
@@ -66,13 +70,13 @@ router.get('/login',nocache,homeJwtCheck,renderLogin)
 // router.get("/otplogin",otppage)
 // router.post("/otp-submit",otpcheck)
 
-router.post('/login-submit',regexCheck,userLoginroute,redirectHome)
+router.post('/login-submit',loginVal,userLoginroute,redirectHome)
 router.get("/logout",nocache,userLogout)
 
 router.get('/signup',nocache,renderSignup,renderHome)
 
 
-router.post("/signup-submit",userSignupRoute,renderLogin)
+router.post("/signup-submit",signupVal,userSignupRoute,renderLogin)
 
 router.get("/home",nocache,autherization,renderHome)
 
@@ -98,7 +102,7 @@ router.get('/checkout',nocache,autherization,checkoutPage)
 
 router.post('/addAddress',nocache,autherization,addAddress)
 
-router.get('/shop',nocache,autherization,shopProducts)
+router.get('/shop',shopVal,nocache,autherization,shopProducts)
 
 router.post('/placeOrder',nocache,autherization,placeOrder)
 router.get('/placeOrder/:data',nocache,autherization,placeOrder)

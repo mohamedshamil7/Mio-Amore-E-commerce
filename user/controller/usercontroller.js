@@ -290,7 +290,7 @@ module.exports = {
       !req.body.password ||
       !req.body.phone
     ) {
-      res.render("userView/signup", { error: "please enter details" });
+      res.render("userView/signup", { errorMessage: "please enter details" });
     } else {
       console.log(req.body);
       let userData = req.body;
@@ -314,7 +314,7 @@ module.exports = {
           console.log(user + "/");
 
           res.render("userView/signup", {
-            error: " Username or  email already exsits!!!",
+            errorMessage: " Username or  email already exsits!!!",
           });
         })
         .catch(() => {
@@ -1800,7 +1800,7 @@ module.exports = {
     check('email').isEmail().withMessage('Email is not valid'),
     check('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long')
     .customSanitizer((value) => {
-      return value.trim().replace(/[$%^!#()]/g, '');
+      return value.trim().replace(/[$%^!#(){}]/g, '');
     }),
     
     (req, res, next) => {
@@ -1810,8 +1810,37 @@ module.exports = {
       }
       next();
     },
-  
- 
+],
+
+
+shopVal:[
+      check('p').optional().customSanitizer((value) => {
+        return value.replace(/[$%^!#(){}]/g, '');
+      }),
+      check('category').optional().customSanitizer((value) => {
+        return value.replace(/[$%^!#(){}]/g, '');
+      }),
+      check('brand').optional().customSanitizer((value) => {
+        return value.replace(/[$%^!#(){}]/g, '');
+      }),
+],
+
+signupVal:[
+  check('username').notEmpty().withMessage("ServerError :enter Fullname").customSanitizer((value) => {
+    return value.replace(/[$%^!#(){}]/g, '');
+  }),
+  check('email').notEmpty().isEmail().withMessage('Email is not valid'),
+  check('phone').notEmpty().withMessage("ServerError :enter Phone").isNumeric().withMessage("Server Error enter only number").customSanitizer((value) => {
+    return value.replace(/[$%^!#(){}]/g, '');
+  }),
+  check('password').notEmpty().withMessage("ServerError :enter Password").blacklist('[$%^!#()]{},').withMessage("password should not contain [$%^!#()]{} "),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.render('userview/signup',{errorMessage:errors[0].msg});
+    }
+    next();
+  },
 ],
 
 

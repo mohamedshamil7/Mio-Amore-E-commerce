@@ -185,7 +185,8 @@
                         <div class="input-box">
                             <form class="row g-4" action="/login-submit" method="post" id="loginEmailForm">
                                 <div class="col-12">
-                                    <span id="errorMessageLogin" style="color: red;"></span>
+                                    {{!-- <span id="errorMessageLogin" "></span> --}}
+                                    <p id="errorMessageLogin" style="color: red;"></p>
                                     <div class="form-floating theme-form-floating log-in-form">
                                         <input type="email" class="form-control"  name="email" id="s-email" oninput="validateEmail()" placeholder="Email Address">
                                         <label for="email">Email Address</label>
@@ -288,12 +289,13 @@ $("#loginEmailForm").submit((e)=>{
 
             }
            } ,error:(xhr, thrownError)=>{
-            alert(xhr)
-        console.log(xhr)
+            let error =  xhr.responseJSON.errors[0].msg
+            alert(error)
+       
         Swal.fire({
             icon: 'error',
-            title: xhr,
-            // text: 'Something went wrong!',
+            title: 'Server ERROR',
+          text: error ,
            
           })
     }
