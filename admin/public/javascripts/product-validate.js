@@ -139,12 +139,14 @@ function validatekeyWord3(){
 }
 
 function checkAll(){
-    if(validateName()&& validateMRP() && validatePrice() && validatemanufacturingDate() && validateSize() && validateColor() || validateStock() || validateDescription() ||validatekeyWord1() || validatekeyWord2() || validatekeyWord3() ){
-        let submiterr = document.getElementById('addProdsubm ').innerHTML='' 
-        return true
-    }
-    else{  
+    if( !validateName() || !validateMRP() || !validatePrice() || !validatemanufacturingDate() || !validateSize() || !validateColor() || !validateStock() || !validateDescription() || !validatekeyWord1() || !validatekeyWord2() || !validatekeyWord3() ){
+        alert("if")
         let submiterr = document.getElementById('addProdsubm ').innerHTML='please provide all details' 
         return false
+    }
+    else{  
+        alert("else")
+        let submiterr = document.getElementById('addProdsubm ').innerHTML='' 
+        return true
         }
 }

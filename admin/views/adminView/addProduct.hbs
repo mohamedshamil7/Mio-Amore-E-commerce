@@ -4,7 +4,7 @@
           <h2 class="mb-5 mt-0">Add New Product</h2>
 
              <!-- General Form Elements -->
-              <form action="/admin/addProduct-submit" method="post" enctype='multipart/form-data' >
+              <form id="addProductForm" action="" method="post" enctype='multipart/form-data' >
                 <div class="row mb-3">
   <label for="inputText" class="col-sm-2 col-form-label fw-bold">Product Name</label>
   <div class="col-sm-4">
@@ -176,6 +176,7 @@
                   {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
                   <div class="col-sm-4 col-form-label ">
                     <button type="submit" onclick="checkAll()" class="btn btn-primary">Add Product</button>
+                    <span id="addProdsubm"></span>
                   </div>
                 </div>
 
@@ -185,3 +186,39 @@
 </section>
 
 <script src="/admin/javascripts/product-validate.js"></script>
+
+
+
+<script>
+
+$("#addProductForm").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/admin/addProduct-submit",
+         data:$('#addProductForm').serialize(),
+           method:'post',
+           success:(response)=>{
+            alert(response)
+            console.log(response)
+            if(response.status==true){
+                location.href='/admin/stocks'
+            }else if(response.status=="false"){
+                alert(response.errorMessage)
+                document.getElementById("errorMessageLogin").innerHTML = response.errorMessage
+
+            }
+           } ,error:(xhr, thrownError)=>{
+            let error =  xhr.responseJSON.error
+            alert(error)
+       
+        Swal.fire({
+            icon: 'error',
+            title: ' ERROR',
+          text: error ,
+           
+          })
+    }
+    })
+})
+
+    </script>

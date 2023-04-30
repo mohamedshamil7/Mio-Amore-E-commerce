@@ -12,6 +12,7 @@ const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const { readFile } = require("fs/promises");
 var util = require('handlebars-utils');
 var QRCode = require('qrcode');
+const { log } = require("handlebars");
 
 
 
@@ -374,7 +375,12 @@ console.log(chartcount);
   },
 
   addNewProduct: async (req, res) => {
+    if(!req.body.ProductName || !req.body.Company || !req.body.MRP || !req.body.Price || !req.body.category || !req.body.Size || !req.body.Color || !req.body.Stock ||!req.body.Description || !req.body.Keyword1 || !req.body.Keyword2 ||!req.body.Keyword3){
+     return  res.status(400).json({ error: "Please fill all the fields" });
+    }
     const files = req.files;
+
+    console.log(files,"filesesese");
 
     let arr1 = Object.values(files);
 
@@ -433,7 +439,7 @@ console.log(chartcount);
     req.body.offer = parseInt(((mrp-sellingprice)/mrp)*100)
 
     adminHelper.addNewProduct(req.body).then((response) => {
-      res.redirect("/admin/stocks");
+      res.json({status:true});
     });
   },
 
