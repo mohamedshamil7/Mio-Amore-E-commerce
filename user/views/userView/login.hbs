@@ -280,7 +280,7 @@ $("#loginEmailForm").submit((e)=>{
            success:(response)=>{
             if(response.status==true){
                 location.href='/home'
-            }else if(response.status==false){
+            }else if(response.status=="false"){
                 alert(response.errorMessage)
                 document.getElementById("errorMessage").value = response.errorMessage
 
