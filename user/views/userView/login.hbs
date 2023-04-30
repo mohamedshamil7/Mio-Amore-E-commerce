@@ -278,6 +278,8 @@ $("#loginEmailForm").submit((e)=>{
          data:$('#loginEmailForm').serialize(),
            method:'post',
            success:(response)=>{
+            alert(response)
+            console.log(response)
             if(response.status==true){
                 location.href='/home'
             }else if(response.status=="false"){

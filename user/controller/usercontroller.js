@@ -343,7 +343,7 @@ module.exports = {
         res.json({status:true})
       })
       .catch((err) => {
-        res .status(400).json({status:false, errorMessage: "Incorrect emailId or Password",})
+        res .json({status:false, errorMessage: "Incorrect emailId or Password",})
         // res.render("userView/login", {
         //   errorMessage: "Incorrect emailId or Password",
         // });
