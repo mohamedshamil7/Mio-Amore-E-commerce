@@ -64,7 +64,8 @@ const {
   addVarient_submit,
   variationDelete,
   variationEdit,
-  editVariation_submit
+  editVariation_submit,
+  homeJwtCheck
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -74,12 +75,12 @@ const{
   upload3,
 }=require("../public/javascripts/multer")
 /* GET home page. */
-router.get('/admin/',renderadminLogin);
-
-router.post('/admin/sales',autherization,salesReport)
+router.get('/admin/',nocache,homeJwtCheck,renderadminLogin);
 router.post('/admin/login-submit',nocache,adminLoginRoute,redirectAdminDash)
 
+
 router.get("/admin/adminDash",nocache,autherization,renderadminDash)
+router.post('/admin/sales',autherization,salesReport)
 
 router.get("/admin/allUsers",nocache,autherization,AllUsersPage)
 

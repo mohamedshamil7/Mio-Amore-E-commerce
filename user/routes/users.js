@@ -102,7 +102,7 @@ router.get('/checkout',nocache,autherization,checkoutPage)
 
 router.post('/addAddress',nocache,autherization,addAddress)
 
-router.get('/shop',shopVal,nocache,autherization,shopProducts)
+router.get('/shop',nocache,autherization,shopVal,shopProducts)
 
 router.post('/placeOrder',nocache,autherization,placeOrder)
 router.get('/placeOrder/:data',nocache,autherization,placeOrder)

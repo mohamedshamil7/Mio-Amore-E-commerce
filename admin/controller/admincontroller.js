@@ -84,6 +84,24 @@ module.exports = {
     res.header("Pragma", "no-cache");
     next();
   },
+  homeJwtCheck: (req, res, next) => {
+    const token = req.cookies.admintoken;
+    console.log(token);
+    if (!token) {
+      next();
+    } else {
+      try {
+        const user = jwt.verify(token, MY_SECRET);
+        console.log("userrrrr<<<<<<<<<<<<<<<<<<<>>>>>>>" + user);
+        if (user) {
+          res.redirect("/admin/adminDash")
+          // res.redirect("/user/home")
+        }
+      } catch (err) {
+        next();
+      }
+    }
+  },
 
   renderadminLogin: (req, res) => {
     console.log("calll is herererrrre");
