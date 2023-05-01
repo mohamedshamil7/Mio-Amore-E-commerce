@@ -14,15 +14,6 @@ const Keyword3error = document.getElementById('Keyword3-error')
 
 
 
-const cooupenNameerr= document.getElementById('coupenName-error')
-const coupenCoderr= document.getElementById('coupenCode-error')
-const startDateerr= document.getElementById('startDate-error')
-const endDateerr= document.getElementById('endDate-error')
-const percentageerr= document.getElementById('percentage-error')
-const amounterr= document.getElementById('amount-error')
-const totalCoupenserr= document.getElementById('totalCoupens-error')
-const minimumerr= document.getElementById('minimum-error')
-const limiterr= document.getElementById('limit-error')
 
 
 
@@ -45,7 +36,7 @@ function validateMRP(){
     if(typeof MRP =='number'){
         MRPerror.innerHTML = 'MRP  should be a number'
         return false
-
+        
     }
     MRPerror.innerHTML=''
     return true
@@ -61,7 +52,7 @@ function validatePrice(){
     if(typeof Price =='number'){
         PriceError.innerHTML = 'Price  should be a number'
         return false
-
+        
     }
     PriceError.innerHTML=''
     return true
@@ -72,9 +63,9 @@ function validatemanufacturingDate(){
     if(ManufacturingDate.length <=0){
         ManufacturingDateError.innerHTML = 'Manufacturing Date is required'
         return false
-        }
-        ManufacturingDateError.innerHTML=''
-        return true
+    }
+    ManufacturingDateError.innerHTML=''
+    return true
 }
 
 function validateSize(){
@@ -82,9 +73,9 @@ function validateSize(){
     if(Size.length <=0){
         Sizeerror.innerHTML = 'Size is required'
         return false
-        }
-        Sizeerror.innerHTML=''
-        return true
+    }
+    Sizeerror.innerHTML=''
+    return true
 }
 
 
@@ -93,9 +84,9 @@ function validateColor(){
     if(Color.length <=0){
         Colorerror.innerHTML = 'color is required'
         return false
-        }
-        Colorerror.innerHTML=''
-        return true
+    }
+    Colorerror.innerHTML=''
+    return true
 }
 
 
@@ -104,9 +95,9 @@ function validateStock(){
     if(Stock.length <=0){
         Stockerror.innerHTML = 'Description is required'
         return false
-        }
-        Stockerror.innerHTML=''
-        return true
+    }
+    Stockerror.innerHTML=''
+    return true
 }
 
 function validateDescription(){
@@ -114,10 +105,10 @@ function validateDescription(){
     if(Description.length <=0){
         Descriptionerror.innerHTML = 'Description  is required'
         return false
-        }
-        Descriptionerror.innerHTML=''
-        return true
-
+    }
+    Descriptionerror.innerHTML=''
+    return true
+    
 }
 
 function validatekeyWord1(){
@@ -125,9 +116,9 @@ function validatekeyWord1(){
     if(KeyWord1.length <=0){
         Keyword1error.innerHTML = 'KeyWord1 is required'
         return false
-        }
-        Keyword1error.innerHTML=''
-        return true
+    }
+    Keyword1error.innerHTML=''
+    return true
 }
 
 
@@ -137,9 +128,9 @@ function validatekeyWord2(){
     if(KeyWord2.length <=0){
         Keyword2error.innerHTML = 'KeyWord2 is required'
         return false
-        }
-        Keyword2error.innerHTML=''
-        return true
+    }
+    Keyword2error.innerHTML=''
+    return true
 }
 
 
@@ -148,9 +139,9 @@ function validatekeyWord3(){
     if(KeyWord3.length <=0){
         Keyword3error.innerHTML = 'KeyWord3 is required'
         return false
-        }
-        Keyword3error.innerHTML=''
-        return true
+    }
+    Keyword3error.innerHTML=''
+    return true
 }
 
 function checkAll(){
@@ -163,8 +154,17 @@ function checkAll(){
         alert("else")
         let submiterr = document.getElementById('addProdsubm ').innerHTML='' 
         return true
-        }
+    }
 }
+const cooupenNameerr= document.getElementById('coupenName-error')
+const coupenCoderr= document.getElementById('coupenCode-error')
+const startDateerr= document.getElementById('startDate-error')
+const endDateerr= document.getElementById('endDate-error')
+const percentageerr= document.getElementById('percentage-error')
+const amounterr= document.getElementById('amount-error')
+const totalCoupenserr= document.getElementById('totalCoupens-error')
+const minimumerr= document.getElementById('minimum-error')
+const limiterr= document.getElementById('limit-error')
 
 
 function validateCoupenName(){
@@ -179,7 +179,7 @@ function validateCoupenName(){
 }
 function validateCoupenCode(){
     let coupenName =document.getElementById('coupenCode').value
-    if(coupencodee.length <=0){
+    if(coupenName.length <=0){
         coupenCoderr.innerHTML = 'coupenCode is required'
         return false
         }
@@ -239,7 +239,7 @@ function validateTotalCoupens(){
         
 }
 function validateMinimum(){
-    let minimum =document.getElementById('minimum').value
+    let minimum =document.getElementById('minimumAmount').value
     if(minimum.length <=0){
         minimumerr.innerHTML = 'minimum is required'
         return false
@@ -249,7 +249,7 @@ function validateMinimum(){
         
 }
 function validateLimit(){
-    let limit =document.getElementById('limit').value
+    let limit =document.getElementById('limitAmount').value
     if(limit.length <=0){
         limiterr.innerHTML = 'limit is required'
         return false
