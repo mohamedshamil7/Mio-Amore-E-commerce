@@ -106,7 +106,7 @@ function validateDescription(){
 }
 
 function validatekeyWord1(){
-    const KeyWord1 = document.getElementById('KeyWord1').value
+    const KeyWord1 = document.getElementById('Keyword1').value
     if(KeyWord1.length <=0){
         Keyword1error.innerHTML = 'KeyWord1 is required'
         return false

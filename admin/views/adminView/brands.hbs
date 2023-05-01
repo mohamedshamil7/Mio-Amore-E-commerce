@@ -11,7 +11,7 @@
                   <label for="inputText" class="col-sm-2 col-form-label ">Add new Brand :</label>
                   <div class="col-sm-4">
                     <input type="text" name="newBrand" oninput="newCat()" id="newBrand" class="form-control" required>
-                    <span id="cat-error" style="color: red;"></span>
+                    <span id="brand-error" style="color: red;"></span>
                   </div>
                 </div>
              <p class="error">{{error}}</p>
@@ -82,11 +82,11 @@
   {{!-- <script src="sweetalert2.all.min.js"></script> --}}
 
 <script>
-  const catErr = document.getElementById("cat-error")
+  const catErr = document.getElementById("brand-error")
 function newCat(){
   let catog = document.getElementById("newCategory").value
-  if(catog==0){
-    catErr.innerHTML="enter category name"
+  if(catog=.length=0){
+    catErr.innerHTML="enter brand name"
     return false
   }
   catErr.innerHTML=""

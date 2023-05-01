@@ -119,6 +119,10 @@ function changeDeliveryStatus(orderid,status){
 
 function addCategory (){
   const category = document.getElementById("newCategory").value
+  if(category.length==0){
+    document.getElementById('cat-error').innerHTML='please add Value '
+    return 
+  }
   $.ajax({
     url:"/admin/addCategory",
     method:'post',
@@ -155,7 +159,9 @@ function addBrand (){
   // const error = document.getElementById("")
   const brand = document.getElementById("newBrand").value
   if(brand.length==0){
-    return error
+    document.getElementById('brand-error').innerHTML='please add Value '
+
+    return 
   }
   $.ajax({
     url:"/admin/addBrand",
