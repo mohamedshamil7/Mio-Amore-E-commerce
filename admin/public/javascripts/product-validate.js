@@ -11,6 +11,21 @@ const Keyword2error = document.getElementById('Keyword2-error')
 const Keyword3error = document.getElementById('Keyword3-error')
 
 
+
+
+
+const cooupenNameerr= document.getElementById('coupenName-error')
+const coupenCoderr= document.getElementById('coupenCode-error')
+const startDateerr= document.getElementById('startDate-error')
+const endDateerr= document.getElementById('endDate-error')
+const percentageerr= document.getElementById('percentage-error')
+const amounterr= document.getElementById('amount-error')
+const totalCoupenserr= document.getElementById('totalCoupens-error')
+const minimumerr= document.getElementById('minimum-error')
+const limiterr= document.getElementById('limit-error')
+
+
+
 function validateName(){
     const ProductName = document.getElementById('ProductName').value
     if(ProductName.length <=0){
@@ -149,4 +164,97 @@ function checkAll(){
         let submiterr = document.getElementById('addProdsubm ').innerHTML='' 
         return true
         }
+}
+
+
+function validateCoupenName(){
+    let coupenName =document.getElementById('coupenName').value
+    if(coupenName.length <=0){
+        cooupenNameerr.innerHTML = 'coupenName is required'
+        return false
+        }
+        cooupenNameerr.innerHTML=''
+        return true
+        
+}
+function validateCoupenCode(){
+    let coupenName =document.getElementById('coupenCode').value
+    if(coupencodee.length <=0){
+        coupenCoderr.innerHTML = 'coupenCode is required'
+        return false
+        }
+        coupenCoderr.innerHTML=''
+        return true
+        
+}
+function validatestartDate(){
+    let startDate =document.getElementById('startDate').value
+    if(startDate.length <=0){
+        startDateerr.innerHTML = 'startDate is required'
+        return false
+        }
+        startDateerr.innerHTML=''
+        return true
+        
+}
+function validateendDate(){
+    let endDate =document.getElementById('endDate').value
+    if(endDate.length <=0){
+        endDateerr.innerHTML = 'endDate is required'
+        return false
+        }
+        endDateerr.innerHTML=''
+        return true
+        
+}
+function validatePercentage(){
+    let percentage =document.getElementById('percentage').value
+    if(percentage.length <=0){
+        percentageerr.innerHTML = 'percentage is required'
+        return false
+        }
+        percentageerr.innerHTML=''
+        return true
+        
+}
+
+function validateAmount(){
+    let amount =document.getElementById('amount').value
+    if(amount.length <=0){
+        amounterr.innerHTML = 'amount is required'
+        return false
+        }
+        amounterr.innerHTML=''
+        return true
+        
+}
+function validateTotalCoupens(){
+    let totalCoupens =document.getElementById('total_coupens').value
+    if(totalCoupens.length <=0){
+        totalCoupenserr.innerHTML = 'totalCoupens is required'
+        return false
+        }
+        totalCoupenserr.innerHTML=''
+        return true
+        
+}
+function validateMinimum(){
+    let minimum =document.getElementById('minimum').value
+    if(minimum.length <=0){
+        minimumerr.innerHTML = 'minimum is required'
+        return false
+        }
+        minimumerr.innerHTML=''
+        return true
+        
+}
+function validateLimit(){
+    let limit =document.getElementById('limit').value
+    if(limit.length <=0){
+        limiterr.innerHTML = 'limit is required'
+        return false
+        }
+        limiterr.innerHTML=''
+        return true
+        
 }

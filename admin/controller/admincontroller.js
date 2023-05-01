@@ -938,6 +938,7 @@ await adminHelper.updateBanner3(req.body).then(()=>{
         // const content = await compile("invoice",orderDetails)
         const compile = async function(templateName, data){
           console.log("inide copile contnet");
+          console.log(process.cwd());
           const filePath = path.join(process.cwd(),"/views",`adminView/${templateName}.hbs`);
           const html = await readFile(filePath, "utf-8");
           
