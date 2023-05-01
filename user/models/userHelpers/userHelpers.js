@@ -1688,7 +1688,8 @@ getAllCoupens:()=>{
 
 searchProduct:(data)=>{
     return new Promise(async(resolve,reject)=>{
-        const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({ ProductName: { $regex:`.*${data}*`,$options:'i' } }).toArray()
+        const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({$or:[{ProductName: { $regex:`.*${data}*`,$options:'i' }},{Description: { $regex:`.*${data}*`,$options:'i' }},{Keyword1: { $regex:`.*${data}*`,$options:'i' }},{Keyword2: { $regex:`.*${data}*`,$options:'i' }},{Keyword3: { $regex:`.*${data}*`,$options:'i' }}]}).toArray()
+        // const product = await db.get().collection(collection.PRODUCT_COLLECTIONS).find({$or:[{ProductName: { $regex:`.*${data}*`,$options:'i' } ]} }).toArray()
         if(product){
             console.log(product,"/////");
             resolve(product)

@@ -470,7 +470,10 @@ module.exports={
                     Image3:id?.Image3,
                     Image4:id?.Image4,
                     Size:id?.Size,
-                    Color:id?.Color 
+                    Color:id?.Color,
+                    Keyword1:id?.Keyword1,
+                    Keyword2:id?.Keyword2,
+                    Keyword3:id?.Keyword3,
 
 
                 }
