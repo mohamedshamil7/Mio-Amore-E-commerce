@@ -4,19 +4,15 @@
 
           <h2 class="mb-5 mt-0">Schedule Order</h2>
 
-
-                    <form action="" method="post">
-                <div class="row mb-3">
-                    <input type="text" name="orderId" id="" value="{{products._id}}" hidden>
-                        <label for="inputDate" class="col-sm-2 col-form-label">schedule Delivery Date</label>
-                  <div class="col-sm-4">
-                    <input type="date" name="deliveryDate" id="deliverydate" class="form-control">
-                    <span id="DateError" style="color: red;"></span>
-                    <button type="button" onclick="scheduleorder('{{products._id}}')" class="btn btn-success mt-4">Confirm</button>
-                  </div>
-              
-                </div>
-                    </form>
+                <div class="row mb-3 d-flex align-items-center">
+            <input type="text" name="orderId" id="" value="{{products._id}}" hidden>
+            <label for="inputDate" class="col-sm-2 col-form-label">Schedule Delivery Date</label>
+            <div class="col-sm-4">
+                <input type="date" name="deliveryDate" id="deliverydate" class="form-control">
+                <span id="DateError" style="color: red;"></span>
+            </div>
+            <button type="button" style="width: 100px;"  onclick="scheduleorder('{{products._id}}')" class="btn btn-success">Confirm</button>
+        </div>
                
 
                 <div class="row">
