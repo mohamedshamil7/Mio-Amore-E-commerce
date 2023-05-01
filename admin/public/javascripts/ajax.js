@@ -119,7 +119,8 @@ function changeDeliveryStatus(orderid,status){
 
 function addCategory (){
   const category = document.getElementById("newCategory").value
-  if(category.length==0){
+  alert(category.length)
+  if(category.length<=0){
     document.getElementById('cat-error').innerHTML='please add Value '
     return 
   }
@@ -158,6 +159,7 @@ function addCategory (){
 function addBrand (){
   // const error = document.getElementById("")
   const brand = document.getElementById("newBrand").value
+  alert(brand.length)
   if(brand.length==0){
     document.getElementById('brand-error').innerHTML='please add Value '
 

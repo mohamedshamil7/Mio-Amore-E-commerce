@@ -133,7 +133,7 @@ function validatekeyWord1(){
 
 
 function validatekeyWord2(){
-    const KeyWord2 = document.getElementById('KeyWord2').value
+    const KeyWord2 = document.getElementById('Keyword2').value
     if(KeyWord2.length <=0){
         Keyword2error.innerHTML = 'KeyWord2 is required'
         return false
@@ -144,7 +144,7 @@ function validatekeyWord2(){
 
 
 function validatekeyWord3(){
-    const KeyWord3 = document.getElementById('KeyWord3').value
+    const KeyWord3 = document.getElementById('Keyword3').value
     if(KeyWord3.length <=0){
         Keyword3error.innerHTML = 'KeyWord3 is required'
         return false
