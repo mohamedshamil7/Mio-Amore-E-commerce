@@ -1040,7 +1040,7 @@ module.exports={
                 console.log("Variation size already there  and nee color inserted");
                 resolve(ins)
            }else{
-             let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId)},{
+             let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId)},{
              $push:{Variations:{ id:new ObjectId(),Size:data.Size, Data:[dataToInsert]}}
 
             })

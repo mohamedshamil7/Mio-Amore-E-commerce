@@ -57,15 +57,9 @@
                  </div>
 
 
-                 {{!-- <div class="row mb-3">
-                  {{!-- <label for="inputNumber"  class="col-sm-2 col-form-label">Colors Added :</label> --}}
-                  <div class="col-sm-4">
-
-                  </div>
-                </div> --}}
+          
 
                 <div class="row mb-3">
-                  {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
                   <div class="col-sm-4 col-form-label">
                     <button type="button" onclick="AddVarient()" class="btn btn-primary">Add Varient</button>
                   </div>
@@ -136,17 +130,17 @@
 
         let Color = document.getElementById('Color').value
          if(Color.length<1){
-          document.getElementById('Color-error').innerHTML='please Add Size'
+          document.getElementById('Color-error').innerHTML='please Add Color'
           return
         }
         let Price = document.getElementById('Price').value
          if(Price.length<1){
-          document.getElementById('Price-error').innerHTML='please Add Size'
+          document.getElementById('Price-error').innerHTML='please Add Price'
           return
         }
         let Stock = document.getElementById('Stock').value
          if(Stock.length<1){
-          document.getElementById('Stock-error').innerHTML='please Add Size'
+          document.getElementById('Stock-error').innerHTML='please Add Stock'
           return
         }
 
