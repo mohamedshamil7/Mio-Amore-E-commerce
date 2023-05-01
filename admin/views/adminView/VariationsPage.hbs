@@ -21,7 +21,8 @@
                 <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Size</label>
                   <div class="col-sm-4">
-                    <input type="text" name="Size" id="Size"  class="form-control">
+                    <input type="text"  name="Size" id="Size"  class="form-control">
+                    <span id="Size-error" style="color: red;"></span>
                   </div>
                 </div>
 
@@ -30,6 +31,8 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
                   <div class="col-sm-4">
                     <input type="text" name="Color" id="Color"  class="form-control">
+                     <span id="Color-error" style="color: red;"></span>
+
                   </div>
                 </div>
 
@@ -38,6 +41,8 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Selling Price</label>
                   <div class="col-sm-4">
                     <input type="number" id="Price" name="Price" class="form-control">
+                      <span id="Price-error" style="color: red;"></span>
+
                   </div>
                 </div>
 
@@ -46,6 +51,8 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
                   <div class="col-sm-4">
                     <input type="number" name="Stock" id="Stock" class="form-control">
+             <span id="Stock-error" style="color: red;"></span>
+
                   </div>
                  </div>
 
@@ -122,9 +129,26 @@
     function AddVarient(){
         let prodId = document.getElementById('prodId').value
         let Size = document.getElementById('Size').value
+        if(Size.length<1){
+          document.getElementById('Size-error').innerHTML='please Add Size'
+          return
+        }
+
         let Color = document.getElementById('Color').value
+         if(Color.length<1){
+          document.getElementById('Color-error').innerHTML='please Add Size'
+          return
+        }
         let Price = document.getElementById('Price').value
+         if(Price.length<1){
+          document.getElementById('Price-error').innerHTML='please Add Size'
+          return
+        }
         let Stock = document.getElementById('Stock').value
+         if(Stock.length<1){
+          document.getElementById('Stock-error').innerHTML='please Add Size'
+          return
+        }
 
         $.ajax({
             url:"/admin/addVarient-submit",

@@ -178,8 +178,8 @@ function validateCoupenName(){
         
 }
 function validateCoupenCode(){
-    let coupenName =document.getElementById('coupenCode').value
-    if(coupenName.length <=0){
+    let coupenCode =document.getElementById('coupenCode').value
+    if(coupenCode.length <=0){
         coupenCoderr.innerHTML = 'coupenCode is required'
         return false
         }
@@ -240,6 +240,7 @@ function validateTotalCoupens(){
 }
 function validateMinimum(){
     let minimum =document.getElementById('minimumAmount').value
+    alert(minimum,"/?")
     if(minimum.length <=0){
         minimumerr.innerHTML = 'minimum is required'
         return false
@@ -250,6 +251,7 @@ function validateMinimum(){
 }
 function validateLimit(){
     let limit =document.getElementById('limitAmount').value
+    alert(limit,"//")
     if(limit.length <=0){
         limiterr.innerHTML = 'limit is required'
         return false

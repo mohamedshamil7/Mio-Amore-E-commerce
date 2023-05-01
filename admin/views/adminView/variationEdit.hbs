@@ -30,6 +30,7 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
                   <div class="col-sm-4">
                     <input type="text" name="Color" id="Color" value="{{variations._id.Data.color}}"  class="form-control">
+                    <span id="Color-error" style="color: red;"></span>
                   </div>
                 </div>
 
@@ -38,6 +39,7 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Selling Price</label>
                   <div class="col-sm-4">
                     <input type="number" id="Price" value="{{variations._id.Data.Price}}" name="Price" class="form-control">
+                      <span id="Price-error" style="color: red;"></span>
                   </div>
                 </div>
 
@@ -46,6 +48,7 @@
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
                   <div class="col-sm-4">
                     <input type="number" name="Stock"  value="{{variations._id.Data.Stock}}" id="Stock" class="form-control">
+                            <span id="Stock-error" style="color: red;"></span>
                   </div>
                  </div>
 
@@ -122,10 +125,24 @@
     function EditVariation(dataId,varId){
         let prodId = document.getElementById('prodId').value
         alert(prodId)
+      let prodId = document.getElementById('prodId').value
         let Size = document.getElementById('Size').value
+
         let Color = document.getElementById('Color').value
+         if(Color.length<1){
+          document.getElementById('Color-error').innerHTML='please Add Size'
+          return
+        }
         let Price = document.getElementById('Price').value
+         if(Price.length<1){
+          document.getElementById('Price-error').innerHTML='please Add Size'
+          return
+        }
         let Stock = document.getElementById('Stock').value
+         if(Stock.length<1){
+          document.getElementById('Stock-error').innerHTML='please Add Size'
+          return
+        }
 
         $.ajax({
             url:"/admin/editVariation-submit",
