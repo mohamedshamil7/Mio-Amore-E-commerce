@@ -825,8 +825,9 @@ module.exports={
 
                 const url=MONGODB
 
-                mongoClient.connect(url, async function(err, client){
-                    if (err) throw err;
+                mongoClient.connect(url).then(async(client)=>{
+
+                
               
                     console.log("Connected to MongoDB database!");
                   
@@ -912,6 +913,9 @@ module.exports={
                     client.close()
                     console.log(`session closed`);
                   }
+                }).
+                catch((err)=>{
+                 throw err;
                 })
         
 
