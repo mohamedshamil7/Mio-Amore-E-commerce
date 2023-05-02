@@ -50,6 +50,11 @@
           {{/if}}
         {{/if}}
         {{else}}
+        {{#if this.deliveredDate}}
+         <p class="badge bg-success">{{this.deliveredDate}}</p>
+            <a href="/admin/invoice?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Invoice</button></a> 
+            <a href="/admin/billLabel?id={{this._id}}"><button type="button" class="btn btn-success btn-sm mt-2">Download Billing Label</button></a> 
+        {{/if}}
          <p class="badge bg-secondary">{{this.status}}</p>
         {{/if}}
       </td>

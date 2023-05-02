@@ -147,23 +147,26 @@
             </select>
           </div>
         </div>
+ <div class="row mb-3">
 
-        <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Stock</label>
                   <div class="col-sm-4">
                     <input type="number" name="Stock" value="{{product.Stock}}" class="form-control">
                   </div>
+ </div>
 
                   <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Size</label>
                   <div class="col-sm-4">
                     <input type="text" name="Size" value="{{product.Size}}" class="form-control">
                   </div>
+                  </div>
 
                   <div class="row mb-3">
                   <label for="inputNumber"  class="col-sm-2 col-form-label">Color</label>
                   <div class="col-sm-4">
                     <input type="text" name="Color" value="{{product.Color}}" class="form-control">
+                  </div>
                   </div>
 
         <div class="row mb-3">
@@ -203,7 +206,7 @@
         <div class="row mb-3">
           {{!-- <label class="col-sm-2 col-form-label">Submit Button</label> --}}
           <div class="col-sm-4 col-form-label">
-            <button type="submit" class="btn btn-primary">Add Product</button>
+            <button type="submit" class="btn btn-primary">Edit Product</button>
           </div>
         </div>
 
@@ -270,7 +273,7 @@
                     icon: 'success',
                     title: 'Image Deleted',
                     showConfirmButton: false,
-                    
+
                   })
 
                 }

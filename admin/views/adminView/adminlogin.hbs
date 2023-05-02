@@ -78,7 +78,6 @@
 
 
   <script>
-    alert("here")
     $("#adminLogin").submit((e)=>{
     e.preventDefault()
     $.ajax({
@@ -86,7 +85,6 @@
          data:$('#adminLogin').serialize(),
            method:'post',
            success:(response)=>{
-            alert(response)
             console.log(response)
             if(response.status==true){
                 location.href='/admin/adminDash'

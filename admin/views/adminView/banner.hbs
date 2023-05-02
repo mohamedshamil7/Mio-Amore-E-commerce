@@ -147,8 +147,7 @@
                 location.href='/admin/banners'
             }else if(response.status=="false"){
                 alert(response.errorMessage)
-                document.getElementById("banner1error").innerHTML = response.errorMessage
-
+                document.getElementById("banner1error").innerHTML = `${response.errorMessage}`
             }
            
     }
@@ -164,13 +163,12 @@
          data:$('#banner2-submit').serialize(),
            method:'post',
            success:(response)=>{
-            alert(response)
+
             console.log(response)
             if(response.status==true){
                 location.href='/admin/banners'
             }else if(response.status=="false"){
-                alert(response.errorMessage)
-                document.getElementById("banner2error").innerHTML = response.errorMessage
+                document.getElementById("banner2error").innerHTML = `${response.errorMessage}`
 
             }
            
@@ -185,13 +183,12 @@
          data:$('#banner3-submit').serialize(),
            method:'post',
            success:(response)=>{
-            alert(response)
             console.log(response)
             if(response.status==true){
                 location.href='/admin/banners'
-            }else if(response.status=="false"){
+            }else if(response.status==false){
                 alert(response.errorMessage)
-                document.getElementById("banner3error").innerHTML = response.errorMessage
+                document.getElementById("banner3error").innerHTML = `${response.errorMessage}`
 
             }
            
