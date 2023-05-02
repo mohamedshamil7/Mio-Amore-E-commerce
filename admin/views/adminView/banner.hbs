@@ -184,11 +184,11 @@
            method:'post',
            success:(response)=>{
             if(response.status==true){
-            console.log(response)
                 location.href='/admin/banners'
             }else if(response.status==false){
+            console.log(response)
                 alert(response.errorMessage)
-                document.getElementById("banner3error").innerHTML = `${response.errorMessage}`
+                document.getElementById("banner3error").innerHTML = `${response.errorMessage.errorMessage}`
 
             }
            
