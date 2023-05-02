@@ -996,8 +996,8 @@ module.exports={
             let  dataToInsert={
                 id:new ObjectId(),
                 color:data.Color.toLowerCase(),
-                Price:data.Price,
-                Stock:data.Stock,
+                Price:Number(data.Price),
+                Stock:Number(data.Stock),
                 Size:data.SizetoLowerCase(),
                 inStock:true
             }
@@ -1118,7 +1118,7 @@ module.exports={
                         // "Variations.$.Data.Id":ObjectId(data.varId),
                         'Variations.$[i].Data.$[j].color': data.Color,
                         'Variations.$[i].Data.$[j].Price': Number(data.Price),
-                        'Variations.$[i].Data.$[j].Stock':data.Stock,
+                        'Variations.$[i].Data.$[j].Stock':Number(data.Stock),
                         'Variations.$[i].Data.$[j].inStock':stock,
                         'Variations.$[i].Data.$[j].Size':data.Size,
 
