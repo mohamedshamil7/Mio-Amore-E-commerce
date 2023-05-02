@@ -1617,6 +1617,17 @@ getsingleorderDetails:(orderId)=>{
 
         if(data){
             console.log(data);
+            if(data.coupenId){
+              let coupenData=  await db.get().collection(collection.COUPEN_COLLECTION).findOne({_id:new ObjectId(data.coupenId)})
+              data.CoupenName=coupenData.name
+              data.coupenCode= coupenData.code
+              if(coupenData.redeemType=='amount'){
+                data.discount= `flat ${coupenData.amount} off`
+              }else{
+                data.discount = `${coupenData.percentage} off `
+              }
+
+            }
             resolve(data)
         }else{
             console.log("rejected");

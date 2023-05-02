@@ -85,6 +85,27 @@
                         </div>
                         {{/if}}
 
+                        {{#if orderData.CoupenName }}
+
+                         <div class="col-xl-4 col-sm-6">
+                            <div class="order-details-contain">
+                                <div class="order-tracking-icon">
+                                    <i data-feather="map-pin" class="text-content"></i>
+                                </div>
+
+                                <div class="order-details-name">
+                                    <h5 class="text-content">Coupen used</h5>
+                                    <h6 class="theme-color"><span style="margin-top: 2%;"> CoupenName :  </span> {{orderData.CoupenName}}</h6> 
+                                    <h6 class="theme-color"> <span style="margin-top: 2%;"> Code :  </span>{{orderData.coupenCode}}</h6> 
+                                    <h6 class="theme-color"> <span style="margin-top: 2%;"> Discount :  </span>{{orderData.discount}}</h6> 
+
+
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+
+
                         {{!-- <div class="col-xl-4 col-sm-6">
                             <div class="order-details-contain">
                                 <div class="order-tracking-icon">
