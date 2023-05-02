@@ -85,7 +85,7 @@
   const catErr = document.getElementById("cat-error")
 function newCat(){
   let catog = document.getElementById("newCategory").value
-  alert(catog.length)
+  catog = catog.trim()
   if(catog.length==0){
     catErr.innerHTML="enter category name"
     return false

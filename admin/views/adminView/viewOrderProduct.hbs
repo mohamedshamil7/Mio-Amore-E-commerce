@@ -9,6 +9,8 @@
                 <th scope="col">Product</th>
                 <th scope="col">Quantity</th>
                 <th scope="col">Price</th>
+                <th scope="col">Size</th>
+                <th scope="col">Color</th>
                 <th scope="col">Address</th>
                 <th scope="col">Shipping Status</th>
 
@@ -21,6 +23,8 @@
                  <td>{{this.cart_product.ProductName}}</td>
                 <td>{{this.quantity}}</td>
                 <td>₹{{this.cart_product.Price}}</td>
+                <td>₹{{this.cart_product.Size}}</td>
+                <td>₹{{this.cart_product.Color}}</td>
                         {{/each}}
                 <td>
                     {{products.deleviryDetails.fullName}} <br>
@@ -36,13 +40,6 @@
                  <td>
                     <h6 class="badge bg-info">{{products.deliveryStatus}}</h6><br>
 
-                        {{!-- <select class="shipping" name="status"  >
-                            <option value="Preparing">Order Confirmed</option>
-                            <option value="Shipped">Shipped</option>
-                            <option value="Delivered">Delivered</option>
-                        </select> --}}
-                    <p class="badge bg-secondary">{{products.status}}</p> <br>
-
                 </td>
             </tr>
         </tbody>
@@ -53,17 +50,3 @@
    
 </section>
 
-
-
-
-{{!-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
-
-
-<script>
-
-  $(document).ready( function () {
-    $('#SingleTable').DataTable();
-} );
-</script> --}}

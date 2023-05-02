@@ -189,16 +189,27 @@ function validateCoupenCode(){
 }
 function validatestartDate(){
     let startDate =document.getElementById('startDate').value
+
+
+
+
     if(startDate.length <=0){
         startDateerr.innerHTML = 'startDate is required'
         return false
         }
+        
+        
         startDateerr.innerHTML=''
         return true
         
 }
 function validateendDate(){
     let endDate =document.getElementById('endDate').value
+    let startDate =document.getElementById('startDate').value
+
+    if(new Date(startDate) <= new Date(endDate)){
+        endDateerr.innerHTML = 'end date should be grater than start date'
+      }
     if(endDate.length <=0){
         endDateerr.innerHTML = 'endDate is required'
         return false

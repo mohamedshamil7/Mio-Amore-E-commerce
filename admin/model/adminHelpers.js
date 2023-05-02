@@ -299,18 +299,15 @@ module.exports={
     },
 
     addcategory:(datas)=>{
-        console.log(datas);
         const data=datas.toLowerCase();
         return new Promise(async(resolve,reject)=>{
             let category =await db.get().collection(collection.CATTEGORY_COLLECTION).findOne({categoryName:data})
-            console.log(category);
             if(category){
                 return reject(category)
             }
             else{
 
                 let newcat= await db.get().collection(collection.CATTEGORY_COLLECTION).insertOne({categoryName:data})
-                console.log(newcat)
 
                 if(newcat.insertedId){
                     resolve(newcat)
@@ -402,8 +399,6 @@ module.exports={
         })
     },
     AvailProduct:(id,Availability)=>{
-        console.log(id);
-        console.log(Availability);
         let status
         return new Promise(async(resolve,reject)=>{
         if(Availability== "true"){
@@ -418,7 +413,6 @@ module.exports={
                 Availability:status
             }
         }).then((response)=>{
-            console.log(response);
             resolve(response)    
         }).catch((error)=>{
          reject(error)
@@ -437,18 +431,15 @@ module.exports={
     },
 
     editProduct:(id)=>{
-        console.log(">>>>");
         id.Price = Number(id.Price)
         id.MRP= Number(id.MRP)
         id.Stock=Number(id.Stock)
         id.offer = Number(id.offer)
         if(id.Stock<1){
             console.log(id.Stock);
-            console.log("false do");
             id.inStock=false
         }else if( id.Stock>=1){
             console.log(id.Stock);
-            console.log("true ");
             id.inStock=true
         }
         return new Promise(async(resolve,reject)=>{
@@ -478,13 +469,10 @@ module.exports={
 
                 }
             })
-            console.log("}}}}}}}}}}}}}}}}}}}}}}}}");
             if(Product) {
-                console.log("??????????????????????????????",Product.insertedId);
                 resolve(Product)
             }
             else {
-                console.log("else wooo");
                 reject()}
         })
     },
@@ -515,7 +503,6 @@ module.exports={
         },
 
         getAllorders:()=>{
-            // date not updated
             return new Promise(async(resolve,reject)=>{
                 let allOrders =await db.get().collection(collection.ORDER_COLLECTION).aggregate([
                     {
@@ -535,15 +522,11 @@ module.exports={
                         }
                     }
                 ]).toArray()
-                console.log("all orders:", allOrders);
                 allOrders = allOrders.reverse()
                 if(allOrders.length ==0){
-                    console.log("0");
                     reject()
                 }
                 else{
-                    // console.log(allOrders.length);
-                    console.log(allOrders);
                     resolve(allOrders)
 
                 }
@@ -703,7 +686,7 @@ module.exports={
                 }
                 resolve()
             })
-        }   ,
+        },
         deleteImage:(image,product,no)=>{
         
             return new Promise(async(resolve,reject)=>{
@@ -842,7 +825,6 @@ module.exports={
             })
         },
         confirmReturn: (orderId) => {
-            console.log("orderid:",orderId);
             return new Promise(async (resolve, reject) => {
 
                 const url=MONGODB
@@ -875,15 +857,7 @@ module.exports={
                                 {'j.id':new ObjectId(fullOrder.cart[i].varientId)},{'x.id':new ObjectId(fullOrder.cart[i].sizeId)}
                                 ],session},
                                 ) 
-
-                                if(varint){
-                                    console.log("varient kjdnas",varint);
-                                }else{
-                                    console.log(varint);
-                                    console.log("noononononononononon");
-                                }
                             }
-                            // stock incrimenting 
                         }
                         
                         let creditData={
@@ -894,7 +868,6 @@ module.exports={
                             
                         }
                         
-                        console.log("fullOrder:222",fullOrder.userId);
                     let wallet=   await db.get().collection(collection.WALLET_COLLECTION).updateOne({userId:new ObjectId(fullOrder.userId)},{
                            $inc:{
                                 total:fullOrder.totalAmount
@@ -905,7 +878,6 @@ module.exports={
                         }
                         },{session})
 
-                        console.log(wallet);
 
                         let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
                                 $set:{
@@ -1002,7 +974,6 @@ module.exports={
                         $match:{$or:[{deliveryStatus:"Delivered"},{returnConfirmed:true}]}
                     },
                 ]).toArray()
-                console.log(Sales);
                 resolve(Sales)
             })
         },
@@ -1122,7 +1093,6 @@ module.exports={
                         }
                     },
                 ]).toArray()
-                console.log(";;;;;;vari",vari,"/////");
                 if(vari){
                     resolve(vari[0])
                 }else{
@@ -1133,9 +1103,6 @@ module.exports={
 
 
         editVariation_submit:(data)=>{
-            console.log(data.prodId);
-            console.log(data.varId,";;;");
-            console.log(data.dataId);
             let stock 
             data.Stock=Number(data.Stock)
             if( data.Stock>0){
@@ -1145,7 +1112,7 @@ module.exports={
             }
             return new Promise(async(resolve,reject)=>{
 
-                let edit = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:ObjectId(data.prodId),},{
+                let edit = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId),},{
 
                     $set:{
                         // "Variations.$.Data.Id":ObjectId(data.varId),
@@ -1161,7 +1128,6 @@ module.exports={
                     ]}
                 )
                 if(edit){
-                    console.log(edit);
                     resolve(edit)
                 }else{
                     reject()

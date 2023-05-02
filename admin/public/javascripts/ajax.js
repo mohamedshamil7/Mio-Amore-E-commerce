@@ -1,6 +1,5 @@
 
 function deleteCategor(id){
-console.log(id);
     Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -37,7 +36,6 @@ console.log(id);
 }
 
 function deleteBrand(id){
-  console.log("<<<<<<<<<<<<<",id);
       Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -110,16 +108,9 @@ function cancelOrder(orderId){
 }
 
 
-
-
-function changeDeliveryStatus(orderid,status){
-  console.log(orderid);
-  console.log(status);
-}
-
 function addCategory (){
   const category = document.getElementById("newCategory").value
-  alert(category.length)
+  category= category.trim()
   if(category.length<=0){
     document.getElementById('cat-error').innerHTML='please add Value '
     return 
@@ -159,7 +150,7 @@ function addCategory (){
 function addBrand (){
   // const error = document.getElementById("")
   const brand = document.getElementById("newBrand").value
-  alert(brand.length)
+  brand= brand.trim()
   if(brand.length==0){
     document.getElementById('brand-error').innerHTML='please add Value '
 
@@ -242,9 +233,7 @@ function couponDelete(id){
 
 
 function delivwerStatuschange(id){
-  alert(id)
   let s = document.getElementById("select").value
-  alert(s)
   
   $.ajax({
     url:"/admin/delivery-status",
@@ -264,7 +253,6 @@ function delivwerStatuschange(id){
 
 
 function scheduleorder(orderId){
-  alert(orderId)
 
   let date = document.getElementById('deliverydate').value
   alert(date.length)

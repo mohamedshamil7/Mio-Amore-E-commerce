@@ -250,10 +250,11 @@ module.exports = {
     }).catch((errors)=>{
      let  error = "Category already exists";
         res.status(404).json({ error: error });
+    }).catch(()=>{
+      console.log("some other error cocuerd");
     })
   },
   deleteBrand:(req,res)=>{
-    console.log(":::::::",req.params.id);
     adminHelper.deleteBrand(req.params.id).then((resp)=>{
       res.json({status: true})
     }).catch((error)=>{
@@ -264,17 +265,15 @@ module.exports = {
     adminHelper
       .getAllCategories()
       .then((categories) => {
-        console.log("found these categories", categories);
         res.render("adminView/categories", { admin: true, categories });
       })
       .catch((err) => {
         console.log(err);
+        res.redirect('/admin/reject')
       });
   },
 
   addCategoryManager: (req, res) => {
-    console.log(req.body, ";;;;;;;;;;;;;;");
-
     adminHelper
       .addcategory(req.body.category)
       .then((response) => {
@@ -284,9 +283,6 @@ module.exports = {
       .catch((categories) => {
         error = "Category already exists";
         res.status(404).json({ error: error });
-        // res.render('adminView/categories',{error});
-
-        // res.render("adminView/categories",{admin:true,error:"category already exists",categories})
       })
       .catch((err) => {
         console.log("some other error ocuured whiile adding categories");
@@ -294,7 +290,6 @@ module.exports = {
   },
 
   deleteCategory: (req, res) => {
-    console.log(req.params.id);
     adminHelper
       .deleteCategories(req.params.id)
       .then((response) => {
@@ -322,6 +317,7 @@ module.exports = {
       console.log(brands);
     }).catch(()=>{
       console.log("error in fetching alll Brands");
+      res.redirect('/admin/reject')
     })
     res.render("adminView/addProduct", { admin: true,categories,brands});
   },
@@ -396,7 +392,6 @@ module.exports = {
   },
 
   availabilityCheck: (req, res) => {
-    console.log("call came");
     console.log(req.body);
     adminHelper
       .AvailProduct(req.params.id, req.body.Availability)
@@ -405,6 +400,7 @@ module.exports = {
       })
       .catch((error) => {
         console.log(error);
+        res.redirect("/admin/reject");
       });
   },
 
@@ -413,16 +409,17 @@ module.exports = {
     let categories = null;
 
     await adminHelper.getEditProduct(req.body.id).then((products) => {
-      console.log(products);
       Data = products;
-    });
+    }).catch(()=>{
+      res.redirect('/admin/reject')
+    })
    await  adminHelper.getAllCategories().then((categoriess) => {
       categories = categoriess;
-      // console.log(categories);
-    });
-    console.log(   "...",Data);
+    }).catch((err)=>{
+      res.redirect('/admin/reject')
+    })
+
     async function processImages(Data) {
-      console.log(Data);
       if (Data.Image1) {
         Data.isImage1= true
         Data.urlImage1 = await getImgUrl(Data.Image1);
@@ -439,8 +436,6 @@ module.exports = {
         Data.isImage4= true
         Data.urlImage4 = await getImgUrl(Data.Image4);
       }
-
-      console.log("Data:", Data);
       return Data;
     }
     let product = await processImages(Data);
@@ -454,14 +449,11 @@ module.exports = {
 
 
   EditProductData: async (req, res) => {
-    console.log("body",req.body);
-    console.log("req",req.files);
 
     const files = req.files;
 
     let arr1 = Object.values(files);
     let arr2 = arr1.flat();
-    console.log("arr2:", arr2);
     let name 
     let data = [];
 
@@ -477,7 +469,6 @@ module.exports = {
         }else if(fieldname === "Image4"){
           name = randomImgName();
         }
-        // let imageName = randomImgName();
         data.push({ fieldname, img: name });
 
         const { buffer } = files;
@@ -497,12 +488,11 @@ module.exports = {
         } catch (e) {
           console.log("eror");
           console.log(e);
+          res.redirec('/admin/reject')
         }
       })
     );
-    console.log("::::::",data);
 if(data.length!==0){
-  console.log("entereed");
   data.map((value) => {
     if (value.fieldname === "Image1" && value.img!=null) {
       req.body.Image1 = value?.img;
@@ -530,7 +520,6 @@ if(data.length!==0){
     }
   });
 }else{
-  console.log("hrteer");
   req.body.Image1 = req.body.imagename1
   req.body.Image2 = req.body.imagename2
   req.body.Image3 = req.body.imagename3
@@ -538,13 +527,13 @@ if(data.length!==0){
 }
    let mrp = req.body.MRP
    let sellingprice = req.body.Price
-  //  req.body.offer = parseInt(((mrp-sellingprice)/mrp)/100)
    req.body.offer = parseInt(((mrp-sellingprice)/mrp)*100)
     adminHelper.editProduct(req.body).then((response) => {
-      console.log(response);
 
       res.redirect("/admin/stocks");
-    });
+    }).catch(()=>{
+      res.redirect('/admin/reject')
+    })
   },
 
   deleteImage:async(req,res)=>{
@@ -575,9 +564,11 @@ if(data.length!==0){
 
   allorders: (req, res) => {
     adminHelper.getAllorders().then((orders) => {
-      console.log(orders);
-      res.render("adminView/orders", { admin: true, orders, dataTable:true });
-    });
+
+      res.render("adminView/orders", { admin: true, orders,  });
+    }).catch(()=>{
+      res.render("adminView/orders", { admin: true, orders, e:"no Orders yet"  });
+    })
   },
 
   adminLogout: (req, res) => {
@@ -589,7 +580,9 @@ if(data.length!==0){
     adminHelper.cancelOrderAdminSubmit(req.body.orderId).then((response) => {
       // res.redirect('/admin/allorders');
       res.json(response);
-    });
+    }).catch(()=>{
+      console.log("error");
+    })
   },
 
   viewOrderProduct: (req, res) => {
@@ -656,7 +649,6 @@ if(data.length!==0){
           element.isAmount = true
         }
     });
-    console.log(coupens,"///");
     res.render('adminView/coupen',{admin: true, coupens})
   },
   deletecoupon:(req,res)=>{
@@ -721,9 +713,14 @@ if(data.length!==0){
   },
 
   banner1Add:async(req,res)=>{
-    console.log(req.body);
 
-    console.log("filese:", req.file);
+    if(req.body?.linkTo){
+      req.body.linkTo = req.body.linkTo.trim()
+    }
+    if(!req.file ||req.body.linkTo.length==0){
+      return res.json({status:false, errorMessage:"please add required details"})
+    }
+
     const {fieldname} = req.file
 let imageName = randomImgName();
 const { buffer } = req.file;
@@ -743,19 +740,22 @@ try {
   console.log("eror");
   // console.log(e);
 }
-console.log("lllaalla");
 req.body.banner= fieldname
 req.body.img= imageName
 await adminHelper.updateBanner1(req.body).then(()=>{
-  res.redirect('/admin/banners')
+    res.json({status:true})
 })
 
 
   },
   banner2Add:async(req,res)=>{
-    console.log(req.body);
 
-    console.log("filese:", req.file);
+    if(req.body?.linkTo){
+      req.body.linkTo = req.body.linkTo.trim()
+    }
+    if(!req.file ||req.body.linkTo.length==0){
+      return res.json({status:false, errorMessage:"please add required details"})
+    }
     const {fieldname} = req.file
 let imageName = randomImgName();
 const { buffer } = req.file;
@@ -775,19 +775,22 @@ try {
   console.log("eror");
   // console.log(e);
 }
-console.log("lllaalla");
 req.body.banner= fieldname
 req.body.img= imageName
 await adminHelper.updateBanner2(req.body).then(()=>{
-  res.redirect('/admin/banners')
+res.json({status:true})
 })
 
 
   },
   banner3Add:async(req,res)=>{
-    console.log(req.body);
+    if(req.body?.linkTo){
+      req.body.linkTo = req.body.linkTo.trim()
+    }
+    if(!req.file ||req.body.linkTo.length==0){
+      return res.json({status:false, errorMessage:"please add required details"})
+    }
 
-    console.log("filese:", req.file);
     const {fieldname} = req.file
 let imageName = randomImgName();
 const { buffer } = req.file;
@@ -807,11 +810,11 @@ try {
   console.log("eror");
   // console.log(e);
 }
-console.log("lllaalla");
 req.body.banner= fieldname
 req.body.img= imageName
 await adminHelper.updateBanner3(req.body).then(()=>{
-  res.redirect('/admin/banners')
+  res.json({status:true})
+
 })
 
   },
@@ -823,7 +826,6 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       }
   },
   confrimReturn:async(req,res)=>{
-    console.log("this is the req.params",req.params.id);
     let confirm = await adminHelper.confirmReturn(req.params.id).then(()=>{
 
       res.redirect(req.get("referer"));
@@ -835,11 +837,9 @@ await adminHelper.updateBanner3(req.body).then(()=>{
 
     
   scheduleOrder:(req,res)=>{
-    console.log("?>>>>>>>>>.",req.params.id);
     adminHelper
       .viewSingleOrder(req.params.id)
       .then((products) => {
-        // products.cart.Orderid=
         let cart = products.cart;
         cart.Orderid = products._id.toString();
         console.log(cart);
@@ -850,6 +850,7 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       })
       .catch(() => {
         let e = "No orders";
+
       });
     },
 
@@ -883,14 +884,12 @@ await adminHelper.updateBanner3(req.body).then(()=>{
 
       })
       try{
-       console.log("inside try");
+
   
         const browser =await  puppeteer.launch()
         const page = await browser.newPage()
-        // const content = await compile("invoice",orderDetails)
+
         const compile = async function(templateName, data){
-          console.log("inide copile contnet");
-          console.log(process.cwd());
           const filePath = path.join(process.cwd(),"/views",`adminView/${templateName}.hbs`);
           const html = await readFile(filePath, "utf-8");
           
@@ -899,7 +898,6 @@ await adminHelper.updateBanner3(req.body).then(()=>{
         const content  = await compile("invoice",orderDetails)
   
         await page.setContent(content)
-        // const filePath = path.join(process.cwd(),"temp",`Invoice-${req.query.id}.pdf`);
   
         const pdfBuffer=  await  page.pdf({
           format:"A4",
@@ -920,23 +918,24 @@ await adminHelper.updateBanner3(req.body).then(()=>{
       }
       catch(e){
         console.log("error occured", e);
+        res.redirect('/admin/reject')
       }
       
-
+      
       // console.log(orderDetails.cart);
       // res.render("adminView/invoice",{admin:true, orderDetails, date:new Date().toLocaleString()})
-
-},
-renderbillLabel:async(req,res)=>{
-  let orderDetails
+      
+    },
+    renderbillLabel:async(req,res)=>{
+      let orderDetails
       await adminHelper.viewSingleOrder(req.query.id).then(async(details)=>{
         orderDetails = details
         orderDetails.logo =await getImgUrl("logo.jpg");
         orderDetails.date = new Date().toLocaleString()
       }).catch(()=>{
         console.log("error occured during view single order rendershipping label");
+        res.redirect('/admin/reject')
       })
-      console.log(orderDetails);
 
 
       var opts = {
@@ -953,13 +952,11 @@ renderbillLabel:async(req,res)=>{
       })
 
       try{
-        console.log("inside try");
    
          const browser =await  puppeteer.launch()
          const page = await browser.newPage()
          // const content = await compile("invoice",orderDetails)
          const compile = async function(templateName, data){
-           console.log("inide copile contnet");
            const filePath = path.join(process.cwd(),"/views",`adminView/${templateName}.hbs`);
            const html = await readFile(filePath, "utf-8");
            hbs.registerHelper('eq',function(a,b,options){
@@ -976,7 +973,6 @@ renderbillLabel:async(req,res)=>{
          const content  = await compile("shippinglabel",orderDetails)
    
          await page.setContent(content)
-         // const filePath = path.join(process.cwd(),"temp",`Invoice-${req.query.id}.pdf`);
    
          const pdfBuffer=  await  page.pdf({
            format:"A4",
@@ -997,11 +993,9 @@ renderbillLabel:async(req,res)=>{
        }
        catch(e){
          console.log("error occured", e);
+         res.redirect('/admin/reject')
        }
 
-
-
-  // res.render('adminView/shippinglabel',{ orderDetails, date:new Date().toLocaleString()})
 },
 
 renderSalesReport:async(req,res)=>{
@@ -1014,6 +1008,8 @@ renderSalesReport:async(req,res)=>{
   res.render("adminView/salesReport",{admin:true, sales})
 },
 salesFilter:(req,res)=>{
+
+
   adminHelper.filterSale(req.body.startDate,req.body.endDate).then((sales)=>{
     res.render("adminView/salesReport",{admin:true, sales})
   })

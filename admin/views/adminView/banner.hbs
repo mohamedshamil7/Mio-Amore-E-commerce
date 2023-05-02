@@ -1,10 +1,17 @@
+<style>
+    #mydata{
+        margin-top: 15%;
+    }
+</style>
+
+
 <section class="page-align mt-5 " id="footer">
-    <div class="container-fluid" class="mydata">
+    <div class="container-fluid" id="mydata">
 
         <div class="row">
                 
 
-                <form action="/admin/banner1-submit" method="post" enctype="multipart/form-data">
+                <form id="banner1-submit"  method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <img src="{{banner1.bannerUrl1}}" width="150" alt="left"> <button type="button"
@@ -20,6 +27,7 @@
                     <input type="file" class="form-control" name="banner1" id="inputText" >
                 </div>
                 <div class="col-sm-4 " >
+                    <p id="banner1error"></p>
                     <select class="form-select" name="linkTo" aria-label="Default select example">
                         {{#if products}}
                         <option value="{{this._id}}">{{this.productName}}</option>
@@ -41,7 +49,7 @@
         </form>
             <hr>
 
-             <form action="/admin/banner2-submit" method="post" enctype="multipart/form-data">
+             <form id="banner2-submit"  method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <img src="{{banner2.bannerUrl2}}" width="150" alt="left"> <button type="button" style="float: right; width: 60px;"
@@ -56,6 +64,7 @@
                     <input type="file" class="form-control" name="banner2" id="inputText">
                 </div>
                  <div class="col-sm-4">
+                     <p id="banner2error" ></p>
             <select class="form-select" name="linkTo" aria-label="Default select example">
              {{#if products}}
               <option value="{{this._id}}">{{this.productName}}</option>
@@ -76,7 +85,7 @@
                     
         </form>
             <hr>
-             <form action="/admin/banner3-submit" method="post" enctype="multipart/form-data">
+             <form id="banner3-submit"  method="post" enctype="multipart/form-data">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <img src="{{banner3.bannerUrl3}}"  width="150" alt="left"> <button type="button" style="float: right; width: 60px;"
@@ -92,6 +101,7 @@
                     <input type="file" class="form-control" name="banner3" id="inputText">
                 </div>
                  <div class="col-sm-4">
+                     <p id="banner3error" ></p>
             <select class="form-select" name="linkTo" aria-label="Default select example">
              {{#if products}}
               <option value="{{this._id}}">{{this.productName}}</option>
@@ -123,7 +133,77 @@
     {{!-- </div> --}}
 
 </section>
+<script>
+    $("#banner1-submit").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/admin/banner1-submit",
+         data:$('#banner1-submit').serialize(),
+           method:'post',
+           success:(response)=>{
+            alert(response)
+            console.log(response)
+            if(response.status==true){
+                location.href='/admin/banners'
+            }else if(response.status=="false"){
+                alert(response.errorMessage)
+                document.getElementById("banner1error").innerHTML = response.errorMessage
 
+            }
+           
+    }
+    })
+})
+
+
+
+ $("#banner2-submit").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/admin/banner2-submit",
+         data:$('#banner2-submit').serialize(),
+           method:'post',
+           success:(response)=>{
+            alert(response)
+            console.log(response)
+            if(response.status==true){
+                location.href='/admin/banners'
+            }else if(response.status=="false"){
+                alert(response.errorMessage)
+                document.getElementById("banner2error").innerHTML = response.errorMessage
+
+            }
+           
+    }
+    })
+})
+
+ $("#banner3-submit").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/admin/banner3-submit",
+         data:$('#banner3-submit').serialize(),
+           method:'post',
+           success:(response)=>{
+            alert(response)
+            console.log(response)
+            if(response.status==true){
+                location.href='/admin/banners'
+            }else if(response.status=="false"){
+                alert(response.errorMessage)
+                document.getElementById("banner3error").innerHTML = response.errorMessage
+
+            }
+           
+    }
+    })
+})
+
+    </script>
+
+
+
+</script>
 
 <script>
     function delBanner(bannername){

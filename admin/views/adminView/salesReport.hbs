@@ -8,14 +8,14 @@
           <button id="download-button" class="btn btn-secondary">Download As PDF</button>
           <button type="button" class="btn btn-secondary" onclick="export_data()" value="Export to Excel">Download As Excel</button>
         </div>
+        {{/if}}
         <form action="/admin/sale-filter" method="post">
           <div class="input-group">
-            <input type="date" name="startDate" id="startDate" class="form-control">
+            <input type="date" name="startDate"  id="startDate" class="form-control">
             <input type="date" name="endDate" id="endDate" class="form-control">
             <button class="btn btn-secondary" type="submit">Filter</button>
           </div>
         </form>
-        {{/if}}
       </div>
     </div>
     {{#if sales}}
@@ -27,7 +27,6 @@
         <thead>
           <tr>
             <th scope="col">Date</th>
-            <th scope="col">User</th>
             <th scope="col">Order ID</th>
             <th scope="col">Total</th>
             <th scope="col">Payment Method</th>
@@ -38,7 +37,6 @@
           {{#each sales}}
           <tr>
             <td id="date">{{this.deliveredDate}}</td>
-            <td>{{this.deliveryDetails.fullName}}</td>
             <td>{{this._id}}</td>
             <td>{{this.totalAmount}}</td>
             <td>{{this.paymentMethod}}</td>
@@ -73,7 +71,7 @@
             
             function export_data() {
         let data = document.getElementById('invoice');
-        var fp = XLSX.utils.table_to_book(data, { sheet: 'wisdom' });
+        var fp = XLSX.utils.table_to_book(data, { sheet: 'mioamore' });
         XLSX.write(fp, {
             bookType: 'xlsx',
             type: 'base64'
