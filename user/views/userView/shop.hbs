@@ -1,4 +1,41 @@
+<style>
+    .category-button {
+  padding: 12px 24px;
+  background-color: #00234d;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-button:hover {
+  background-color: #0062cc;
+}
+.brand-button {
+  padding: 12px 24px;
+  background-color: #00234d;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.brand-button:hover {
+  background-color: #0062cc;
+}
+
+</style>
+
+
  {{!-- <!-- Poster Section Start -->
+
+
     <section>
         <div class="container-fluid-lg">
             <div class="row">
@@ -111,7 +148,7 @@
                                                 <li>
                                                     
                                                         {{!-- <input type="text" name="name" id="" value="{{this.categoryName}}" hidden> --}}
-                                                        <button style="border: none;" onclick="selectCategory('{{this.categoryName}}')"  type="button">{{this.categoryName}}</button>
+                                        <button class="category-button" onclick="selectCategory('{{this.categoryName}}')" type="button">{{this.categoryName}}</button>
 
                                               
                                                     {{/each}}
@@ -178,7 +215,7 @@
                                                 <li>
                                                     
                                                         {{!-- <input type="text" name="name" id="" value="{{this.categoryName}}" hidden> --}}
-                                                        <button style="border: none;" onclick="selectbrand('{{this.brandName}}')"  type="button">{{this.brandName}}</button>
+                    <button class="brand-button" onclick="selectbrand('{{this.brandName}}')" type="button">{{this.brandName}}</button>
 
                                               
                                                     {{/each}}
