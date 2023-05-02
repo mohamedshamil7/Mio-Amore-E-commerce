@@ -93,10 +93,8 @@ module.exports = {
     } else {
       try {
         const user = jwt.verify(token, MY_SECRET);
-        console.log("userrrrr<<<<<<<<<<<<<<<<<<<>>>>>>>" + user);
         if (user) {
           res.redirect("/admin/adminDash")
-          // res.redirect("/user/home")
         }
       } catch (err) {
         next();
@@ -105,12 +103,10 @@ module.exports = {
   },
 
   renderadminLogin: (req, res) => {
-    console.log("calll is herererrrre");
     res.render("adminView/adminlogin");
   },
 
   salesReport: async (req, res) => {
-    console.log("entered >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
     let salesTitle = null;
     console.log(req.body, "///.......>>>");
     let reports = null;
@@ -142,33 +138,30 @@ module.exports = {
   },
 
   adminLoginRoute: (req, res, next) => {
-    console.log("lgo in admin login route");
     adminHelper
       .adminLogin(req.body)
       .then((response) => {
-        // req.session.admin=req.body.adminname;
         let admin = response;
         console.log(admin);
         const token = createToken(admin);
-        console.log("here");
         res.cookie("admintoken", token, {
           httpOnly: true,
         });
         res.status(201);
         console.log(token);
-        // req.session.loggedIn=true
-        console.log("calling next");
-        next();
+
+
+        res.json({status:true})
       })
-      .catch(() => {
-        res.render("adminView/adminlogin", {
-          error: "invalid Admin Id or Password",
-        });
+      .catch((err) => {
+        console.log(err);
+        res.render("adminView/adminlogin", {errorMessage: "invalid Admin Id or Password" });
+        res.json({status:false, errorMessage:"invalid adminId or password"})
       });
   },
 
   autherization: (req, res, next) => {
-    console.log("entered auth");
+
 
     const token = req.cookies.admintoken;
     console.log(token);
@@ -177,12 +170,8 @@ module.exports = {
     } else {
       try {
         const user = tokenVerify(req);
-        // console.log(user);
         if (user) {
           const decode = tokenVerify(req);
-          console.log(decode, "+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
-          console.log(decode.value.insertedId);
-          console.log("next going to work");
           next();
         } else {
           res.render("adminView/adminlogin");
@@ -208,18 +197,12 @@ module.exports = {
     let totalUserCount = await adminHelper.getAllUsers()
     let chartcount = await adminHelper.getchartCount()
     let OrdersCount = await adminHelper.getOrdersCount()
-console.log(chartcount);
-    console.log(`today:${dailyRevenue}`);
-    console.log(`week:${weeklyRevenue}`);
-    console.log(`,monty:${monthlyRevenue}`);
-    console.log(`uyear:${yearlyRevenue}`);
 
       res.render("adminView/adminDash", { admin: true, salesToday:salesToday.length,salesweek:salesweek.length ,salesMonth:salesMonth.length, saleYear:saleYear.length , dailyRevenue,weeklyRevenue,monthlyRevenue,yearlyRevenue,totalUserCount:totalUserCount.length,chartcount, OrdersCount});
   },
 
   AllUsersPage: (req, res) => {
     adminHelper.getAllUsers().then((users) => {
-      // console.log(users);
       res.render("adminView/allUsers", { admin: true, users });
     });
   },

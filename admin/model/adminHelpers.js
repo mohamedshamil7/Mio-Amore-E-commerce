@@ -7,6 +7,7 @@ const Collections = require('../../dbconnections/Collections')
 
 const {S3Client, GetObjectCommand, DeleteBucketCorsCommand  } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { log } = require('console')
 
 const mongoClient=require('mongodb').MongoClient
 
@@ -51,7 +52,6 @@ const getImgUrl= async(imgName)=>{
 
 module.exports={
     adminLogin:(adminData)=>{
-        console.log(adminData);
         return new Promise(async(resolve,reject)=>{
             let admin= await db.get().collection(collection.ADMIN_COLLECTION).findOne({adminname:adminData.adminname})            
              if(admin){
@@ -63,17 +63,20 @@ module.exports={
                         }
                         resolve(adminData)
                     }else{
-                        reject()
+                        let err="password error"
+                        console.log("password error");
+                        reject(err)
                     }
                 })
             }else{
-                reject()
+                let err = "adminname error"
+                console.log("username error");
+                reject(err)
             }
         })
     },
 
     getDailyOrder:()=>{
-        // const currentDate = new Date().
 
         return new Promise(async(resolve,reject)=>{
             const order  = await db.get().collection(collection.ORDER_COLLECTION).aggregate([
@@ -81,7 +84,6 @@ module.exports={
                     $match:{date:new Date().toDateString()}
                 }
             ]).toArray()
-            console.log("order daily",order);
             resolve(order)
         })
     },
@@ -106,7 +108,6 @@ module.exports={
                     {fullDate:{$gte: new Date(new Date().getDate()-30)}}
                 ]
             }).toArray()
-            console.log(order,"mothly");
             resolve(order)
         })
     },
@@ -137,7 +138,6 @@ module.exports={
               },
             },
           ]).toArray();
-          console.log(sales);
           if (sales.length !== 0) {
             resolve(sales[0].total);
           } else {

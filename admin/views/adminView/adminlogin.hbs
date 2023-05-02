@@ -24,13 +24,13 @@
 
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Admin Login</h5>
-                    <p class="text-center small">Enter your username & password </p>
+                    <p class="text-center small">Enter your adminname & password </p>
                   </div>
 
-                  <form action="/admin/login-submit" method="post" class="row g-3 needs-validation" novalidate>
+                  <form id="admiLogin" action="" method="post" class="row g-3 needs-validation" novalidate>
 
                     <div class="col-12">
-                      <span style="color: red;">{{error}}</span>
+                      <span style="color: red;">{{errorMessage}}</span>
                       <label for="yourUsername"  class="form-label">adminname</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend">@</span>
@@ -75,3 +75,27 @@
     </section>
 
   </body>
+
+
+  <script>
+    $("#adminLogin").submit((e)=>{
+    e.preventDefault()
+    $.ajax({
+        url:"/admin/login-submit",
+         data:$('#adminLogin').serialize(),
+           method:'post',
+           success:(response)=>{
+            alert(response)
+            console.log(response)
+            if(response.status==true){
+                location.href='/admin/adminDash'
+            }else if(response.status=="false"){
+                alert(response.errorMessage)
+                document.getElementById("errorMessage").innerHTML = response.errorMessage
+
+            }
+           
+    }
+    })
+})
+  </script>
