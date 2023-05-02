@@ -27,7 +27,7 @@
                     <p class="text-center small">Enter your adminname & password </p>
                   </div>
 
-                  <form id="admiLogin" action="" method="post" class="row g-3 needs-validation" novalidate>
+                  <form id="adminLogin" action="" method="post" class="row g-3 needs-validation" novalidate>
 
                     <div class="col-12">
                       <span style="color: red;">{{errorMessage}}</span>
@@ -78,6 +78,7 @@
 
 
   <script>
+    alert("here")
     $("#adminLogin").submit((e)=>{
     e.preventDefault()
     $.ajax({
