@@ -46,7 +46,6 @@ import {
        console.log(userData);
        var queryString = $.param(userData);
        if(newuser){
-        // alert("new user")
 
 
         
@@ -58,16 +57,13 @@ import {
           location.href = `/googleSignUp/${queryString}`;
 
          }else{
-          alert("error occured")
          }
        }else{
-        // alert('old user')
         if(userData){
           // var queryString = $.param(userData);
           location.href = `/googleLogin/${queryString}`;
 
          }else{
-          alert("error occured")
          }
 
        }

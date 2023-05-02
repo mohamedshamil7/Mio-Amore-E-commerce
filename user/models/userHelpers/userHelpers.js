@@ -103,8 +103,6 @@ module.exports={
      userBlockCheck:(userId)=>{
         return new Promise(async(resolve,reject)=>{
             let user = await db.get().collection(collection.USER_COLLECTION).findOne({_id: new ObjectId (userId)})
-            console.log(user);
-            console.log(user.isBlocked,"....");
             if(user.isBlocked==true){
                 reject()
             }
@@ -151,7 +149,6 @@ module.exports={
                     resolve(data)
                 }
                 else{
-                    console.log("all selse worked");
                     reject()
                 }
             }
@@ -165,7 +162,6 @@ module.exports={
 
 
      viewProduct:(prodid)=>{
-        console.log("enttered");
         return new Promise(async(resolve,reject)=>{
 
             await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id: new ObjectId(prodid)}).then((response)=>{
@@ -175,20 +171,6 @@ module.exports={
             }).catch((error)=>{
                  reject(error)
                 })
-            // try{
-            //     let product= await db.get().collection(collection.PRODUCT_COLLECTIONS).findOne({_id:ObjectId(prodid)})
-            //     if(product){
-            //         console.log(product);
-            //         resolve(product)   
-            //         }
-            //         else{
-            //             reject(err)
-            //         }
-
-            // }catch(err){
-            //     console.log(err);
-
-            // }
         })
      },
      addToWishlist:(prodID,userId)=>{
@@ -198,7 +180,6 @@ module.exports={
                 wishlist= userwl.wishlist.findIndex(product=>{
                     return product==prodID
                 })
-                console.log(wishlist);
                 if(wishlist !=-1){
                     db.get().collection(collection.WISHLIST_COLLECTION).updateOne({user:new ObjectId(userId)},{
                         $pull:{
@@ -234,28 +215,17 @@ module.exports={
                             inWishlist: true
                         }
                     })
-                    console.log("responsed form helperass",response);
                     resolve(response)
                 }).catch((err)=>{
-                    console.log("got into catch");
                     reject(err)
                 })
             }
            
         })
      },
-    //  getAllWishist:(userId)=>{
-    //     return new Promise (async(resolve,reject)=>{
-    //         let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user:ObjectId(userId)})
-    //         if(userwl){
-    //             await db.get().collection(collection.WISHLIST_COLLECTION).find()
-    //         }
-    //     })
-    //  }
     wishlistProducts:(userId)=>{
         return new Promise(async(resolve,reject)=>{
              let userwl = await db.get().collection(collection.WISHLIST_COLLECTION).findOne({user: new ObjectId(userId)})
-             console.log(userwl);
              if(userwl){
                 let wishlist=await db.get().collection(collection.WISHLIST_COLLECTION).aggregate([
                     {
@@ -344,10 +314,6 @@ findbynumber:(userphone)=>{
 },
 
 addToCart:(userId,data)=>{
-    console.log(userId,":userId");
-    console.log(data.prodId,":pro");
-    console.log(data.varient,":var");
-    console.log(data.sizeId,":size");
     let prodObj = {
             item:new ObjectId(data.prodId),
             varientId:new ObjectId(data.varient),
@@ -358,13 +324,11 @@ addToCart:(userId,data)=>{
     return new Promise(async(resolve,reject)=>{
 
         let userCart = await db.get().collection(collection.CART_COLLECTION).findOne({user:new ObjectId(userId)}) 
-        console.log(userCart);
         if(userCart){
             // const proExist = userCart.books.findIndex((book) => book.item == proId);
            const  cart= userCart.product.findIndex(product=>{
                 return product.varientId==data.varient
             })
-            console.log(cart);
 
             if(cart !==-1){
                await db.get().collection(collection.CART_COLLECTION).updateOne({user:new ObjectId(userId),'product.varientId':new ObjectId(data.varient)},{
@@ -401,7 +365,6 @@ getcart:(userId)=>{
     let total =0
     return new Promise(async(resolve,reject)=>{
       let  cart= await db.get().collection(collection.CART_COLLECTION).findOne({user: new ObjectId(userId)})
-    //   console.log("check cart erere",cart);
       if(cart){
         const cartItems= await db.get().collection(collection.CART_COLLECTION).aggregate([
             {
@@ -438,17 +401,10 @@ getcart:(userId)=>{
         ]).toArray()
         if(cartItems){
             let outofStock= false
-            console.log("workingggg");
          
-            console.log(cartItems);
             for(let i=0;i<cartItems.length;i++){
-                console.log(cartItems.length);
                 if(cartItems[i].item.equals(cartItems[i].varientId)){
-                    console.log("same");
                 }else{
-                    console.log(cartItems[i].item,"prod id");
-                    console.log(cartItems[i].varientId,"var id");
-                    console.log("enterd else");
                   let vari=  await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                         {
                             $match:{
@@ -477,14 +433,7 @@ getcart:(userId)=>{
                             }
                         }
 
-                        // {
-                        //     $group:{
-                        //         _id:'$Variations'
-                        //     }
-                        // },
                     ]).toArray()
-                    console.log(vari,"THIS IS VART");
-                    console.log(vari[0].Variations.Data);
                     cartItems[i].cart_product.Color = vari[0].Variations.Data.color,
                     cartItems[i].cart_product.Size = vari[0].Variations.Data.Size
                     cartItems[i].cart_product.Price = vari[0].Variations.Data.Price
@@ -493,28 +442,20 @@ getcart:(userId)=>{
 
                 }
               
-                console.log(cartItems[i].cart_product.inStock,"<<<<<<<<<");
                 if(cartItems[i].cart_product.inStock==false){
-                    console.log("hereeeere");
                     outofStock=true
                 }
-                console.log(typeof (cartItems[i].quantity),"qunatity" );
-                console.log(typeof (cartItems[i].cart_product.Price) , "Price");
+
              total =  total+(cartItems[i].quantity * cartItems[i].cart_product.Price)   
             }
-            console.log(outofStock);
-            console.log(cartItems);
-            console.log(total,"total>>>>>>>>>>>>>>>");
             let obj={
                 cartItems:cartItems,
                 outofStock:outofStock,
                 total:total
             }
-            console.log("helper obj",obj);
             resolve(obj)
         }
         else{
-            console.log("this is woring");
             let status=0
             resolve(status)
         }
@@ -542,9 +483,7 @@ getcart:(userId)=>{
 },
 
 removeCart:(userId,prodId,varientId)=>{
-    console.log(userId);
     
-    console.log("prodd>>>>>>>>>>>>>>>>>",prodId);
     return new Promise(async(resolve,reject)=>{
         let userCart= db.get().collection(collection.CART_COLLECTION).findOne({user:new ObjectId(userId)})
         if(userCart){
@@ -579,7 +518,6 @@ changeProductQuantity:(data)=>{
     let quantity=parseInt(data.quantity)
 
     let count=parseInt(data.count)
-    console.log(data);
 
     return new Promise(async(resolve,reject)=>{
 
@@ -609,7 +547,6 @@ changeProductQuantity:(data)=>{
                                 }
                 }
         }else{
-            console.log("not same");
 
             let stock= await db.get().collection(collection.PRODUCT_COLLECTIONS).aggregate([
                 {
@@ -639,10 +576,8 @@ changeProductQuantity:(data)=>{
                     }
                 }
             ]).toArray()
-            console.log(stock);
             stock = stock[0].Variations.Data.Stock
              if(stock<(quantity + count)){
-            console.log("entered reject");
             return reject()
                  }else{
                     if(count== -1 && quantity== 1 ){
@@ -665,30 +600,6 @@ changeProductQuantity:(data)=>{
 
         }
 
-
-
-        // stock=stock.Stock
-        // if(stock<(quantity + count)){
-        //     console.log("entered reject");
-        //     return reject()
-        // }else{
-            // if(count== -1 && quantity== 1 ){
-            //     await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
-            //         $pull:{
-            //             product:{varientId:ObjectId(data.varientId)}
-            //         }
-            //     }).then(()=>{
-            //         resolve({prodDelete:true})
-            //     })
-            // }else{
-        //         await db.get().collection(collection.CART_COLLECTION).updateOne({$and:[{_id:ObjectId(data.cart)},{'product.varientId':ObjectId(data.varientId)}]},{
-        //             $inc:{'product.$.quantity':count}  
-        //         }).then(()=>{
-        //             resolve(true)
-        //         })
-        //     }
-
-        // }
        
        
 
@@ -1771,7 +1682,6 @@ getAllReviews:(prodId)=>{
                     }
         ]).toArray()
       if(reviews){
-        console.log("this are the reviews :",reviews);
         resolve(reviews)
       }else{
         reject()

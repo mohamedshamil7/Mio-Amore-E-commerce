@@ -139,13 +139,7 @@
                                         {{#each Variations}}
 
                                         <li>
-                                            {{!-- <form action="/user/VariationSelect"> --}}
-                                                {{!-- <input type="text" name="variationId"  value="{{this.Variations.Data.id}}" hidden> --}}
-                                                {{!-- <input type="text" name="prodId"  value="{{data._id}}" hidden> --}}
-                                            {{!-- <a > <button type="submit" style="border: none; background: none;" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a> --}}
                                             
-                                            {{!-- </form> --}}
-                                            {{!-- <h1>{{this.Variations.id}}</h1> --}}
                                             <a > <button type="button" style="border: none; background: none;" class="variations"  onclick=" return Variation('{{this.Variations.Data.Price}}','{{this.Variations.Data.Size}}','{{this.Variations.Data.color}}','{{this.Variations.Data.id}}','{{this.Variations.Data.inStock}}','{{this.Variations.id}}')" >Size : {{this.Variations.Data.Size}}  Color :{{this.Variations.Data.color}}</button> </a>
                                         </li>
                                       
@@ -181,9 +175,6 @@
                                     {{#if data.Availability}}
 
 
-                                   {{!-- <a href="/user/addToCart/{{data._id}}">  <button 
-                                        class="btn btn-md bg-dark cart-button text-white w-100">Add To Cart</button>
-                                        </a> --}}
                                         <button id="addToCartButton" class="btn btn-md bg-dark cart-button text-white w-100" 
                                         onclick="addToCart('{{data._id}}')">ADD TO CART </button>
 
@@ -211,10 +202,7 @@
                                     </a>
                                     
                                     {{/if}}
-                                    {{!-- <a href="compare.html"> --}}
-                                        {{!-- <i data-feather="shuffle"></i> --}}
-                                        {{!-- <span>Add To Compare</span> --}}
-                                    {{!-- </a> --}}
+                        
                                 </div>
 
                                     {{!-- <div class="pickup-box">
@@ -315,7 +303,7 @@
 
                                                 <div class="col-12">
                                                     <div class="review-title">
-                                                        <h4 class="fw-500">Customer questions & answers</h4>
+                                                        <h4 class="fw-500">Customer reviews & ratings</h4>
                                                     </div>
 
                                                     <div class="review-people">
@@ -597,9 +585,7 @@
     <!-- Product Left Sidebar End -->
 
 
-    <script src="https://unpkg.com/js-image-zoom/js-image-zoom.js"></script>
    
-<script src="https://cdn.jsdelivr.net/npm/js-image-zoom/js-image-zoom.min.js"></script>
 
 <script>
     let id = null
@@ -777,3 +763,8 @@
 
 
 </script>
+
+
+ <script src="https://unpkg.com/js-image-zoom/js-image-zoom.js"></script>
+   
+<script src="https://cdn.jsdelivr.net/npm/js-image-zoom/js-image-zoom.min.js"></script>

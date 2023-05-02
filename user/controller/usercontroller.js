@@ -27,7 +27,6 @@ paypal.configure({
 
 
 const { stringify } = require("querystring");
-const { log } = require("console");
 
 
 const bucketname = process.env.BUCKET_NAME
@@ -57,7 +56,6 @@ const tokenVerify = (request) => {
 
   return await userHelpers.getcart(decode.value.insertedId).then((obj)=>{
   
-    // console.log("new cart:>>>",cart);
     return obj
   }).catch(()=>{
     let cartStatus= "no cart available"
@@ -68,7 +66,6 @@ const tokenVerify = (request) => {
 const CartCount= async (req)=>{
   let decode= tokenVerify(req)
   return await userHelpers.getCartCount(decode.value.insertedId).then((count)=>{
-    console.log("count,,,,,,",count);
     return count
   }).catch((error)=>{
     return error
@@ -130,16 +127,13 @@ module.exports = {
 
   homeJwtCheck: (req, res, next) => {
     const token = req.cookies.token;
-    console.log(token);
     if (!token) {
       next();
     } else {
       try {
         const user = jwt.verify(token, MY_SECRET);
-        console.log("userrrrr<<<<<<<<<<<<<<<<<<<>>>>>>>" + user);
         if (user) {
           res.redirect("/home")
-          // res.redirect("/user/home")
         }
       } catch (err) {
         next();
@@ -148,20 +142,14 @@ module.exports = {
   },
 
   autherization: (req, res, next) => {
-    console.log("entered auth");
-
     const token = req.cookies.token;
-    console.log(token);
     if (!token) {
       res.render("userView/login");
     } else {
       try {
         const user = tokenVerify(req);
-        // console.log(user);
         if (user) {
           const decode = tokenVerify(req);
-          console.log(decode, "+++++decode is here >>>>>>>>>>>>>>>>>>>>>>>");
-          console.log(decode.value.insertedId);
 
           userHelpers
             .userBlockCheck(decode.value.insertedId)
@@ -184,11 +172,8 @@ module.exports = {
   },
 
   renderHome: async (req, res) => {
-    console.log("got in here");
     let decode = tokenVerify(req);
-    console.log(decode);
     let walletData = await wallet(req);
-    console.log(walletData.total, "//////////");
     // let total = await TotalAmount(req);
     let cart = await cartProd(req);
     let products = cart.cartItems;
@@ -201,7 +186,6 @@ module.exports = {
     // console.log(cart);
     let banner = await userHelpers.getallBanners()
     async function processImagesd(Data) {
-      console.log(Data,"ethida");
       for(let i=0;i<Data.length;i++){
         if (Data[i].name==='banner1') {
           banner1={
@@ -229,12 +213,9 @@ module.exports = {
             }
           }
         }
-          console.log("Data:", Data);
-        // return Data;
      
     }
      await processImagesd(banner);
-    console.log("banners ", banner3);
     let count = await CartCount(req);
     await userHelpers
       .getAllProducts(dbQuery)
@@ -248,10 +229,7 @@ module.exports = {
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
-          // console.log(";;;;;fjf");
-          // console.log("image 1 :", data[i].Image1);
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
-          // console.log("Data[i].urlImage1:", data.all[i].urlImage1);
         }
       }
       return data;
@@ -264,7 +242,6 @@ module.exports = {
       userpar: true,
       products,
       count,
-      // total,
       outofStock,
       walletTotal: walletData.total,
       banner1,
@@ -272,7 +249,6 @@ module.exports = {
     });
   },
   redirectHome: (req, res) => {
-    console.log("entereddd");
     res.redirect("/home");
   },
 
@@ -292,7 +268,6 @@ module.exports = {
     ) {
       res.render("userView/signup", { errorMessage: "please enter details" });
     } else {
-      console.log(req.body);
       let userData = req.body;
 
       userHelpers
@@ -301,14 +276,7 @@ module.exports = {
           let user = response;
 
           next();
-          // console.log( user.isBlocked);
-          //             const token =createToken(user);
-          // console.log(token);
 
-          //               res.cookie("tokehn",token)
-          //             res.status(201);
-          //             console.log(token);
-          //             next();
         })
         .catch((user) => {
           console.log(user + "/");
@@ -325,28 +293,21 @@ module.exports = {
   },
   userLoginroute: (req, res, next) => {
     let userData = req.body;
-    console.log(";.;.",userData);
-    console.log("?????????");
     userHelpers
       .doLogin(userData)
       .then((response) => {
         console.log(response);
         let user = response;
         const token = createToken(user);
-        console.log(token);
         res.cookie("token", token, {
           httpOnly: true,
         });
         res.status(201);
-        console.log(token);
 
         res.json({status:true})
       })
       .catch((err) => {
         res.json({status:false, errorMessage: "Incorrect emailId or Password",})
-        // res.render("userView/login", {
-        //   errorMessage: "Incorrect emailId or Password",
-        // });
         console.log("error ducring login");
         console.log(err);
       });
@@ -370,7 +331,6 @@ module.exports = {
     let total = await TotalAmount(req);
     let user = decode.value.insertedId;
     let walletData = await wallet(req);
-    console.log(req.params.id);
     let prodId = req.params.id;
     let normalCoupens
     let datas = null;
@@ -400,11 +360,8 @@ module.exports = {
           sum = Number( sum+(reviews[i].rating))
         }
         avg = sum/(reviews.length)
-        console.log(sum,"//");
-        console.log(avg,"lll");
         datas.averageRating = avg
       })
-      console.log("datasss after avg",datas);
       
 
     await userHelpers
@@ -420,10 +377,8 @@ module.exports = {
       })
 
     async function processImages(Data) {
-      console.log(Data);
       if (Data.Image1) {
         Data.urlImage1 = await getImgUrl(Data.Image1);
-        // console.log("Data[i].urlImage1:", Data.urlImage1);
       }
       if (Data.Image2) {
         Data.urlImage2 = await getImgUrl(Data.Image2);
@@ -435,7 +390,6 @@ module.exports = {
         Data.urlImage4 = await getImgUrl(Data.Image4);
       }
 
-      console.log("Data:", Data);
       return Data;
     }
     let data = await processImages(datas);
@@ -459,20 +413,9 @@ module.exports = {
 
   VariationSelect:async(req,res)=>{
     let decode = tokenVerify(req);
-    let cart = await cartProd(req);
-    let products = cart.cartItems;
-    let outofStock = cart.outofStock;
-    let count = await CartCount(req);
-    let total = await TotalAmount(req);
-    let user = decode.value.insertedId;
-    let walletData = await wallet(req);
+ 
     let prodId = req.body.prodId;
     let VarientId = req.body.variationId
-    let normalCoupens
-    let datas = null;
-    let wishlist;
-    let reviews
-    let Variations
 
     await userHelpers.getVarient(prodId,VarientId)
 
@@ -500,16 +443,12 @@ module.exports = {
       .then((response) => {
         datas = response;
       });
-    console.log("dataaas", datas);
     async function processImages(Data) {
       for (let i = 0; i < Data?.length; i++) {
         if (Data[i].Product.Image1) {
-          console.log("image 1 :", Data[i].Product.Image1);
           Data[i].Product.urlImage1 = await getImgUrl(Data[i].Product.Image1);
-          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
       }
-      console.log("Data:", Data);
       return Data;
     }
 
@@ -531,7 +470,6 @@ module.exports = {
     userHelpers
       .addToWishlist(req.params.id, decode.value.insertedId)
       .then((response) => {
-        console.log(response);
         res.redirect(req.get("referer"));
         // res.send("added to wishlist")
         // res.render("userView/productPage",{data,user:decode.value.username,userpar:true})
@@ -542,7 +480,6 @@ module.exports = {
   },
 
   findbynumber: (req, res) => {
-    console.log(req.body);
     global.window.recaptchaVerifier = new RecaptchaVerifier(
       "recaptcha-container",
       {
@@ -559,7 +496,6 @@ module.exports = {
     userHelpers
       .findbynumber(req.body.phone)
       .then((response) => {
-        console.log(response);
         signInWithPhoneNumber(auth, req.body.phone, appVerifier)
           .then((confirmationResult) => {
             // SMS sent. Prompt user to type the code from the message, then sign the
@@ -580,8 +516,6 @@ module.exports = {
   },
 
   addToCart: (req, res) => {
-    console.log("api called");
-    console.log(req.body.prodId);
     let decode = tokenVerify(req);
     userHelpers
       .addToCart(decode.value.insertedId,  req.body  )
@@ -598,28 +532,22 @@ module.exports = {
     let total 
     let count = await CartCount(req);
     let walletData = await wallet(req);
-    console.log(total);
     let product;
     let outofStock;
     let normalCoupens
     await userHelpers.getcart(decode.value.insertedId).then((obj) => {
-      console.log(obj.outofStock);
       product = obj.cartItems;
       outofStock = obj.outofStock;
       total = obj.total
     });
-    // console.log(products);
     async function processImages(Data) {
       for (let i = 0; i < Data?.length; i++) {
         if (Data[i].cart_product.Image1) {
-          console.log("image 1 :", Data[i].cart_product.Image1);
           Data[i].cart_product.urlImage1 = await getImgUrl(
             Data[i].cart_product.Image1
           );
-          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
       }
-      console.log("Data:", Data);
       return Data;
     }
     let products = await processImages(product);
@@ -640,12 +568,9 @@ module.exports = {
 
   removeCart: (req, res) => {
     let decode = tokenVerify(req);
-    console.log(req.body.prodId, "this is te iddddd");
     userHelpers
       .removeCart(decode.value.insertedId, req.body.prodId, req.body.varientId)
       .then((response) => {
-        console.log("this is the response", response);
-        // res.redirect(req.get("referer"));
         res.json(response);
       })
       .catch(() => {
@@ -660,7 +585,6 @@ module.exports = {
         res.json(response);
       })
       .catch(() => {
-        console.log("here");
         let error = "Stock limit Exceeded";
 
         res.status(404).json({ error: "Ha Ocurrido un error" });
@@ -688,9 +612,6 @@ module.exports = {
 
     let user = decode.value.username;
     let userID = new ObjectId(decode.value.insertedId);
-    console.log("uer if", userID);
-    console.log("@#############@@@@@@@###", user);
-    console.log("???????", Address, ">>>>>");
     await userHelpers.getcart(decode.value.insertedId).then((obj) => {
       product = obj.cartItems;
       outofStock = obj.outofStock;
@@ -699,7 +620,6 @@ module.exports = {
 
     let isWallet;
     if (walletData.total >= total) {
-      console.log("/////is");
       isWallet = true;
     }
     async function processImages(Data) {
@@ -709,10 +629,8 @@ module.exports = {
           Data[i].cart_product.urlImage1 = await getImgUrl(
             Data[i].cart_product.Image1
           );
-          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
       }
-      console.log("Data:", Data);
       return Data;
     }
 
@@ -735,7 +653,6 @@ module.exports = {
   },
 
   addAddress: (req, res) => {
-    console.log("calhh  here");
     
         //  return  Swal.fire({
         //     title: 'Do you want to save the changes?',
@@ -754,11 +671,9 @@ module.exports = {
           // })
 
     let decode = tokenVerify(req);
-    console.log(req.body);
     userHelpers
       .addAddress(decode.value.insertedId, req.body)
       .then((response) => {
-        console.log(response);
         res.json(response);
       });
 
@@ -817,7 +732,6 @@ module.exports = {
  await userHelpers.getAllProducts(dbQuery).then((data)=>{
   AllProducts = data.all
  })
-    console.log(AllProducts.length ,"kdfoifiiidididiiidiid");
     let m = AllProducts.length/limit
     let max = Math.ceil(m)
     let page = []
@@ -827,19 +741,15 @@ module.exports = {
     pageNo = parseInt(pageNo+1)
 
      
-    console.log(dataCount);
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
       }
-      console.log("Data:", data);
       return data;
     }
-    console.log(dataCount);
     let data = await processImages(dataCount);
-    console.log("came data:::::>>>>", data);
     res.render("userView/shop", {
       userpar: true,
       data,
@@ -871,17 +781,14 @@ module.exports = {
     let totalOrders = 0
     // console.log(decode.value.insertedId);
     await userHelpers.getUserData(decode.value.insertedId).then((response) => {
-      console.log("/////?", response);
       data = response;
     });
     await userHelpers
       .getOrderDetails(decode.value.insertedId)
       .then((response) => {
-        // console.log(response);
         orderDatas = response;
       });
       totalOrders = orderDatas.length
-    console.log("orderDatas", orderDatas[0]?.cart);
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
         for (let j = 0; j < Data[i].cart.length; j++) {
@@ -890,11 +797,8 @@ module.exports = {
               Data[i].cart[j].cart_product.Image1
             );
           }
-          // console.log("image 1 :", Data[i].Image1);
-          // console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
       }
-      console.log("Data:", Data);
       return Data;
     }
 
@@ -924,7 +828,6 @@ module.exports = {
     for (let i = 0; i < products.length; i++) {
       prodIds.push(products[i].item);
     }
-    console.log(">>>>>>>>>>>>>>>>>>>", prodIds);
 
     let outofStock = cart.outofStock;
 
@@ -936,7 +839,6 @@ module.exports = {
     }
     
 
-    console.log(req.body, "msa");
     let PaymentStatus = "false";
 
     let razorpaycomplete = false;
@@ -947,7 +849,6 @@ module.exports = {
 
     let payment_method = req.body.PaymentOption;
 
-    console.log(`payment_method is ${payment_method}`);
 
     let globalorderId = null;
 
@@ -968,7 +869,6 @@ module.exports = {
 
         let id =new  ObjectId(req.body.userId);
 
-        console.log(id);
 
         req.body.id = id;
 
@@ -980,12 +880,10 @@ module.exports = {
 
         let response = await currencyConverter.convert();
 
-        console.log("response", response);
 
         var usdtotal = Math.round(response);
 
         req.body.PaymentStatus = PaymentStatus;
-        console.log(req.body.PaymentOption);
 
         const orderId = await userHelpers.placeOrder(req.body, products, total);
         globalorderId = orderId;
@@ -1002,12 +900,8 @@ module.exports = {
             .debitFromWallet(orderId, total, decode.value.insertedId)
             .then((transactionIds) => {
               transactionId = transactionIds;
-              console.log(`${transactionId} is the transaction id wallet`);
               PaymentStatus = "true";
             });
-          console.log(
-            `payment option selected is wallet and req.body.status is now`
-          );
         } else if (req.body.PaymentOption === "razorPay") {
           await userHelpers
             .generateRazorPay(orderId, total)
@@ -1037,7 +931,6 @@ module.exports = {
           };
           paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
-              console.log(error.response);
               throw error;
             } else {
               for (var i = 0; i < payment.links.length; i++) {
@@ -1053,7 +946,6 @@ module.exports = {
             }
           });
 
-          console.log(`payment option selected is paypal`);
         }
       }
       } else if (req.params.data) {
@@ -1064,14 +956,10 @@ module.exports = {
         const payerId = req.query.PayerID;
         const paymentId = req.query.paymentId;
         transactionId = paymentId;
-        console.log(`payrer id  :${payerId}`);
-        console.log(`payrermet  id  :${paymentId}`);
-        console.log(`data is coming${req.params.data}`);
         globalorderId = req.params.data
         // console.log(data);
 
       }else if(req.query.cancel){
-        console.log("here in cancel dkljdkfjl1!!!!!!!!!!!!!!!!!!!!");
         console.log(req.query.orderId);
         await userHelpers.deleteOrder(req.query.orderId).then((resp)=>{
           if(resp){
@@ -1079,13 +967,10 @@ module.exports = {
 
           }
         }).catch(()=>{
-          console.log("some error ocuuered");
         })
       }
        else {
         payment_method = "razorPay";
-        console.log(`payment meth here i s sinsncsdijcdc${payment_method}`);
-        console.log(req.body);
         await userHelpers
           .verifyPayment(req.body)
           .then(() => {
@@ -1094,22 +979,15 @@ module.exports = {
             PaymentStatus = "true";
             razorpaycomplete = true;
             transactionId = req.body["order[receipt]"];
-            console.log(
-              `order recuewso for razorpay is ${req.body["order[receipt]"]}`
-            );
             // res.json({status:true})
           })
           .catch((err) => {
             PaymentStatus = "false";
             razorpaycomplete = true;
-            console.log(err);
             // res.json({status:'Payment Failed'})
           });
       }
       const orderId = getOrderid();
-      console.log(orderId,"orderId");
-      // console.log(`${transactionId} is the transaction id wallet`);
-      console.log(`payment_method is ${payment_method} 333`);
       if (
         (payment_method === "razorPay" && razorpaycomplete == false) ||
         (payment_method === "paypal" && paypalcomplete == false)
@@ -1131,7 +1009,6 @@ module.exports = {
           return data;
         }
         let ids = destruct(products);
-        console.log("ids klasm;dfkmalskfdmas;", typeof ids[0].prodId);
         await userHelpers.placeOrderTrans(
             orderId,
             transactionId,
@@ -1141,8 +1018,6 @@ module.exports = {
             decode.value.insertedId
           )
           .then((resp) => {
-            console.log("then reps  hgvytfrwrartvbkhbytdythbujhb");
-            console.log(resp);
             //  location.href="http://localhost:8001/user/orderSuccess"
             if (payment_method === "COD" || payment_method=="razorPay" || payment_method==="wallet") {
               res.json({ status: true });
@@ -1167,10 +1042,8 @@ module.exports = {
 
           }
         }).catch(()=>{
-          console.log("some error ocuuered");
         })
       }
-      console.log(e, "this is theerroro ");
     }  
      
     
@@ -1180,7 +1053,6 @@ module.exports = {
 
   
   verifyPayment: (req, res) => {
-    console.log(req.body);
     userHelpers
       .verifyPayment(req.body)
       .then(() => {
@@ -1222,21 +1094,16 @@ module.exports = {
       });
   },
   otpverified: (req, res, next) => {
-    console.log(
-      "?///////////////////..................>>>>>>>>>>>>>>>....,,,,,,,,,,,,,,,,,<<<<<<<<<<<<<"
-    );
-    console.log(req.params.num, "khjhkkhkkuuuu8889988989898998998");
+
     userHelpers
       .checkNumber(req.params.num)
       .then((response) => {
-        console.log(response);
         let user = response;
         const token = createToken(user);
         res.cookie("token", token, {
           httpOnly: true,
         });
         res.status(201);
-        console.log("tpoek n", token);
 
         next();
       })
@@ -1255,7 +1122,6 @@ module.exports = {
         ) +
         '"}'
     );
-    console.log(data);
     userHelpers
       .googleSignup(data)
       .then((user) => {
@@ -1265,7 +1131,6 @@ module.exports = {
         res.cookie("token", token, {
           httpOnly: true,
         });
-        console.log(token);
 
         next();
       })
@@ -1273,7 +1138,6 @@ module.exports = {
         alert("try not worked");
       })
       .catch((user) => {
-        console.log("eroorroorro");
         res.render("userView/signup", {
           errorMessage: "email id already exists in the database",
         });
@@ -1288,7 +1152,6 @@ module.exports = {
         ) +
         '"}'
     );
-    console.log(data);
     userHelpers
       .googleLogin(data)
       .then((Data) => {
@@ -1385,7 +1248,6 @@ module.exports = {
       categories = cat;
     });
 
-    console.log(req.body);
     await userHelpers
       .getSortedData(req.body.opt)
       .then((data) => {
@@ -1400,14 +1262,10 @@ module.exports = {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
       }
-      console.log("Data:", data);
       return data;
     }
-    console.log(dataCount, "sjjsjsj");
     let data = await processImages(dataCount);
-    console.log("came data::>", data);
 
-    console.log("it is hre right?");
     res.render("userView/shop", {
       userpar: true,
       data,
@@ -1424,7 +1282,6 @@ module.exports = {
   },
 
   renderShop: async (req, res) => {
-    console.log("reacehed render Shop");
     let decode = tokenVerify(req);
     let cart = await cartProd(req);
     let products = cart.cartItems;
@@ -1438,7 +1295,6 @@ module.exports = {
     await userHelpers.getAllCategories().then((cat) => {
       categories = cat;
     });
-    console.log(req.session);
 
     // if(!req.session.isCategory && !req.session.isData){
     //   console.log("entered no ");
@@ -1446,34 +1302,26 @@ module.exports = {
     // }
 
     if (req.session.isData) {
-      console.log("enterd data");
       dataCount = req.session.data;
       req.session.isData = false;
     }
-    console.log(dataCount, "llll");
     req.session.data = {};
 
     if (req.session.isCategory) {
-      console.log("entererds acater");
       dataCount = req.session.categoryData;
       req.session.isCategory = false;
     }
-    console.log("now dat is ", dataCount);
     async function processImages(data) {
       for (let i = 0; i < data.all.length; i++) {
         if (data.all[i].Image1) {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
       }
-      console.log("Data:", data);
       return data;
     }
-    console.log(dataCount, "sjjsjsj");
     let data = await processImages(dataCount);
-    console.log("came data::>", data);
     req.session = {};
-    console.log(req.session);
-    console.log("it is hre right?");
+
     res.render("userView/shop", {
       userpar: true,
       data,
@@ -1509,14 +1357,10 @@ module.exports = {
           data.all[i].urlImage1 = await getImgUrl(data.all[i].Image1);
         }
       }
-      console.log("Data:", data);
       return data;
     }
-    console.log(dataCount, "sjjsjsj");
     let data = await processImages(dataCount);
-    console.log("came data::>", data);
 
-    console.log("it is hre right?");
     res.render("userView/shop", {
       userpar: true,
       data,
@@ -1595,7 +1439,6 @@ module.exports = {
 
   delAddress:(req,res)=>{
     let decode = tokenVerify(req)
-    console.log(req.body.id);
     userHelpers.delAddress(req.body.id,decode.value.insertedId).then(()=>{
       res.json({status:true})
     })
@@ -1605,7 +1448,6 @@ module.exports = {
   search:async(req,res)=>{
 
     let payload=req.body.e.trim()
-    console.log(payload);
 
     await userHelpers.searchProduct(payload).then(async(data)=>{
       console.log(data,"///;///;.")
@@ -1623,7 +1465,6 @@ module.exports = {
             // console.log("Data[i].urlImage1:", Data.cart[i].urlImage1);
           
         }
-        console.log("Data:", Data);
         return Data;
       }
 
@@ -1672,7 +1513,6 @@ module.exports = {
         // console.log("Data[i].urlImage1:", Data.cart[i].urlImage1);
       
     }
-    console.log("Data:", Data);
     return Data;
   }
 
@@ -1684,16 +1524,13 @@ module.exports = {
     let decode = await tokenVerify(req)
     let count = await  CartCount(req)
     let  walletData = await wallet(req)
-    console.log(req.params.id)
     let dat
     await userHelpers.checkReview(decode.value.insertedId, req.params.id).then(async()=>{
-      console.log("new review by user");
 
       await userHelpers.viewProduct(req.params.id).then((data)=>{
         dat= data
       })
       async function processImages(Data) {
-        console.log(Data);
         if (Data.Image1) {
           Data.urlImage1 = await getImgUrl(Data.Image1);
           // console.log("Data[i].urlImage1:", Data.urlImage1);
@@ -1717,7 +1554,6 @@ module.exports = {
   addReview:async(req,res)=>{
       let decode = tokenVerify(req)
       let data
-      console.log("//..mmnnbbvv,,,,", req.body.prodId);
       await userHelpers.addReview(decode.value.insertedId, req.body.prodId ,req.body.star, req.body.rev).then((response)=>{
         res.json({status:true})
       }).catch(()=>{
@@ -1727,8 +1563,6 @@ module.exports = {
 
   },
   check_quantity:async(req,res)=>{
-    console.log("....fkmslfnaoidncsddcnofinoindmckldnalnmc");
-    console.log(req.body);
     let decode = await tokenVerify(req)
     userHelpers.check_quantity(decode.value.insertedId , req.body).then((response)=>{
       res.json({status:true})

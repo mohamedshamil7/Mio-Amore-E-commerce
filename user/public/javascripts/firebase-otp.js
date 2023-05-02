@@ -61,7 +61,6 @@ const sendVerificationCode = () => {
       // ...
     })
     .catch((error) => {
-      alert(error);
     });
 };
 

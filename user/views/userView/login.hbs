@@ -121,7 +121,7 @@
         </div>
     </header>
     <!-- Header End -->
-        <!-- mobile fix menu start -->
+        {{!-- <!-- mobile fix menu start -->
     <div class="mobile-menu d-md-none d-block mobile-cart">
         <ul>
             <li class="active">
@@ -160,7 +160,7 @@
             </li>
         </ul>
     </div>
-    <!-- mobile fix menu end -->
+    <!-- mobile fix menu end --> --}}
         
         
         
@@ -279,18 +279,15 @@ $("#loginEmailForm").submit((e)=>{
          data:$('#loginEmailForm').serialize(),
            method:'post',
            success:(response)=>{
-            alert(response)
             console.log(response)
             if(response.status==true){
                 location.href='/home'
             }else if(response.status=="false"){
-                alert(response.errorMessage)
                 document.getElementById("errorMessageLogin").innerHTML = response.errorMessage
 
             }
            } ,error:(xhr, thrownError)=>{
             let error =  xhr.responseJSON.errors[0].msg
-            alert(error)
        
         Swal.fire({
             icon: 'error',

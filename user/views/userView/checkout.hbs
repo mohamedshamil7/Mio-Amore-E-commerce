@@ -565,7 +565,6 @@
         }
 
         function razorpayClose(orderId){
-            alert(order)
                 $.ajax({
                     url:`/placeOrder?cancel=true&orderId=${orderId}`,
                     method:'post',
@@ -626,7 +625,6 @@
                       document.getElementById('error-2').innerHTML = ''
                 })  ,
                 error:(xhr, thrownError)=>{
-                    alert(xhr.responseText)
                  document.getElementById('error-2').innerHTML = `${xhr.responseText}`
                   {{!-- document.getElementById('offer').innerHTML = '₹' + --}}
                   var code = document.getElementById('code').value =""
