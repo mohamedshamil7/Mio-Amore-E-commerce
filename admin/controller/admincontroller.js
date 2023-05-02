@@ -137,7 +137,8 @@ module.exports = {
     res.render("adminView/adminDash", { admin: true, reports:reports.length, salesTitle });
   },
 
-  adminLoginRoute: (req, res, next) => {
+  adminLoginRoute: (req, res) => {
+    console.log("////////;//;/;//");
     adminHelper
       .adminLogin(req.body)
       .then((response) => {
