@@ -141,12 +141,10 @@
          data:$('#banner1-submit').serialize(),
            method:'post',
            success:(response)=>{
-            alert(response)
-            console.log(response)
+
             if(response.status==true){
                 location.href='/admin/banners'
             }else if(response.status=="false"){
-                alert(response.errorMessage)
                 document.getElementById("banner1error").innerHTML = `${response.errorMessage}`
             }
            
@@ -164,7 +162,6 @@
            method:'post',
            success:(response)=>{
 
-            console.log(response)
             if(response.status==true){
                 location.href='/admin/banners'
             }else if(response.status=="false"){
@@ -186,8 +183,7 @@
             if(response.status==true){
                 location.href='/admin/banners'
             }else if(response.status==false){
-            console.log(response)
-                alert(response.errorMessage)
+
                 document.getElementById("banner3error").innerHTML = `${response.errorMessage.errorMessage}`
 
             }
