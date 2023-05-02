@@ -102,6 +102,10 @@ module.exports = {
     }
   },
 
+  rejectPage:(req,res)=>{
+    res.render('reject')
+  },
+
   renderadminLogin: (req, res) => {
     res.render("adminView/adminlogin");
   },
@@ -156,7 +160,6 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
-        res.render("adminView/adminlogin", {errorMessage: "invalid Admin Id or Password" });
         res.json({status:false, errorMessage:"invalid adminId or password"})
       });
   },
@@ -208,14 +211,10 @@ module.exports = {
     });
   },
   userBlock: (req, res) => {
-    console.log(req.body.id);
-    console.log(">>" + req.body.isBlocked);
-
     adminHelper
       .userBlockManager(req.body.id, req.body.isBlocked)
       .then((response) => {
         console.log(response);
-        console.log("block wroked ////////////");
         res.redirect("/admin/allUsers");
       });
   },
@@ -228,47 +227,16 @@ module.exports = {
     async function processImages(Data) {
       for (let i = 0; i < Data.length; i++) {
         if (Data[i].Image1) {
-          console.log("image 1 :", Data[i].Image1);
           Data[i].urlImage1 = await getImgUrl(Data[i].Image1);
-          console.log("Data[i].urlImage1:", Data[i].urlImage1);
         }
 
       }
-      console.log("Data:", Data);
       return Data;
     }
 
     let Details = await processImages(Data);
-    console.log("k:", Details);
     res.render("adminView/stocks", { admin: true, Details });
 
-    // console.log(Data);
-    // async function urlImg(Data){
-    //   for(let i = 0;i<Data.length)
-    //   console.log("data",Data);
-    //    return Data
-    // }
-
-    // let k = await urlImg(Data)
-    // console.log("kkkkkkkkk2k22kk2",k);
-    // console.log("<<<<<",imgurl);
-    // console.log(Data);
-
-    // async function imgurl (Data){
-    //   for(let i=0;i<Data.length;i++){
-    //     if(Data[i].Image1){
-    //        Data[i].imgUrl1 = await  getImgUrl(Data[i].Image1)
-    //       // let s= await getImgUrl(Data[i].Image1)
-    //       console.log("this is s////",  Data[i].imgUrl1);
-    //     }
-    //   }
-    //   return Data
-    // }
-
-    // let k = imgurl(Data)
-    // console.log( k  );
-    // console.log(Data[0].imgUrl1);
-    // res.render("adminView/stocks", { admin: true, stock });
   },
   brandsPage:(req,res)=>{
     adminHelper.getAllBrands().then((brands)=>{
@@ -1054,13 +1022,10 @@ salesFilter:(req,res)=>{
 
 
 addVariations:(req,res)=>{
-  console.log("///????????????>>>>>>>>>>>>>>>>>");
   adminHelper.getEditProduct(req.query.id).then((product)=>{
     
     
-    // let Variations = [...product.Variations]
     adminHelper.getAllVariations(req.query.id).then((Variations)=>{
-      console.log("....",Variations);
        res.render('adminView/VariationsPage',{product,Variations,admin:true})
       }).catch(()=>{
         
@@ -1070,12 +1035,13 @@ addVariations:(req,res)=>{
     })
 },
 addVarient_submit:(req,res)=>{
-  console.log("//",req.body)
 
   adminHelper.AddVariation(req.body).then((data)=>{
     res.json(data)
   }).catch(()=>{
     console.log("error occured during Variation add Submit");
+    res.redirect('/admin/reject')
+
   })
 },
 
@@ -1085,6 +1051,7 @@ variationDelete:(req,res)=>{
     res.json(response)
   }).catch(()=>{
     console.log("error occured during Varient deltetion");
+    res.redirect('/admin/reject')
   })
 
 },
@@ -1093,21 +1060,24 @@ variationEdit:(req,res)=>{
   console.log(req.query.prodId);
   console.log(req.query.varid);
   adminHelper.getSingleVariation(req.query.prodId,req.query.dataId).then((variations)=>{
-    console.log("variations: ", variations);
     adminHelper.getEditProduct(req.query.prodId).then((product)=>{
-      console.log("product: ", product);
       adminHelper.getAllVariations(req.query.prodId).then((vars)=>{
-        console.log("all variations: ", vars);
         res.render("adminView/variationEdit",{variations,admin:true,product,vars})
       }).catch(()=>{
         console.log("error occrued during get all Variations");
+        res.redirect('/admin/reject')
+
       })
 
     }).catch(()=>{
       console.log("error ocuured during getting edit product");
+      res.redirect('/admin/reject')
+
     })
   }).catch(()=>{
     console.log("error occured during get Singlr Variation");
+    res.redirect('/admin/reject')
+
   })
    
   
@@ -1117,6 +1087,8 @@ editVariation_submit:(req,res)=>{
     res.json(resp)
   }).catch(()=>{
     console.log("error occured during variation editing");
+    res.redirect('/admin/reject')
+
   })
 }
 

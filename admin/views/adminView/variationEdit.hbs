@@ -4,7 +4,7 @@
           <h2 class="mb-5 mt-0">Add New Product</h2>
 
              <!-- General Form Elements -->
-              <form action="/admin/addVarient-submit" method="post"  >
+
                 <div class="row mb-3">
                     <input type="text" name="prodId" id="prodId" value="{{product._id}}" hidden >
                   <label for="inputText" class="col-sm-2 col-form-label">Product Name</label>
@@ -63,7 +63,6 @@
                   </div>
                 </div>
 
-              </form><!-- End General Form Elements -->
 
 
                <table class="table table-striped mt-3">
@@ -120,20 +119,22 @@
     function EditVariation(dataId,varId){
         let prodId = document.getElementById('prodId').value
         alert(prodId)
-      let prodId = document.getElementById('prodId').value
         let Size = document.getElementById('Size').value
 
         let Color = document.getElementById('Color').value
+        Color = Color.trim()
          if(Color.length<1){
           document.getElementById('Color-error').innerHTML='please Add Color'
           return
         }
         let Price = document.getElementById('Price').value
+        Price = Price.trim()
          if(Price.length<1){
           document.getElementById('Price-error').innerHTML='please Add Price'
           return
         }
         let Stock = document.getElementById('Stock').value
+        Stock = Stock.trim()
          if(Stock.length<1){
           document.getElementById('Stock-error').innerHTML='please Add Stock'
           return

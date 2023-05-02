@@ -123,22 +123,26 @@
     function AddVarient(){
         let prodId = document.getElementById('prodId').value
         let Size = document.getElementById('Size').value
+        Size=Size.trim()
         if(Size.length<1){
           document.getElementById('Size-error').innerHTML='please Add Size'
           return
         }
 
         let Color = document.getElementById('Color').value
+        Color=Color.trim()
          if(Color.length<1){
           document.getElementById('Color-error').innerHTML='please Add Color'
           return
         }
         let Price = document.getElementById('Price').value
+        Price=Price.trim()
          if(Price.length<1){
           document.getElementById('Price-error').innerHTML='please Add Price'
           return
         }
         let Stock = document.getElementById('Stock').value
+        Stock=Stock.trim()
          if(Stock.length<1){
           document.getElementById('Stock-error').innerHTML='please Add Stock'
           return

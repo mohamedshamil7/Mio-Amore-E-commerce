@@ -65,7 +65,8 @@ const {
   variationDelete,
   variationEdit,
   editVariation_submit,
-  homeJwtCheck
+  homeJwtCheck,
+  rejectPage
 } = require("../controller/admincontroller");
 const{
   // uploadMultiple
@@ -83,10 +84,14 @@ router.get("/admin/adminDash",nocache,autherization,renderadminDash)
 router.post('/admin/sales',autherization,salesReport)
 
 router.get("/admin/allUsers",nocache,autherization,AllUsersPage)
-
 router.post("/admin/blockManager",autherization,userBlock)
 
 router.get("/admin/stocks",nocache,autherization,stockPage)
+router.get("/admin/addVariations",nocache,autherization,addVariations)
+router.post("/admin/addVarient-submit",nocache,autherization,addVarient_submit)
+router.delete("/admin/variationDelete",nocache,autherization,variationDelete)
+router.get("/admin/variationEdit",nocache,autherization,variationEdit)
+router.post("/admin/editVariation-submit",nocache,autherization,editVariation_submit)
 
 router.get("/admin/categories",nocache,autherization,categories_Page)
 router.get("/admin/brands",nocache,autherization,brandsPage)
@@ -146,12 +151,7 @@ router.get("/admin/billLabel",nocache,autherization,renderbillLabel)
 router.get("/admin/Sales",nocache,autherization,renderSalesReport)
 router.post("/admin/sale-filter",nocache,autherization,salesFilter)
 
-router.get("/admin/addVariations",nocache,autherization,addVariations)
+router.get('/admin/reject',rejectPage)
 
-router.delete("/admin/variationDelete",nocache,autherization,variationDelete)
-router.post("/admin/addVarient-submit",nocache,autherization,addVarient_submit)
-router.get("/admin/variationEdit",nocache,autherization,variationEdit)
-
-router.post("/admin/editVariation-submit",nocache,autherization,editVariation_submit)
 module.exports = router;
 

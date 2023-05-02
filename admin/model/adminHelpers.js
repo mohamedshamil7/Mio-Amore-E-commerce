@@ -1024,10 +1024,10 @@ module.exports={
             console.log(data.prodId);
             let  dataToInsert={
                 id:new ObjectId(),
-                color:data.Color,
+                color:data.Color.toLowerCase(),
                 Price:data.Price,
                 Stock:data.Stock,
-                Size:data.Size,
+                Size:data.SizetoLowerCase(),
                 inStock:true
             }
             return new Promise(async(resolve,reject)=>{
@@ -1035,20 +1035,15 @@ module.exports={
                 console.log(product);
            if(product !=null){
 
-         console.log("entereeddddddd");
                 // Size: " " exists, push data into it
            const ins=   await  db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId), "Variations.Size": data.Size },
                   { $push: { "Variations.$.Data": dataToInsert } }, )
-                console.log(ins,":ins");
-                console.log("Variation size already there  and nee color inserted");
                 resolve(ins)
            }else{
              let ins =   await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId)},{
              $push:{Variations:{ id:new ObjectId(),Size:data.Size, Data:[dataToInsert]}}
 
             })
-            console.log(ins,":ins") ;
-            console.log("NO size already there  and new color inserted");
             resolve(ins)
            }
             })
@@ -1087,14 +1082,11 @@ module.exports={
         },
 
         VariationDelete:(data)=>{
-            console.log(data.prodId);
-            console.log(data.varId);
             return new Promise(async(resolve,reject)=>{
                 let del = await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(data.prodId)},{
                     $pull:{"Variations.$[].Data":{id:new ObjectId(data.varId)}}
                 })
                 if(del){
-                    console.log(del);
                     resolve(del)
                 }else{
                     reject()
