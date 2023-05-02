@@ -146,12 +146,12 @@ function validatekeyWord3(){
 
 function checkAll(){
     if( !validateName() || !validateMRP() || !validatePrice() || !validatemanufacturingDate() || !validateSize() || !validateColor() || !validateStock() || !validateDescription() || !validatekeyWord1() || !validatekeyWord2() || !validatekeyWord3() ){
-        alert("if")
+
         let submiterr = document.getElementById('addProdsubm ').innerHTML='please provide all details' 
         return false
     }
     else{  
-        alert("else")
+
         let submiterr = document.getElementById('addProdsubm ').innerHTML='' 
         return true
     }
@@ -251,7 +251,6 @@ function validateTotalCoupens(){
 }
 function validateMinimum(){
     let minimum =document.getElementById('minimumAmount').value
-    alert(minimum,"/?")
     if(minimum.length <=0){
         minimumerr.innerHTML = 'minimum is required'
         return false
@@ -262,7 +261,7 @@ function validateMinimum(){
 }
 function validateLimit(){
     let limit =document.getElementById('limitAmount').value
-    alert(limit,"//")
+
     if(limit.length <=0){
         limiterr.innerHTML = 'limit is required'
         return false

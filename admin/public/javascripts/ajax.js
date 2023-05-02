@@ -244,9 +244,8 @@ function delivwerStatuschange(id){
     method:"post",
     success:(response)=>{
       if(response.status){
-        alert("true")
         location.reload()
-      }else{alert("falese")}
+      }else{}
     }
   })
 }
@@ -265,7 +264,7 @@ function scheduleorder(orderId){
     method:"post",
     success:(response)=>{
       if(response.err){
-        alert(response.err)
+
         document.getElementById('DateError').innerHTML = response.err
       }else{
         // alert("something coming")
