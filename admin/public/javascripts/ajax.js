@@ -255,12 +255,10 @@ function delivwerStatuschange(id){
 function scheduleorder(orderId){
 
   let date = document.getElementById('deliverydate').value
-  alert(date.length)
   if(date.length<=0){
     return    document.getElementById('DateError').innerHTML = "enter a date"
 
   }
-  alert(date)
   $.ajax({
     url:"/admin/deliveryDateSubmit",
     data:{orderId:orderId, deliveryDate:date},
