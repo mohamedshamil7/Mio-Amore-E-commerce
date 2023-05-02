@@ -691,25 +691,21 @@ module.exports={
         
             return new Promise(async(resolve,reject)=>{
                 if(no==="Image1"){
-                    console.log(";;hereree");
                      await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image1:1}
                     })
                 }
               else  if(no==="Image2"){
-                    console.log(";;hereree");
                      await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $set:{Image2:''}
                     })
                 }
                else if(no==="Image3"){
-                    console.log(";;hereree");
                     await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image3:1}
                     })
                 }
                 else if(no==="Image4"){
-                    console.log(";;hereree");
                      await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(product)},{
                         $unset:{Image4:1}
                     })
@@ -723,7 +719,7 @@ module.exports={
                 if(body.linkTo ==="shop"){
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/shop',
+                       linkTo:'/shop',
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
@@ -735,7 +731,7 @@ module.exports={
                     console.log("entered else");
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       linkTo:'/product/'+body.linkTo,
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
@@ -752,7 +748,7 @@ module.exports={
                 if(body.linkTo ==="shop"){
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/shop',
+                       linkTo:'/shop',
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
@@ -764,7 +760,7 @@ module.exports={
                     console.log("entered else");
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       linkTo:'/product/'+body.linkTo,
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
@@ -781,7 +777,7 @@ module.exports={
                 if(body.linkTo ==="shop"){
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/shop',
+                       linkTo:'/shop',
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
@@ -793,7 +789,7 @@ module.exports={
                     console.log("entered else");
                     let data= {
                         name:body.banner,
-                       linkTo:'http://localhost:8001/user/product/'+body.linkTo,
+                       linkTo:'/product/'+body.linkTo,
                        img:body.img 
                     }
                     let ban= await db.get().collection(collection.BANNER_COLLECTION).insertOne(data)
