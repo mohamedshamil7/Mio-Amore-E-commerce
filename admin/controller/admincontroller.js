@@ -324,7 +324,8 @@ module.exports = {
 
   addNewProduct: async (req, res) => {
     if(!req.body.ProductName || !req.body.Company || !req.body.MRP || !req.body.Price || !req.body.category || !req.body.Size || !req.body.Color || !req.body.Stock ||!req.body.Description || !req.body.Keyword1 || !req.body.Keyword2 ||!req.body.Keyword3){
-     return  res.status(400).json({ error: "Please fill all the fields" });
+    //  return  res.status(400).json({ error: "Please fill all the fields" });
+    console.log("missing data");
     }
     const files = req.files;
 
@@ -387,7 +388,7 @@ module.exports = {
     req.body.offer = parseInt(((mrp-sellingprice)/mrp)*100)
 
     adminHelper.addNewProduct(req.body).then((response) => {
-      res.json({status:true});
+      res.redirect('/admin/stocks')
     });
   },
 

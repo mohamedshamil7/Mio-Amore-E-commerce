@@ -4,7 +4,7 @@
           <h2 class="mb-5 mt-0">Add New Product</h2>
 
              <!-- General Form Elements -->
-              <form id="addProductForm" action="" method="post" enctype='multipart/form-data' >
+              <form id="addProductForm" action="/admin/addProduct-submit" method="post" enctype='multipart/form-data' >
                 <div class="row mb-3">
   <label for="inputText" class="col-sm-2 col-form-label fw-bold">Product Name</label>
   <div class="col-sm-4">
@@ -191,7 +191,7 @@
 
 
 
-<script>
+{{!-- <script>
 
 $("#addProductForm").submit((e)=>{
     e.preventDefault()
@@ -223,4 +223,4 @@ $("#addProductForm").submit((e)=>{
     })
 })
 
-    </script>
+    </script> --}}
