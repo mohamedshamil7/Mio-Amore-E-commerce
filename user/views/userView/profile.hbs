@@ -160,13 +160,12 @@
                                 <div class="row g-4">
                                     <div class="col-xxl-12">
                                         <div class="dashboard-contant-title">
-                                            <h4>Contact Information <a href="javascript:void(0)" data-bs-toggle="modal"
-                                                    data-bs-target="#editProfile">Edit</a>
+                                            <h4>Contact Information 
                                             </h4>
                                         </div>
                                         <div class="dashboard-detail">
-                                            <h6 class="text-content">{{data.username}}</h6>
-                                            <h6 class="text-content">{{data.email}}</h6>
+                                            <h6 class="text-content"> username : {{data.username}}</h6>
+                                            <h6 class="text-content">email address :{{data.email}}</h6>
                                             {{!-- <a href="javascript:void(0)">Change Password</a> --}}
                                         </div>
                                     </div>
@@ -226,9 +225,9 @@
                                             </div>
                                         </div>
 
-                   <a href="/viewOrderDetails/{{this._id}}"> <button  style=" margin-top: 30px;" class="btn  btn-success ">View Details</button> </a> 
+                                 <a href="/viewOrderDetails/{{this._id}}"> <button  style=" margin-top: 30px;" class="btn  btn-success ">View Details</button> </a> 
                                         {{#if this.btnStatus}}
-                    <button  onclick="cancelOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> 
+                                        <button  onclick="cancelOrder('{{this._id}}')" style="float: right; margin: 100;" class="btn btn-animation proceed-btn ">Cancel ?</button> 
                                                    
                                                    {{/if}}
                                         {{#if this.returnOption}}
