@@ -183,8 +183,8 @@
          data:$('#banner3-submit').serialize(),
            method:'post',
            success:(response)=>{
-            {{!-- console.log(response) --}}
             if(response.status==true){
+            console.log(response)
                 location.href='/admin/banners'
             }else if(response.status==false){
                 alert(response.errorMessage)
