@@ -841,10 +841,12 @@ module.exports={
                   try{
                     const transactionResults= await session.withTransaction(async()=>{
                         let fullOrder = await db.get().collection(collection.ORDER_COLLECTION).findOne({ _id:new  ObjectId(orderId) },{session})
+                        console.log(fullOrder);
 
                         for (let i = 0; i < fullOrder.cart.length; i++) {
                             if(fullOrder.cart[i].varientId == fullOrder.cart[i].item){
-                                await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
+                            const d=    await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(fullOrder.cart[i].item)},{$inc:{Stock : fullOrder.cart[i].quantity}},{session})      
+                            console.log(d);
 
                             }else{
                                 let varint =  await db.get().collection(collection.PRODUCT_COLLECTIONS).updateOne({_id:new ObjectId(fullOrder.cart[i].item)},{
@@ -854,6 +856,7 @@ module.exports={
                                 {'j.id':new ObjectId(fullOrder.cart[i].varientId)},{'x.id':new ObjectId(fullOrder.cart[i].sizeId)}
                                 ],session},
                                 ) 
+                                console.log(varint);
                             }
                         }
                         
@@ -874,6 +877,7 @@ module.exports={
                             "transactions.credits":creditData
                         }
                         },{session})
+                        console.log(wallet);
 
 
                         let order= await db.get().collection(collection.ORDER_COLLECTION).updateOne({_id:new ObjectId(orderId)},{
