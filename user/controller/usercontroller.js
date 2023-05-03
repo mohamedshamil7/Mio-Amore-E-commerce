@@ -1692,7 +1692,8 @@ signupVal:[
 ],
 
 
-idcheck:[check(id).customSanitizer((value) => {
+idcheck:[
+  check('id').customSanitizer((value) => {
   return value.replace(/[$%^!#(){}]/g, '')})
 ],
 
