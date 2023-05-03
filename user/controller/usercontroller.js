@@ -1692,6 +1692,10 @@ signupVal:[
 ],
 
 
+idcheck:[check(id).customSanitizer((value) => {
+  return value.replace(/[$%^!#(){}]/g, '')})
+],
+
   deleteOrder:async(req,res)=>{
     // let decode = await tokenVerify(req)
     userHelpers.deleteOrder(req.body.orderId).then((response)=>{

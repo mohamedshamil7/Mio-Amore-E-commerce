@@ -60,7 +60,8 @@ const {
   signupVal,
   forgotPage,
   resetPasswordPage,
-  resetPassword_submit
+  resetPassword_submit,
+  idcheck
 
 
 } = require("../controller/usercontroller");
@@ -83,15 +84,15 @@ router.post("/signup-submit",signupVal,userSignupRoute,renderLogin)
 
 router.get("/home",nocache,autherization,renderHome)
 
-router.get("/product/:id",nocache,autherization,productPage)
+router.get("/product/:id",idcheck,nocache,autherization,productPage)
 
-router.get('/getImage/:id',imageRoute)
+router.get('/getImage/:id',idcheck,imageRoute)
 
 router.get("/wishlistPage",nocache,autherization,wishlistPage)
 
-router.get("/addToWishlist/:id",autherization,addToWishlist)
+router.get("/addToWishlist/:id",idcheck,autherization,addToWishlist)
 
-router.post('/phone-submit',findbynumber)
+router.post('/phone-submit',nocache,findbynumber)
 
 router.post('/addToCart',autherization,addToCart)
 
@@ -132,8 +133,8 @@ router.post("/changeCategory",nocache,autherization,filterCategory)
 router.post("/checkCoupen",nocache,autherization,checkCoupen)
 router.post("/search",nocache,search)
 router.delete("/deleteAdd",nocache,autherization,delAddress)
-router.get('/viewOrderDetails/:id',nocache,autherization,viewOrderDetails)
-router.get('/gotoReview/:id',nocache,autherization,renderReviewPage)
+router.get('/viewOrderDetails/:id',idcheck,nocache,autherization,viewOrderDetails)
+router.get('/gotoReview/:id',idcheck,nocache,autherization,renderReviewPage)
 router.post('/addReview',nocache,autherization,addReview),
 
 router.delete('/deleteOrder',nocache,deleteOrder)
@@ -142,10 +143,10 @@ router.get('/VariationSelect',nocache,autherization,VariationSelect)
 router.post('/check_quantity',nocache,autherization,check_quantity)
 
 
-router.get('/forgot',forgotPage)
+router.get('/forgot',nocache,forgotPage)
 router.post("/otpVerification",nocache,otpVerification),
-router.get('/resetPassword',resetPasswordPage)
-router.post('/resetPassword-submit',resetPassword_submit)
+router.get('/resetPassword',idcheck,nocache,resetPasswordPage)
+router.post('/resetPassword-submit',nocache,resetPassword_submit)
 
 module.exports = router;
 

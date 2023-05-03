@@ -31,6 +31,10 @@ let id=null
 
 const auth = getAuth();
 
+function isNumeric(str) {
+  return /^\d+$/.test(str);
+}
+
 window.recaptchaVerifier = new RecaptchaVerifier(
   "recaptcha-container",
   {},
@@ -38,17 +42,27 @@ window.recaptchaVerifier = new RecaptchaVerifier(
 );
 
 const sendVerificationCode = () => {
+
+
+
+
   if(!phoneNumber.value.match(/^\d{10}$/)){
     submitError.innerHTML='Enter valied Phone number'
     return false
 }
   if(!phoneNumber.value== 10){
-    submitError.innerHTML= "Enter Valid Data 11"
+    submitError.innerHTML= "Enter Valid Data "
     return false
   }
+
+
+  phoneNumber.trim()
+  if(!isNumeric(phoneNumber)){
+    submitError.innerHTML= "Enter Valid Data "
+    return false
+  }
+
   const phone = `+91${phoneNumber.value}`;
-  console.log("thisisthephone:",phoneNumber.value);
-  alert(phoneNumber)
   fetch('/otpVerification',{
     method: 'POST',
  
@@ -60,7 +74,6 @@ const sendVerificationCode = () => {
       })  }) .then(response => response.json())
       .then(data => {
         if(data.status==true){
-            alert("inside")
             id=data._id
             const appVerifier = window.recaptchaVerifier;
 
@@ -77,6 +90,7 @@ const sendVerificationCode = () => {
               })
               .catch((error) => {
                 alert(error);
+                submitError.innerHTML=error
               });
         
         
@@ -84,24 +98,22 @@ const sendVerificationCode = () => {
             submitError.innerHTML='Phonenumber not found / acc is blocked'
         }
       });
-      
-      
-      
-    //   .then(response =>{
-    //     console.log(response);
-    //     if(response.status==true){
-    //         
- 
-
-  alert(phoneNumber)
-
-
-
 
 };
 
 const ValidateOTP = () => {
   const code = document.getElementById("userOtp").value;
+  code = code.trim()
+  if(!isNumeric(code)){
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: "enter Vaild code",
+      
+    })
+    return false
+  }
+
 
   confirmationResult
     .confirm(code)
