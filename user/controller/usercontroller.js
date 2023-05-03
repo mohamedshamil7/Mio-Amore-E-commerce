@@ -1735,7 +1735,7 @@ resetPassword_submit:(req,res)=>{
   // req.body._id.test('[0-9a-fA-F]{24}')
   
   userHelpers.resetPassword(data).then((response)=>{
-    res.redirect('/user/home')
+    res.redirect('/home')
   }).catch(()=>{
     console.log("error occured>>>>>>>>>>>>>>>>");
   })

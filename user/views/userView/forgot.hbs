@@ -24,7 +24,7 @@
                             </span>
                         </button>
                         <a href="/user/home" class="web-logo nav-logo">
-                            <img src="http://localhost:4000/images/logo.jpg" class="img-fluid blur-up lazyload" alt="">
+                            <img src="../images/logo.jpg" class="img-fluid blur-up lazyload" alt="">
                         </a>
 
                         <div class="header-nav-middle">
@@ -91,11 +91,11 @@
                                             <li class="product-box-contain">
                                                 <i></i>
                                                 {{#if user}}
-                                                <a href="http://localhost:8001/user/logout">Log out</a>
+                                                <a href="/logout">Log out</a>
                                                 {{else}}
-                                                <a href="/user/login">Log in</a>
+                                                <a href="/login">Log in</a>
                                             <li class="product-box-contain">
-                                                <a href="/user/signup">Register</a>
+                                                <a href="/signup">Register</a>
                                             </li>
                                             {{/if}}
                                 </li>
@@ -251,14 +251,14 @@
 
 <!-- log in section end -->
 
-<script type="module" src="http://localhost:4000/javascripts/firebase-forget.js"></script>
+<script type="module" src="/javascripts/firebase-forget.js"></script>
 
 
 
 
 
 
-<script src="http://localhost:4000/javascripts/validation.js"></script>
+<script src="/javascripts/validation.js"></script>
 
 
 {{!--
