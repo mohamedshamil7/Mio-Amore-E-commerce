@@ -58,6 +58,9 @@ const {
   loginVal,
   shopVal,
   signupVal,
+  forgotPage,
+  resetPasswordPage,
+  resetPassword_submit
 
 
 } = require("../controller/usercontroller");
@@ -137,6 +140,12 @@ router.delete('/deleteOrder',nocache,deleteOrder)
 
 router.get('/VariationSelect',nocache,autherization,VariationSelect)
 router.post('/check_quantity',nocache,autherization,check_quantity)
+
+
+router.get('/forgot',forgotPage)
+router.post("/otpVerification",nocache,otpVerification),
+router.get('/resetPassword',resetPasswordPage)
+router.post('/resetPassword-submit',resetPassword_submit)
 
 module.exports = router;
 

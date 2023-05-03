@@ -1083,14 +1083,28 @@ module.exports = {
     res.render("userView/loginWithOtp");
   },
   otpVerification: (req, res) => {
-    console.log(req.body.number);
+    const data = req.body;
+  console.log(data);
+
     userHelpers
-      .checkNumber(req.body.number)
+      .checkNumber(data.phoneNumber)
       .then((user) => {
-        res.json({ status: "found" });
+        console.log(user);
+        const responseBody = {
+          status: true,
+          _id:user.insertedId
+        };
+        
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(responseBody));
       })
       .catch((error) => {
-        res.json({ status: error });
+        const responseBody = {
+          status: false,
+        };
+        
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(responseBody));
       });
   },
   otpverified: (req, res, next) => {
@@ -1685,7 +1699,53 @@ signupVal:[
     }).catch((error)=>{
       console.log("error occcured during deleting order");
     })
+  },
+
+  resetPassword:(payload)=>{
+
+    let ids = payload._id.trim()
+    console.log(ids);
+    console.log(typeof ids);
+    console.log("enterd");
+    console.log(payload.newPassword);
+    return new Promise(async(resolve,reject)=>{
+        payload.newPassword = await bcrypt.hash(payload.newPassword, 10);
+        console.log("???><>><><>?<><<");
+        console.log(payload.newPassword);
+        // console.log(userId);
+        let result = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(ids)},{
+            $set:{password:payload.newPassword}
+        })
+            console.log(result);
+            if(result.modifiedCount){
+                console.log("ewsolve");
+                resolve(true)
+            }else{
+                console.log("reject");
+                reject()
+            }
+
+    })
+},
+resetPassword_submit:(req,res)=>{
+  let data={
+    _id:req.body._id,
+    newPassword:req.body.password
   }
+  // req.body._id.test('[0-9a-fA-F]{24}')
+  
+  userHelpers.resetPassword(data).then((response)=>{
+    res.redirect('/user/home')
+  }).catch(()=>{
+    console.log("error occured>>>>>>>>>>>>>>>>");
+  })
+},
+forgotPage:(req,res)=>{
+  res.render('userView/forgot')
+},
+resetPasswordPage:(req,res)=>{
+  res.render('userView/resetPassword',{_id:req.query.id})
+},
 
 
 

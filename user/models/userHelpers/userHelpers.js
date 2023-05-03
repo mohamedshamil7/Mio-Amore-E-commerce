@@ -1145,13 +1145,13 @@ changePaymentStatus:(orderId)=>{
 },
 
 checkNumber:(phone)=>{
-    console.log("iths thheirjjej");
-    let number=phone
+    let number=''
+    number = phone
     console.log(number,"kdkdkdkdkdn vknvnnnn");
     return new Promise(async(resolve,reject)=>{
         let user=await  db.get().collection(collection.USER_COLLECTION).findOne({phone:number})
         console.log("this is the user from the otp succes",user);
-        if(user){
+        if(user!=null){
          if(user.isBlocked){
              reject({err:"this account is blocked"})
          }else{
@@ -1765,6 +1765,33 @@ check_quantity:(userId,data)=>{
         
         })
 },
+
+resetPassword:(payload)=>{
+
+    let ids = payload._id.trim()
+    console.log(ids);
+    console.log(typeof ids);
+    console.log("enterd");
+    console.log(payload.newPassword);
+    return new Promise(async(resolve,reject)=>{
+        payload.newPassword = await bcrypt.hash(payload.newPassword, 10);
+        console.log("???><>><><>?<><<");
+        console.log(payload.newPassword);
+        // console.log(userId);
+        let result = await db.get().collection(collection.USER_COLLECTION).updateOne({_id:new ObjectId(ids)},{
+            $set:{password:payload.newPassword}
+        })
+            console.log(result);
+            if(result.modifiedCount){
+                console.log("ewsolve");
+                resolve(true)
+            }else{
+                console.log("reject");
+                reject()
+            }
+
+    })
+}
 
 
 
